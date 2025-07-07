@@ -20,8 +20,14 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  /* 背景色を非常に薄いグレーに設定 */
-  background-color: #F8F8F8; /* 新しい色 */
+  background-color: rgb(248, 248, 248); /* あなたが設定した背景色 */
+}
+
+/* ★★★ <dialog>要素の背景（backdrop）をカスタマイズするCSS（任意） ★★★ */
+dialog::backdrop {
+  background-color: rgba(255, 255, 255, 0.8); /* 白の半透明 */
+  /* 純粋な白にしたい場合は以下を使用: */
+  /* background-color: #fff; */
 }
 
 /* その他のスタイルはそのまま */

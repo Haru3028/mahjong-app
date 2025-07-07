@@ -45,11 +45,6 @@ const FuroActionButtons: React.FC<FuroActionButtonsProps> = ({
 }) => {
   // カンの種類選択（明槓/暗槓/加槓）は、確定時に渡すためにここで管理
   const [currentKanType, setCurrentKanType] = useState<KanType>('minkan');
-
-  if (!hasFuro) {
-    return null; // 鳴き機能が無効な場合は何も表示しない
-  }
-
   // 選択中の鳴きタイプが「カン」の場合のみ、カンの種類を選択するUIを表示
   const showKanTypeSelection = selectedFuroTypeToMake === 'kan';
 

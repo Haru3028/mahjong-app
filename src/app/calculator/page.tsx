@@ -6,15 +6,18 @@ import { useMahjongCalculator } from '../../hooks/useMahjongCalculator';
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { MahjongTile, FuroType, KanType, Furo } from '../../types/mahjong';
 import { mahjongTiles } from '../../data/mahjongTiles'; // 牌データもここで使用
+import { useRouter } from 'next/navigation'; // useRouterをインポート
 
 // 分割したコンポーネントをインポート
 import TileSelectionSection from '../../components/TileSelectionSection';
 import HandDisplaySection from '../../components/HandDisplaySection';
 import FuroActionButtons from '../../components/FuroActionButtons';
 import GameInfoSection from '../../components/GameInfoSection';
-import DoraSelectionModal from '../../components/DoraSelectionModal';
+import DoraSelectionModal from '../../components/DoraSelectionModal'; // DoraSelectionModalをインポート
 
 export default function CalculatorPage() {
+  const router = useRouter();
+
   const {
     selectedTiles,
     addTileToHand,
@@ -48,15 +51,37 @@ export default function CalculatorPage() {
   const [selectedFuroTypeToMake, setSelectedFuroTypeToMake] = useState<FuroType | 'none'>('none');
   const [isDoraModalOpen, setIsDoraModalOpen] = useState<boolean>(false);
 
+  // 理牌中状態を追加
+  const [isRiipaiing, setIsRiipaiing] = useState(false);
+
+  // ★ showFuroSection ステートは不要になるため削除
+
   useEffect(() => {
-    setHasFuro(true);
+    // setHasFuroはuseMahjongCalculator内部で管理されているはずなので、このuseEffectは不要かもしれません
+    // setHasFuro(true); // この行はコメントアウトまたは削除してOKです
   }, [setHasFuro]);
 
-  const handleToggleFuroSelectionMode = () => {
+  // selectedTiles の枚数に応じて理牌アニメーションを制御
+  useEffect(() => {
+    const totalTilesInHandAndFuro = selectedTiles.length + furoList.reduce((acc, furo) => acc + furo.tiles.length, 0);
+
+    if (totalTilesInHandAndFuro === 14) {
+      setIsRiipaiing(true);
+      const timer = setTimeout(() => {
+        setIsRiipaiing(false);
+      }, 1000); // 1秒間「理牌中...」と表示
+      return () => clearTimeout(timer);
+    } else {
+      setIsRiipaiing(false);
+    }
+  }, [selectedTiles.length, furoList]);
+
+
+  const handleToggleFuroSelectionMode = useCallback(() => {
     setIsFuroSelectionMode(prev => !prev);
     setSelectedForFuro([]);
     setSelectedFuroTypeToMake('none');
-  };
+  }, []);
 
   const onClearFuroSelection = useCallback(() => {
     setSelectedForFuro([]);
@@ -65,8 +90,15 @@ export default function CalculatorPage() {
   const handleHandTileClick = useCallback((tile: MahjongTile, index: number) => {
     if (!isFuroSelectionMode) {
       removeTileFromHand(index);
+    } else {
+      const isSelected = selectedForFuro.some(t => t.instanceId === tile.instanceId);
+      if (isSelected) {
+        setSelectedForFuro(prev => prev.filter(t => t.instanceId !== tile.instanceId));
+      } else {
+        setSelectedForFuro(prev => [...prev, tile]);
+      }
     }
-  }, [isFuroSelectionMode, removeTileFromHand]);
+  }, [isFuroSelectionMode, removeTileFromHand, selectedForFuro]);
 
 
   const handleConfirmFuroSelection = useCallback((type: FuroType, kanType?: KanType) => {
@@ -78,11 +110,11 @@ export default function CalculatorPage() {
     if (type === 'kan' && kanType === 'kakan') {
       const selectedTileForKakan = selectedForFuro.find(t => !furoList.some(f => f.tiles.some(ft => ft.instanceId === t.instanceId)));
       if (!selectedTileForKakan) {
-          alert('加槓する牌が特定できませんでした。');
-          return;
+        alert('加槓する牌が特定できませんでした。');
+        return;
       }
-      const targetFuroIndex = furoList.findIndex(f => 
-        f.type === 'pon' && 
+      const targetFuroIndex = furoList.findIndex(f =>
+        f.type === 'pon' &&
         f.tiles[0].id.replace('r', '') === selectedTileForKakan.id.replace('r', '')
       );
       if (targetFuroIndex !== -1) {
@@ -111,7 +143,7 @@ export default function CalculatorPage() {
     }
 
     const combinations: MahjongTile[][] = [];
-    const handTiles = [...selectedTiles];
+    const handTilesLocal = [...selectedTiles];
 
     const getHandCounts = (tiles: MahjongTile[]) => {
       const counts = new Map<string, MahjongTile[]>();
@@ -125,7 +157,7 @@ export default function CalculatorPage() {
       return counts;
     };
 
-    const currentHandCounts = getHandCounts(handTiles);
+    const currentHandCounts = getHandCounts(handTilesLocal);
 
     if (selectedFuroTypeToMake === 'pon') {
       currentHandCounts.forEach((tiles, baseId) => {
@@ -134,7 +166,7 @@ export default function CalculatorPage() {
         }
       });
     } else if (selectedFuroTypeToMake === 'chi') {
-      const numberTiles = handTiles.filter(t => t.type !== 'jihai').sort((a, b) => {
+      const numberTiles = handTilesLocal.filter(t => t.type !== 'jihai').sort((a, b) => {
         if (a.type !== b.type) {
           return a.type.localeCompare(b.type);
         }
@@ -149,7 +181,7 @@ export default function CalculatorPage() {
             const tile3 = numberTiles[k];
 
             if (tile1.type === tile2.type && tile2.type === tile3.type &&
-                tile1.value === tile2.value - 1 && tile2.value === tile3.value - 1) {
+              tile1.value === tile2.value - 1 && tile2.value === tile3.value - 1) {
               combinations.push([tile1, tile2, tile3]);
             }
           }
@@ -177,7 +209,7 @@ export default function CalculatorPage() {
     const uniqueCombinationsMap = new Map<string, MahjongTile[]>();
     combinations.forEach(comb => {
       const sortedCombIds = [...comb].sort((a, b) => (a.instanceId || '').localeCompare(b.instanceId || ''))
-                                     .map(t => t.instanceId).join(',');
+        .map(t => t.instanceId).join(',');
       if (!uniqueCombinationsMap.has(sortedCombIds)) {
         uniqueCombinationsMap.set(sortedCombIds, comb);
       }
@@ -186,9 +218,9 @@ export default function CalculatorPage() {
     const uniqueCombinations = Array.from(uniqueCombinationsMap.values());
 
     return uniqueCombinations.sort((a, b) => {
-        const nameA = a.map(t => t.name).join('');
-        const nameB = b.map(t => t.name).join('');
-        return nameA.localeCompare(nameB);
+      const nameA = a.map(t => t.name).join('');
+      const nameB = b.map(t => t.name).join('');
+      return nameA.localeCompare(nameB);
     });
 
   }, [isFuroSelectionMode, selectedFuroTypeToMake, selectedTiles, furoList]);
@@ -217,10 +249,64 @@ export default function CalculatorPage() {
     setIsDoraModalOpen(false);
   }, [setDoraIndicators]);
 
+  // 「計算」ボタンの有効/無効を判定するロジック
+  const isCalculateButtonEnabled = useMemo(() => {
+    const totalTilesCount = selectedTiles.length + furoList.reduce((acc, f) => acc + f.tiles.length, 0);
+    const hasEnoughTiles = totalTilesCount === 14;
+
+    const hasDoraIndicators = doraIndicators.length > 0;
+    const hasAgariTypeSelected = isTsumo !== undefined && isTsumo !== null;
+
+    return hasEnoughTiles && hasDoraIndicators && hasAgariTypeSelected;
+  }, [selectedTiles.length, furoList, doraIndicators.length, isTsumo]);
+
+  // 「戻る」ボタンのハンドラ
+  const handleGoBack = useCallback(() => {
+    router.push('/');
+  }, [router]);
+
+  // 「計算」ボタンのハンドラ
+  const handleCalculate = useCallback(() => {
+    if (isCalculateButtonEnabled) {
+      router.push('/result');
+    } else {
+      let message = '点数計算には以下の条件が必要です:\n';
+      if (selectedTiles.length + furoList.reduce((acc, f) => acc + f.tiles.length, 0) !== 14) {
+        message += '- 手牌が14枚（フーロを含む）選択されている必要があります。\n';
+      }
+      if (doraIndicators.length === 0) {
+        message += '- ドラ表示牌が少なくとも1枚選択されている必要があります。\n';
+      }
+      if (isTsumo === undefined || isTsumo === null) {
+        message += '- ツモまたはロンのいずれかを選択する必要があります。\n';
+      }
+      alert(message);
+    }
+  }, [isCalculateButtonEnabled, router, selectedTiles.length, furoList, doraIndicators.length, isTsumo]);
+
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-4 bg-gray-100"> {/* ★bg-green-900からbg-gray-100に変更 */}
-      <h1 className="text-2xl font-bold mb-4 text-gray-800">麻雀点数計算機</h1> {/* タイトルを黒文字に */}
+    <main className="flex min-h-screen flex-col items-center justify-between p-4 bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4 text-gray-800">麻雀点数計算機</h1>
+
+      {/* 戻るボタンと計算ボタンのコンテナ */}
+      <div className="flex justify-between w-full max-w-5xl mb-6">
+        <button
+          onClick={handleGoBack}
+          className="py-2 px-6 rounded-lg font-bold bg-gray-500 hover:bg-gray-600 text-white shadow-md transition-colors duration-200"
+        >
+          戻る
+        </button>
+        <button
+          onClick={handleCalculate}
+          disabled={!isCalculateButtonEnabled}
+          className={`py-2 px-6 rounded-lg font-bold text-white shadow-md transition-colors duration-200 ${
+            isCalculateButtonEnabled ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-300 cursor-not-allowed'
+          }`}
+        >
+          計算
+        </button>
+      </div>
 
       {/* 上部セクション: 場情報とドラ表示牌の選択・一覧 (2カラム) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mb-6">
@@ -274,52 +360,64 @@ export default function CalculatorPage() {
         type="available"
       />
 
-      {/* 下部セクション: 手牌、鳴き操作、鳴き（フーロ）一覧 (単一カラムで縦に並ぶ) */}
-      <HandDisplaySection
-        selectedTiles={selectedTiles}
-        remainingHandTilesCount={remainingHandTilesCount}
-        selectedForFuro={selectedForFuro}
-        onRemoveIndividualTile={(tile, index) => removeTileFromHand(index)}
-        isFuroSelectionMode={isFuroSelectionMode}
-        selectedFuroTypeToMake={selectedFuroTypeToMake}
-        validCandidateTiles={validCandidateTiles}
-      />
-
-      <FuroActionButtons
-        hasFuro={true}
-        selectedForFuro={selectedForFuro}
-        onMakeFuro={makeFuroFromSelection}
-        onClearFuroSelection={onClearFuroSelection}
-        isFuroSelectionMode={isFuroSelectionMode}
-        onToggleFuroSelectionMode={handleToggleFuroSelectionMode}
-        selectedTiles={selectedTiles}
-        furoList={furoList}
-        setFuroList={setFuroList}
-        selectedFuroTypeToMake={selectedFuroTypeToMake}
-        setSelectedFuroTypeToMake={setSelectedFuroTypeToMake}
-        possibleMeldCombinations={possibleMeldCombinations}
-        onSelectMeldCombination={handleSelectMeldCombination}
-        onConfirmFuroSelection={handleConfirmFuroSelection}
-        onCancelFuroSelection={handleCancelFuroSelection}
-      />
-
-      <TileSelectionSection
-        title="鳴き（フーロ）一覧"
-        tiles={furoList.flatMap(f => f.tiles)}
-        furoList={furoList}
-        onTileClick={() => {}}
-        type="furo"
-        removeFuro={removeFuro}
-      />
-
-      {/* ドラ選択モーダル */}
-      {isDoraModalOpen && (
-        <DoraSelectionModal
-          currentDoraIndicators={doraIndicators}
-          onConfirm={handleDoraConfirm}
-          onClose={() => setIsDoraModalOpen(false)}
-        />
+      {/* 理牌中メッセージ */}
+      {isRiipaiing && (
+        <p className="text-center text-blue-600 font-bold text-lg my-4 animate-pulse">理牌中...</p>
       )}
+
+      {/* 下部セクション: 手牌、鳴き操作、鳴き（フーロ）一覧 */}
+      {/* ★鳴き操作セクションと鳴き（フーロ）一覧を常に表示 */}
+      <div className="w-full max-w-5xl">
+        <HandDisplaySection
+          selectedTiles={selectedTiles}
+          remainingHandTilesCount={remainingHandTilesCount}
+          selectedForFuro={selectedForFuro}
+          onRemoveIndividualTile={handleHandTileClick}
+          isFuroSelectionMode={isFuroSelectionMode}
+          selectedFuroTypeToMake={selectedFuroTypeToMake}
+          validCandidateTiles={validCandidateTiles}
+        />
+
+        {/* ★ FuroActionButtons を直接表示 */}
+        <FuroActionButtons
+          // hasFuro prop は FuroActionButtons.tsx での表示制御には使用しないため、
+          // ここでは仮に true を渡しています。
+          // FuroActionButtons.tsx から 'if (!hasFuro) { return null; }' を必ず削除してください。
+          hasFuro={true}
+          selectedForFuro={selectedForFuro}
+          onMakeFuro={makeFuroFromSelection}
+          onClearFuroSelection={onClearFuroSelection}
+          isFuroSelectionMode={isFuroSelectionMode}
+          onToggleFuroSelectionMode={handleToggleFuroSelectionMode}
+          selectedTiles={selectedTiles}
+          furoList={furoList}
+          setFuroList={setFuroList}
+          selectedFuroTypeToMake={selectedFuroTypeToMake}
+          setSelectedFuroTypeToMake={setSelectedFuroTypeToMake}
+          possibleMeldCombinations={possibleMeldCombinations}
+          onSelectMeldCombination={handleSelectMeldCombination}
+          onConfirmFuroSelection={handleConfirmFuroSelection}
+          onCancelFuroSelection={handleCancelFuroSelection}
+        />
+
+        {/* ★鳴き（フーロ）一覧を直接表示 */}
+        <TileSelectionSection
+          title="鳴き（フーロ）一覧"
+          tiles={furoList.flatMap(f => f.tiles)}
+          furoList={furoList}
+          onTileClick={() => { }}
+          type="furo"
+          removeFuro={removeFuro}
+        />
+      </div>
+
+      {/* DoraSelectionModalの呼び出し */}
+      <DoraSelectionModal
+        isOpen={isDoraModalOpen}
+        currentDoraIndicators={doraIndicators}
+        onConfirm={handleDoraConfirm}
+        onClose={() => setIsDoraModalOpen(false)}
+      />
     </main>
   );
 }
