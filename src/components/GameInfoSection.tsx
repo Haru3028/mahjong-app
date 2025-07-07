@@ -9,108 +9,237 @@ interface GameInfoSectionProps {
   jikaze: Kaze;
   setJikaze: (kaze: Kaze) => void;
   honba: number;
-  handleHonbaChange: (increment: number) => void;
+  setHonba: (value: number) => void;
   reachbo: number;
-  handleReachboChange: (increment: number) => void;
+  setReachbo: (value: number) => void;
+  
+  isTsumo: boolean;
+  setIsTsumo: (checked: boolean) => void;
+  isRiichi: boolean;
+  setIsRiichi: (checked: boolean) => void;
+  isDoubleRiichi: boolean;
+  setIsDoubleRiichi: (checked: boolean) => void;
+  isIppatsu: boolean;
+  setIsIppatsu: (checked: boolean) => void;
+  isChankan: boolean;
+  setIsChankan: (checked: boolean) => void;
+  isRinshan: boolean;
+  setIsRinshan: (checked: boolean) => void;
+  isHaitei: boolean;
+  setIsHaitei: (checked: boolean) => void;
+  isHoutei: boolean;
+  setIsHoutei: (checked: boolean) => void;
+  isChiiho: boolean; // 地和
+  setIsChiiho: (checked: boolean) => void;
+  isTenho: boolean; // 天和
+  setIsTenho: (checked: boolean) => void;
 }
 
-export const GameInfoSection: React.FC<GameInfoSectionProps> = ({
+const GameInfoSection: React.FC<GameInfoSectionProps> = ({
   bakaze,
   setBakaze,
   jikaze,
   setJikaze,
   honba,
-  handleHonbaChange,
+  setHonba,
   reachbo,
-  handleReachboChange,
+  setReachbo,
+  isChankan,
+  setIsChankan,
+
+  isTsumo,
+  setIsTsumo,
+  isRiichi,
+  setIsRiichi,
+  isDoubleRiichi,
+  setIsDoubleRiichi,
+  isIppatsu,
+  setIsIppatsu,
+  isRinshan,
+  setIsRinshan,
+  isHaitei,
+  setIsHaitei,
+  isHoutei,
+  setIsHoutei,
+  isChiiho,
+  setIsChiiho,
+  isTenho,
+  setIsTenho,
 }) => {
   return (
-    <section className="mb-4 p-3 border border-gray-300 rounded-md bg-gray-50/70 backdrop-blur-sm">
-      <h2 className="text-lg font-semibold text-gray-900 mb-3">対局情報</h2>
+    <div className="mb-8 p-4 border rounded-lg bg-white shadow-md w-full max-w-2xl text-gray-800">
+      <h2 className="text-xl font-semibold mb-2 text-center">場情報と役の有無</h2>
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label htmlFor="bakaze" className="block text-sm font-medium text-gray-700">場風:</label>
+          <select
+            id="bakaze"
+            value={bakaze}
+            onChange={(e) => setBakaze(e.target.value as Kaze)}
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+          >
+            <option value="東">東</option>
+            <option value="南">南</option>
+            <option value="西">西</option>
+            <option value="北">北</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="jikaze" className="block text-sm font-medium text-gray-700">自風:</label>
+          <select
+            id="jikaze"
+            value={jikaze}
+            onChange={(e) => setJikaze(e.target.value as Kaze)}
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+          >
+            <option value="東">東</option>
+            <option value="南">南</option>
+            <option value="西">西</option>
+            <option value="北">北</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="honba" className="block text-sm font-medium text-gray-700">本場:</label>
+          <input
+            type="number"
+            id="honba"
+            value={honba}
+            onChange={(e) => setHonba(Number(e.target.value))}
+            min="0"
+            className="mt-1 block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+          />
+        </div>
+        <div>
+          <label htmlFor="reachbo" className="block text-sm font-medium text-gray-700">リーチ棒 (場に出ている合計):</label>
+          <input
+            type="number"
+            id="reachbo"
+            value={reachbo}
+            onChange={(e) => setReachbo(Number(e.target.value))}
+            min="0"
+            className="mt-1 block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
+          />
+        </div>
+      </div>
 
-      {/* 場風の選択 */}
+      {/* アガリ方選択 */}
       <div className="mb-4">
-        <h3 className="text-base font-medium text-gray-800 mb-2">場風</h3>
+        <h3 className="text-lg font-semibold mb-2">アガリ方:</h3>
         <div className="flex gap-4">
-          {['東', '南'].map((kaze) => (
-            <label key={kaze} className="inline-flex items-center">
-              <input
-                type="radio"
-                className="form-radio text-amber-500 focus:ring-amber-500"
-                name="bakaze"
-                value={kaze}
-                checked={bakaze === kaze}
-                onChange={() => setBakaze(kaze as Kaze)}
-              />
-              <span className="ml-2 text-gray-800">{kaze}</span>
-            </label>
-          ))}
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="agariType"
+              value="tsumo"
+              checked={isTsumo}
+              onChange={() => setIsTsumo(true)}
+              className="form-radio text-blue-600"
+            />
+            <span className="ml-2">ツモ</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="radio"
+              name="agariType"
+              value="ron"
+              checked={!isTsumo}
+              onChange={() => setIsTsumo(false)}
+              className="form-radio text-blue-600"
+            />
+            <span className="ml-2">ロン</span>
+          </label>
         </div>
       </div>
 
-      {/* 自風の選択 */}
-      <div className="mb-4">
-        <h3 className="text-base font-medium text-gray-800 mb-2">自風</h3>
-        <div className="flex flex-wrap gap-x-4 gap-y-2">
-          {['東', '南', '西', '北'].map((kaze) => (
-            <label key={kaze} className="inline-flex items-center">
-              <input
-                type="radio"
-                className="form-radio text-amber-500 focus:ring-amber-500"
-                name="jikaze"
-                value={kaze}
-                checked={jikaze === kaze}
-                onChange={() => setJikaze(kaze as Kaze)}
-              />
-              <span className="ml-2 text-gray-800">{kaze}家</span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* 本場数入力 */}
-      <div className="mb-4">
-        <h3 className="text-base font-medium text-gray-800 mb-2">本場数</h3>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleHonbaChange(-1)}
-            className="bg-amber-200 text-amber-800 px-3 py-1 rounded-md hover:bg-amber-300 transition-colors shadow-sm"
-            aria-label="本場数を減らす"
-          >
-            -
-          </button>
-          <span className="text-lg font-bold w-8 text-center text-gray-900">{honba}</span>
-          <button
-            onClick={() => handleHonbaChange(1)}
-            className="bg-amber-200 text-amber-800 px-3 py-1 rounded-md hover:bg-amber-300 transition-colors shadow-sm"
-            aria-label="本場数を増やす"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      {/* リーチ棒の数入力 */}
+      {/* 特殊な役の有無 */}
       <div>
-        <h3 className="text-base font-medium text-gray-800 mb-2">リーチ棒の数</h3>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleReachboChange(-1)}
-            className="bg-amber-200 text-amber-800 px-3 py-1 rounded-md hover:bg-amber-300 transition-colors shadow-sm"
-            aria-label="リーチ棒を減らす"
-          >
-            -
-          </button>
-          <span className="text-lg font-bold w-8 text-center text-gray-900">{reachbo}</span>
-          <button
-            onClick={() => handleReachboChange(1)}
-            className="bg-amber-200 text-amber-800 px-3 py-1 rounded-md hover:bg-amber-300 transition-colors shadow-sm"
-            aria-label="リーチ棒を増やす"
-          >
-            +
-          </button>
+        <h3 className="text-lg font-semibold mb-2">特殊な役の有無:</h3>
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isRiichi}
+              onChange={(e) => setIsRiichi(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">リーチ</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isDoubleRiichi}
+              onChange={(e) => setIsDoubleRiichi(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">ダブルリーチ</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isIppatsu}
+              onChange={(e) => setIsIppatsu(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">一発</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isChankan}
+              onChange={(e) => setIsChankan(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">槍槓</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isRinshan}
+              onChange={(e) => setIsRinshan(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">嶺上開花</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isHaitei}
+              onChange={(e) => setIsHaitei(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">海底摸月</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isHoutei}
+              onChange={(e) => setIsHoutei(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">河底撈魚</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isChiiho}
+              onChange={(e) => setIsChiiho(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">地和</span>
+          </label>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isTenho}
+              onChange={(e) => setIsTenho(e.target.checked)}
+              className="form-checkbox text-blue-600"
+            />
+            <span className="ml-2">天和</span>
+          </label>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
+
+export default GameInfoSection;

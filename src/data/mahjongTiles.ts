@@ -1,57 +1,50 @@
 // src/data/mahjongTiles.ts
 
-import { MahjongTile, TileType } from '../types/mahjong';
+import { MahjongTile } from '../types/mahjong';
 
 export const mahjongTiles: MahjongTile[] = [
-  // 萬子
-  { id: 'm1', name: '一萬', src: '/tiles/man1.png', type: 'manzu', value: 1 },
-  { id: 'm2', name: '二萬', src: '/tiles/man2.png', type: 'manzu', value: 2 },
-  { id: 'm3', name: '三萬', src: '/tiles/man3.png', type: 'manzu', value: 3 },
-  { id: 'm4', name: '四萬', src: '/tiles/man4.png', type: 'manzu', value: 4 },
-  { id: 'm5', name: '五萬', src: '/tiles/man5.png', type: 'manzu', value: 5 },
-  { id: 'm5r', name: '赤五萬', src: '/tiles/man5_red.png', type: 'manzu', value: 5 }, // ★ここを修正
-  { id: 'm6', name: '六萬', src: '/tiles/man6.png', type: 'manzu', value: 6 },
-  { id: 'm7', name: '七萬', src: '/tiles/man7.png', type: 'manzu', value: 7 },
-  { id: 'm8', name: '八萬', src: '/tiles/man8.png', type: 'manzu', value: 8 },
-  { id: 'm9', name: '九萬', src: '/tiles/man9.png', type: 'manzu', value: 9 },
+  // 萬子 (manzu)
+  { id: 'man1', name: '萬子1', type: 'manzu', value: 1, isRedDora: false },
+  { id: 'man2', name: '萬子2', type: 'manzu', value: 2, isRedDora: false },
+  { id: 'man3', name: '萬子3', type: 'manzu', value: 3, isRedDora: false },
+  { id: 'man4', name: '萬子4', type: 'manzu', value: 4, isRedDora: false },
+  { id: 'man5', name: '萬子5', type: 'manzu', value: 5, isRedDora: false },
+  { id: 'man5_red', name: '赤萬子5', type: 'manzu', value: 5, isRedDora: true }, // 赤ドラ
+  { id: 'man6', name: '萬子6', type: 'manzu', value: 6, isRedDora: false },
+  { id: 'man7', name: '萬子7', type: 'manzu', value: 7, isRedDora: false },
+  { id: 'man8', name: '萬子8', type: 'manzu', value: 8, isRedDora: false },
+  { id: 'man9', name: '萬子9', type: 'manzu', value: 9, isRedDora: false },
 
-  // 筒子
-  { id: 'p1', name: '一筒', src: '/tiles/pin1.png', type: 'pinzu', value: 1 },
-  { id: 'p2', name: '二筒', src: '/tiles/pin2.png', type: 'pinzu', value: 2 },
-  { id: 'p3', name: '三筒', src: '/tiles/pin3.png', type: 'pinzu', value: 3 },
-  { id: 'p4', name: '四筒', src: '/tiles/pin4.png', type: 'pinzu', value: 4 },
-  { id: 'p5', name: '五筒', src: '/tiles/pin5.png', type: 'pinzu', value: 5 },
-  { id: 'p5r', name: '赤五筒', src: '/tiles/pin5_red.png', type: 'pinzu', value: 5 }, // ★ここを修正
-  { id: 'p6', name: '六筒', src: '/tiles/pin6.png', type: 'pinzu', value: 6 },
-  { id: 'p7', name: '七筒', src: '/tiles/pin7.png', type: 'pinzu', value: 7 },
-  { id: 'p8', name: '八筒', src: '/tiles/pin8.png', type: 'pinzu', value: 8 },
-  { id: 'p9', name: '九筒', src: '/tiles/pin9.png', type: 'pinzu', value: 9 },
+  // 筒子 (pinzu)
+  { id: 'pin1', name: '筒子1', type: 'pinzu', value: 1, isRedDora: false },
+  { id: 'pin2', name: '筒子2', type: 'pinzu', value: 2, isRedDora: false },
+  { id: 'pin3', name: '筒子3', type: 'pinzu', value: 3, isRedDora: false },
+  { id: 'pin4', name: '筒子4', type: 'pinzu', value: 4, isRedDora: false },
+  { id: 'pin5', name: '筒子5', type: 'pinzu', value: 5, isRedDora: false },
+  { id: 'pin5_red', name: '赤筒子5', type: 'pinzu', value: 5, isRedDora: true }, // 赤ドラ
+  { id: 'pin6', name: '筒子6', type: 'pinzu', value: 6, isRedDora: false },
+  { id: 'pin7', name: '筒子7', type: 'pinzu', value: 7, isRedDora: false },
+  { id: 'pin8', name: '筒子8', type: 'pinzu', value: 8, isRedDora: false },
+  { id: 'pin9', name: '筒子9', type: 'pinzu', value: 9, isRedDora: false },
 
-  // 索子
-  { id: 's1', name: '一索', src: '/tiles/sou1.png', type: 'souzu', value: 1 },
-  { id: 's2', name: '二索', src: '/tiles/sou2.png', type: 'souzu', value: 2 },
-  { id: 's3', name: '三索', src: '/tiles/sou3.png', type: 'souzu', value: 3 },
-  { id: 's4', name: '四索', src: '/tiles/sou4.png', type: 'souzu', value: 4 },
-  { id: 's5', name: '五索', src: '/tiles/sou5.png', type: 'souzu', value: 5 },
-  { id: 's5r', name: '赤五索', src: '/tiles/sou5_red.png', type: 'souzu', value: 5 }, // ★ここを修正
-  { id: 's6', name: '六索', src: '/tiles/sou6.png', type: 'souzu', value: 6 },
-  { id: 's7', name: '七索', src: '/tiles/sou7.png', type: 'souzu', value: 7 },
-  { id: 's8', name: '八索', src: '/tiles/sou8.png', type: 'souzu', value: 8 },
-  { id: 's9', name: '九索', src: '/tiles/sou9.png', type: 'souzu', value: 9 },
+  // 索子 (souzu)
+  { id: 'sou1', name: '索子1', type: 'souzu', value: 1, isRedDora: false },
+  { id: 'sou2', name: '索子2', type: 'souzu', value: 2, isRedDora: false },
+  { id: 'sou3', name: '索子3', type: 'souzu', value: 3, isRedDora: false },
+  { id: 'sou4', name: '索子4', type: 'souzu', value: 4, isRedDora: false },
+  { id: 'sou5', name: '索子5', type: 'souzu', value: 5, isRedDora: false },
+  { id: 'sou5_red', name: '赤索子5', type: 'souzu', value: 5, isRedDora: true }, // 赤ドラ
+  { id: 'sou6', name: '索子6', type: 'souzu', value: 6, isRedDora: false },
+  { id: 'sou7', name: '索子7', type: 'souzu', value: 7, isRedDora: false },
+  { id: 'sou8', name: '索子8', type: 'souzu', value: 8, isRedDora: false },
+  { id: 'sou9', name: '索子9', type: 'souzu', value: 9, isRedDora: false },
 
-  // 字牌
-  { id: 'ton', name: '東', src: '/tiles/ji_ton.png', type: 'jihai', value: 1 },
-  { id: 'nan', name: '南', src: '/tiles/ji_nan.png', type: 'jihai', value: 2 },
-  { id: 'sha', name: '西', src: '/tiles/ji_shaa.png', type: 'jihai', value: 3 },
-  { id: 'pei', name: '北', src: '/tiles/ji_pei.png', type: 'jihai', value: 4 },
-  { id: 'haku', name: '白', src: '/tiles/ji_haku.png', type: 'jihai', value: 5 },
-  { id: 'hatsu', name: '發', src: '/tiles/ji_hatsu.png', type: 'jihai', value: 6 },
-  { id: 'chun', name: '中', src: '/tiles/ji_chun.png', type: 'jihai', value: 7 },
+  // 字牌 (jihai)
+  { id: 'ji_ton', name: '東', type: 'jihai', value: 1, isRedDora: false },
+  { id: 'ji_nan', name: '南', type: 'jihai', value: 2, isRedDora: false },
+  { id: 'ji_sha', name: '西', type: 'jihai', value: 3, isRedDora: false },
+  { id: 'ji_pei', name: '北', type: 'jihai', value: 4, isRedDora: false },
+  { id: 'ji_haku', name: '白', type: 'jihai', value: 5, isRedDora: false },
+  { id: 'ji_hatsu', name: '發', type: 'jihai', value: 6, isRedDora: false },
+  { id: 'ji_chun', name: '中', type: 'jihai', value: 7, isRedDora: false },
 ];
-
-export const tilesByType: { [key in TileType]: MahjongTile[] } = {
-  manzu: mahjongTiles.filter(tile => tile.type === 'manzu'),
-  pinzu: mahjongTiles.filter(tile => tile.type === 'pinzu'),
-  souzu: mahjongTiles.filter(tile => tile.type === 'souzu'),
-  jihai: mahjongTiles.filter(tile => tile.type === 'jihai'),
-};

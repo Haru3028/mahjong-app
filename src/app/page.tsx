@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
       <h1 className="text-4xl font-bold text-gray-800 mb-12">麻雀アプリ</h1>
 
       <div className="w-full max-w-sm space-y-6">
-        {/* 計算役表示 ボタン */}
+        {/* 点数計算・役表示 ボタン */}
         <Link href="/calculator" className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg text-center text-xl shadow-md transition duration-300">
           点数計算・役表示
         </Link>
