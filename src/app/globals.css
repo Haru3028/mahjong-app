@@ -24,3 +24,49 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 雀卓のフェルト部分のベース色と影を設定するクラス */
+.calculator-bg {
+  /* フェルトのベース色 */
+  background-color: #1a4f3a; /* 深い緑 */
+  position: relative;
+  overflow: hidden; /* 背景のテクスチャがはみ出さないように */
+}
+
+/* 雀卓のフチの影（より立体的に見せるため） */
+/* ::before 擬似要素を使って内側に影をつけます */
+.calculator-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 内側に影をつける */
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.7), /* 強い内側の影 */
+              inset 0 0 100px rgba(0, 0, 0, 0.5); /* 広い内側の影 */
+  z-index: 1; /* 手牌やコンテンツより下に */
+  pointer-events: none; /* クリックイベントを妨げないように */
+}
+
+/* メインコンテンツエリアのスタイル（背景透過、角丸、影） */
+main {
+  background-color: rgba(255, 255, 255, 0.9); /* 白背景の透明度を少し上げる */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* メインコンテンツの影 */
+}
+
+/* ヘッダーエリアのスタイル（背景透過、角丸、影） */
+header {
+  background-color: rgba(255, 255, 255, 0.9); /* 白背景の透明度を少し上げる */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ヘッダーの影 */
+}
+
+/* 緑色の牌選択エリアや情報表示エリアの背景 */
+section {
+  background-color: rgba(240, 240, 240, 0.7); /* 少し暗めの白でコントラストを出す */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 軽い枠線 */
+}
