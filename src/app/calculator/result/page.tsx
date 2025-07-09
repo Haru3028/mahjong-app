@@ -141,8 +141,8 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
   }
 
   const handleTileClick = (tile: MahjongTile) => {
-    const currentCount = countTotalTiles(tile.id, selectedTilesInHand, furoList, tempSelectedTiles);
-    const tempSelectedCountOfThisTile = tempSelectedTiles.filter(t => t.id === tile.id).length;
+    // const currentCount = countTotalTiles(tile.id, selectedTilesInHand, furoList, tempSelectedTiles);
+    // const tempSelectedCountOfThisTile = tempSelectedTiles.filter(t => t.id === tile.id).length;
 
     if (tempSelectedTiles.includes(tile)) {
       // If already selected, remove it
@@ -196,12 +196,12 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-11/12 max-w-xl max-h-[90vh] overflow-y-auto">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">{modalTitle}</h3>
+      <div className="section-panel w-11/12 max-w-xl max-h-[90vh] overflow-y-auto">
+        <h3 className="section-title">{modalTitle}</h3>
 
         {/* 萬子 */}
         <div className="mb-3">
-          <h4 className="text-base font-medium text-gray-800 mb-1">萬子</h4>
+          <h4 className="text-base font-medium text-amber-200 mb-1">萬子</h4>
           <div className="flex flex-wrap gap-1 justify-center">
             {tilesByType.manzu.map((tile) => (
               <img
@@ -218,7 +218,7 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
         </div>
         {/* 筒子 */}
         <div className="mb-3">
-          <h4 className="text-base font-medium text-gray-800 mb-1">筒子</h4>
+          <h4 className="text-base font-medium text-amber-200 mb-1">筒子</h4>
           <div className="flex flex-wrap gap-1 justify-center">
             {tilesByType.pinzu.map((tile) => (
               <img
@@ -235,7 +235,7 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
         </div>
         {/* 索子 */}
         <div className="mb-3">
-          <h4 className="text-base font-medium text-gray-800 mb-1">索子</h4>
+          <h4 className="text-base font-medium text-amber-200 mb-1">索子</h4>
           <div className="flex flex-wrap gap-1 justify-center">
             {tilesByType.souzu.map((tile) => (
               <img
@@ -252,7 +252,7 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
         </div>
         {/* 字牌 */}
         <div className="mb-3">
-          <h4 className="text-base font-medium text-gray-800 mb-1">字牌</h4>
+          <h4 className="text-base font-medium text-amber-200 mb-1">字牌</h4>
           <div className="flex flex-wrap gap-1 justify-center">
             {tilesByType.jihai.map((tile) => (
               <img
@@ -271,17 +271,16 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
         <div className="mt-4 flex justify-end gap-3">
           <button
             onClick={onClose}
-            className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors shadow-sm"
+            className="base-button back-button"
           >
             キャンセル
           </button>
           <button
             onClick={handleConfirm}
-            className={`px-4 py-2 rounded-md text-white shadow-sm transition-colors ${
-              tempSelectedTiles.length === requiredTilesCount
-                ? 'bg-green-500 hover:bg-green-600'
-                : 'bg-gray-400 cursor-not-allowed'
+            className={`base-button calculate-button ${
+              tempSelectedTiles.length === requiredTilesCount ? 'enabled' : 'disabled'
             }`}
+            disabled={tempSelectedTiles.length !== requiredTilesCount}
           >
             選択を確定
           </button>
@@ -300,8 +299,8 @@ const CalculatorPage: React.FC = () => {
   const [currentFuroType, setCurrentFuroType] = useState<FuroType | null>(null); // 現在選択中の鳴きの種類
 
   const [isRiipaiDone, setIsRiipaiDone] = useState(false);
-  const [isAnimatingRiipai, setIsAnimatingRiipai] = useState(false);
-  const [isWaitingForRiipaiDisplay, setIsWaitingForRiipaiDisplay] = useState(false);
+  // const [isAnimatingRiipai, setIsAnimatingRiipai] = useState(false);
+  // const [isWaitingForRiipaiDisplay, setIsWaitingForRiipaiDisplay] = useState(false);
 
   const MAX_HAND_TILES = 14; // 全ての牌（手牌＋鳴き）の合計枚数
   const [remainingTilesCount, setRemainingTilesCount] = useState<number>(MAX_HAND_TILES); // 手牌として選択できる残り枚数
@@ -319,8 +318,8 @@ const CalculatorPage: React.FC = () => {
     if (selectedTiles.length > (MAX_HAND_TILES - tilesInFuro)) {
       setSelectedTiles([]); // 手牌枚数が超過したらクリア
       setIsRiipaiDone(false);
-      setIsAnimatingRiipai(false);
-      setIsWaitingForRiipaiDisplay(false);
+      // setIsAnimatingRiipai(false);
+      // setIsWaitingForRiipaiDisplay(false);
     }
   }, [furoList]); // selectedTilesは不要、furoListの変更のみで更新
 
@@ -347,17 +346,17 @@ const CalculatorPage: React.FC = () => {
   useEffect(() => {
     // 手牌の枚数がremainingTilesCountに達したら理牌
     if (selectedTiles.length === remainingTilesCount && !isRiipaiDone) {
-      setIsAnimatingRiipai(true);
+      // setIsAnimatingRiipai(true);
 
       const preRiipaiDelay = setTimeout(() => {
         const sortedHand = doRiipai(selectedTiles);
         setSelectedTiles(sortedHand);
         setIsRiipaiDone(true);
-        setIsWaitingForRiipaiDisplay(true);
+        // setIsWaitingForRiipaiDisplay(true);
 
         const riipaiDuration = setTimeout(() => {
-          setIsAnimatingRiipai(false);
-          setIsWaitingForRiipaiDisplay(false);
+          // setIsAnimatingRiipai(false);
+          // setIsWaitingForRiipaiDisplay(false);
         }, 1500);
 
         return () => clearTimeout(riipaiDuration);
@@ -367,8 +366,8 @@ const CalculatorPage: React.FC = () => {
     } else if (selectedTiles.length < remainingTilesCount && isRiipaiDone) {
       // 手牌が減ったら理牌状態をリセット
       setIsRiipaiDone(false);
-      setIsAnimatingRiipai(false);
-      setIsWaitingForRiipaiDisplay(false);
+      // setIsAnimatingRiipai(false);
+      // setIsWaitingForRiipaiDisplay(false);
     }
   }, [selectedTiles, isRiipaiDone, remainingTilesCount, doRiipai]);
 
@@ -416,16 +415,6 @@ const CalculatorPage: React.FC = () => {
 
     const newHand = [...selectedTiles, tileToAdd];
     setSelectedTiles(newHand);
-  };
-
-  const removeTileFromHand = (indexToRemove: number) => {
-    const newHand = selectedTiles.filter((_, index) => index !== indexToRemove);
-    setSelectedTiles(newHand);
-    if (isRiipaiDone) {
-      setIsRiipaiDone(false);
-      setIsAnimatingRiipai(false);
-      setIsWaitingForRiipaiDisplay(false);
-    }
   };
 
   // 鳴き牌の選択モーダルを開く

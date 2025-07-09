@@ -1,17 +1,17 @@
 // src/components/HandDisplaySection.tsx
 
-import React, { useCallback } from 'react';
-import { MahjongTile, FuroType, MahjongTileType } from '../types/mahjong';
-import TileComponent from './TileComponent';
+import React from 'react';
+import Image from 'next/image';
+import { MahjongTile } from '../types/mahjong';
 
 interface HandDisplaySectionProps {
   selectedTiles: MahjongTile[];
   remainingHandTilesCount: number;
-  selectedForFuro: MahjongTile[]; // ユーザーが選択した組み合わせの牌
-  onRemoveIndividualTile: (tile: MahjongTile, index: number) => void; // 個別削除用
+  selectedForFuro: MahjongTile[];
+  onRemoveIndividualTile: (tile: MahjongTile, index: number) => void;
   isFuroSelectionMode: boolean;
-  selectedFuroTypeToMake: FuroType | 'none';
-  validCandidateTiles: MahjongTile[]; // 鳴き候補として有効な牌のリスト
+  validCandidateTiles: MahjongTile[]; // 鳴き候補の牌
+  isRiipaiing?: boolean; // ←追加
 }
 
 const HandDisplaySection: React.FC<HandDisplaySectionProps> = ({
@@ -20,88 +20,77 @@ const HandDisplaySection: React.FC<HandDisplaySectionProps> = ({
   selectedForFuro,
   onRemoveIndividualTile,
   isFuroSelectionMode,
-  selectedFuroTypeToMake,
   validCandidateTiles,
+  isRiipaiing = false, // ←追加
 }) => {
-  const highlightableTiles = React.useMemo(() => {
-    if (!isFuroSelectionMode || selectedFuroTypeToMake === 'none') {
-      return new Set<string>();
+  // 牌の画像サイズを全てのtypeで統一し、アスペクト比を考慮した幅と高さを設定
+  const TILE_WIDTH = 32;  // 牌の表示幅
+  const TILE_HEIGHT = 40; // 牌の表示高さ
+
+  // 理牌（ソート）された手牌
+  const sortedTiles = [...selectedTiles].sort((a, b) => {
+    // まずタイプでソート (萬子, 筒子, 索子, 字牌)
+    const typeOrder = ['manzu', 'pinzu', 'souzu', 'jihai'];
+    if (a.type !== b.type) {
+      return typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type);
     }
-    const tileInstanceIds = new Set<string>();
-    validCandidateTiles.forEach(tile => {
-      if (tile.instanceId) {
-        tileInstanceIds.add(tile.instanceId);
-      }
-    });
-    return tileInstanceIds;
-  }, [isFuroSelectionMode, selectedFuroTypeToMake, validCandidateTiles]);
-
-  // ★新しいソート関数: 萬子、索子、筒子、字牌の順に並べる
-  const sortTilesForDisplay = useCallback((tiles: MahjongTile[]) => {
-    const typeOrder = ['manzu', 'souzu', 'pinzu', 'jihai']; // ご要望の並び順
-
-    return [...tiles].sort((a, b) => {
-      const typeA = typeOrder.indexOf(a.type);
-      const typeB = typeOrder.indexOf(b.type);
-
-      if (typeA !== typeB) {
-        return typeA - typeB; // 牌の種類でソート
-      }
-      // 同じ種類内では数値でソート
-      // 赤ドラは通常の5の後ろにソート（視覚的な整理のため）
-      if (a.value === 5 && a.isRedDora && b.value === 5 && !b.isRedDora) {
-        return 1;
-      }
-      if (b.value === 5 && b.isRedDora && a.value === 5 && !a.isRedDora) {
-        return -1;
-      }
+    // 次に値でソート (1, 2, ..., 9)
+    if (a.value !== b.value) {
       return a.value - b.value;
-    });
-  }, []);
+    }
+    // 同じ牌の場合、赤ドラを優先 (赤ドラが手前に来るように)
+    return (b.isRedDora ? 1 : 0) - (a.isRedDora ? 1 : 0);
+  });
 
-  const shouldSortAndDisplayAsSingleRow = selectedTiles.length === 14; // 14枚になったら整理して表示
+  // 理牌中は牌を隠し、理牌中メッセージを中央に表示
+  if (isRiipaiing) {
+    return (
+      <div className="p-6 rounded-xl shadow-lg bg-green-800 text-gray-100 flex flex-col items-center justify-center min-h-[120px]">
+        <div className="riipaiing-message text-2xl font-bold text-amber-300">理牌中...</div>
+      </div>
+    );
+  }
 
-  // 表示する牌のリストを決定
-  const tilesToRender = shouldSortAndDisplayAsSingleRow
-    ? sortTilesForDisplay(selectedTiles) // 14枚ならソート
-    : selectedTiles; // 14枚未満なら選択順
+  // 牌が14枚揃うまではキュー状に左詰めで表示
+  const isQueueMode = selectedTiles.length < 14;
+  const displayTiles = isQueueMode ? selectedTiles : sortedTiles;
 
   return (
-    <div className="mb-6 p-4 border rounded-lg bg-white shadow-md w-full text-gray-800">
-      <h2 className="text-xl font-semibold mb-2 text-center">
-        手牌 ({selectedTiles.length} / {remainingHandTilesCount})
-      </h2>
-      <div className="flex flex-col gap-2">
-        {/* 牌の表示エリア */}
-        <div className="flex flex-wrap justify-center gap-1">
-          {tilesToRender.map((tile, index) => (
-            <div key={`${tile.id}-${tile.instanceId}`} className="relative">
-              <TileComponent
-                tile={tile}
-                onClick={isFuroSelectionMode ? undefined : (clickedTile) => onRemoveIndividualTile(clickedTile, selectedTiles.indexOf(tile))}
-                isHandTile={true}
-                isSelectedForFuro={selectedForFuro.some(t => t.instanceId === tile.instanceId)}
-                isValidCandidate={isFuroSelectionMode && selectedFuroTypeToMake !== 'none' ?
-                                  highlightableTiles.has(tile.instanceId || '') :
-                                  true}
-                isFuroSelectionMode={isFuroSelectionMode} // 鳴き選択モードであることを伝える
+    <div className="p-6 rounded-xl shadow-lg bg-green-800 text-gray-100">
+      <h2 className="text-2xl font-bold mb-4 text-center text-amber-300">手牌</h2>
+      <div className={`flex gap-2 justify-center mb-4 ${isQueueMode ? '' : ''}`} style={isQueueMode ? {minHeight: 48} : {}}>
+        {displayTiles.map((tile, index) => {
+          const isSelectedForFuro = selectedForFuro.some(
+            (t) => t.instanceId === tile.instanceId
+          );
+          const isValidCandidate = validCandidateTiles.some(
+            (t) => t.instanceId === tile.instanceId
+          );
+
+          return (
+            <div
+              key={tile.instanceId || `${tile.id}-${index}`}
+              className={`relative cursor-pointer transition-transform duration-100 ease-out transform
+                ${isFuroSelectionMode && isValidCandidate ? 'hover:scale-110 active:scale-95' : ''}
+                ${isSelectedForFuro ? 'ring-4 ring-blue-500 ring-offset-2 ring-offset-green-800' : ''}
+                ${!isFuroSelectionMode ? 'hover:scale-105 active:scale-95' : ''}
+              `}
+              onClick={() => onRemoveIndividualTile(tile, index)}
+            >
+              <Image
+                src={tile.src}
+                alt={tile.name}
+                width={TILE_WIDTH}
+                height={TILE_HEIGHT}
+                className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
               />
-              {!isFuroSelectionMode && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemoveIndividualTile(tile, selectedTiles.indexOf(tile));
-                  }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-                  style={{ zIndex: 10 }}
-                >
-                    X
-                  </button>
-              )}
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
+      <p className="text-center text-lg font-semibold text-amber-200">
+        残り手牌枚数: {remainingHandTilesCount}
+      </p>
     </div>
   );
 };

@@ -1,120 +1,149 @@
-"use client";
+// src/components/DoraSelectionModal.tsx
 
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 import { MahjongTile } from '../types/mahjong';
-import { mahjongTiles } from '../data/mahjongTiles'; // 全ての麻雀牌データをインポート
-import TileSelectionSection from './TileSelectionSection'; // 牌の表示に使っているコンポーネント
+import { mahjongTiles as allAvailableTiles } from '../data/mahjongTiles'; // 全ての牌データ
 
-// DoraSelectionModalコンポーネントのPropsの型定義
 interface DoraSelectionModalProps {
-  currentDoraIndicators: MahjongTile[]; // 現在選択されているドラ表示牌のリスト
-  onConfirm: (tiles: MahjongTile[]) => void; // 確定ボタンを押したときに呼ばれるコールバック
-  onClose: () => void; // モーダルを閉じるときに呼ばれるコールバック
-  isOpen: boolean; // モーダルの表示状態を制御するpropを追加
+  isOpen: boolean;
+  currentDoraIndicators: MahjongTile[];
+  onConfirm?: (selectedDora: MahjongTile[]) => void; // optional
+  onClose: () => void;
 }
 
-export default function DoraSelectionModal({
+const DoraSelectionModal: React.FC<DoraSelectionModalProps> = ({
+  isOpen,
   currentDoraIndicators,
   onConfirm,
   onClose,
-  isOpen, // isOpen prop を受け取る
-}: DoraSelectionModalProps) {
-  const [selectedDora, setSelectedDora] = useState<MahjongTile[]>(currentDoraIndicators);
-  const dialogRef = useRef<HTMLDialogElement>(null); // dialog要素への参照
+}) => {
+  const [selectedDoraTiles, setSelectedDoraTiles] = useState<MahjongTile[]>([]);
+  const TILE_WIDTH = 32;
+  const TILE_HEIGHT = 40;
 
-  // コンポーネントがマウントされた際に、親から渡されたドラ牌で初期化する
   useEffect(() => {
-    setSelectedDora(currentDoraIndicators);
-  }, [currentDoraIndicators]);
-
-  // isOpen prop に応じてモーダルを表示・非表示
-  useEffect(() => {
-    // refが現在のDOMノードを参照していて、かつdialogがまだ開かれていない場合
-    if (isOpen && !dialogRef.current?.open) {
-      dialogRef.current?.showModal(); // モーダルを表示
-    } else if (!isOpen && dialogRef.current?.open) {
-      // refが現在のDOMノードを参照していて、かつdialogが開かれている場合
-      dialogRef.current?.close(); // モーダルを閉じる
+    if (isOpen) {
+      setSelectedDoraTiles([...currentDoraIndicators]);
     }
-  }, [isOpen]);
+  }, [isOpen, currentDoraIndicators]);
 
-  const allAvailableTiles: MahjongTile[] = mahjongTiles; // mahjongTiles データ全体を使用
-
-  // 牌がクリックされた時のハンドラ
   const handleTileClick = useCallback((tile: MahjongTile) => {
-    // 選択された牌が既に selectedDora に含まれているかチェック (instanceId で一意性を判断)
-    const existingTileIndex = selectedDora.findIndex(d => d.instanceId === tile.instanceId);
+    setSelectedDoraTiles(prev => {
+      // 赤ドラの重複チェック
+      if (tile.isRedDora) {
+        const existingRedDora = prev.find(t => t.id === tile.id);
+        if (existingRedDora) {
+          // 既に同じ赤ドラがあれば削除
+          return prev.filter(t => t.instanceId !== existingRedDora.instanceId);
+        }
+      }
 
-    if (existingTileIndex !== -1) {
-      // 既に選択されていれば、リストから削除
-      setSelectedDora(prev => prev.filter((_, index) => index !== existingTileIndex));
-    } else {
-      // 選択されていなければ、リストに追加
-      setSelectedDora(prev => [...prev, tile]);
+      // 既に選択されている牌であれば削除
+      const existingTileIndex = prev.findIndex(t => t.instanceId === tile.instanceId);
+      if (existingTileIndex !== -1) {
+        return prev.filter(t => t.instanceId !== tile.instanceId);
+      } else {
+        // 新しい牌を追加（ユニークなインスタンスIDを付与）
+        return [...prev, { ...tile, instanceId: Math.random().toString(36).substring(2, 11) }];
+      }
+    });
+  }, []);
+
+  const handleConfirm = () => {
+    // ドラ表示牌は最大5枚まで（裏ドラ含め最大10枚だが、表示牌は5枚が一般的）
+    if (selectedDoraTiles.length > 5) {
+      alert('ドラ表示牌は最大5枚まで選択できます。');
+      return;
     }
-  }, [selectedDora]);
+    if (onConfirm) onConfirm(selectedDoraTiles);
+  };
 
-  // dialogのcloseイベントハンドラ（Escキーでのクローズなどに対応）
-  const handleDialogClose = useCallback(() => {
-    onClose(); // 親コンポーネントのonCloseを呼び出す
-  }, [onClose]);
+  if (!isOpen) return null;
 
   return (
-    // <dialog>要素に変更し、refを渡す
-    // クラスはモーダルの内容のスタイルを適用
-    // onCancelでEscキー押下時の挙動をハンドリング
-    <dialog
-      ref={dialogRef}
-      className="p-0 rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto relative border border-gray-300"
-      onCancel={handleDialogClose}
-    >
-      {/* 内部のコンテンツボックスは引き続きbg-white */}
-      <div className="bg-white p-6">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800 text-center">ドラ表示牌を選択</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="bg-green-800 p-8 rounded-xl shadow-2xl border-4 border-amber-500 w-full max-w-2xl max-h-[90vh] overflow-y-auto text-gray-100">
+        <h2 className="text-3xl font-bold mb-6 text-center text-amber-300">ドラ表示牌選択</h2>
 
-        {/* 閉じるボタン */}
-        <button
-          onClick={onClose} // onClose 関数を呼び出してモーダルを閉じる
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-light leading-none"
-        >
-          &times; {/* HTMLエンティティでバツ印を表示 */}
-        </button>
-
-        {/* 現在選択されているドラ牌の表示セクション */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-2">現在のドラ表示牌</h3>
-          <TileSelectionSection
-            title="" // タイトルは不要なので空文字列
-            tiles={selectedDora} // 選択中のドラ牌リストを渡す
-            // クリックで選択から外すロジック (removeDoraIndicator のようなもの)
-            onTileClick={(tile, index) => {
-                setSelectedDora(prev => prev.filter((_, i) => i !== index));
-            }}
-            type="hand" // 手牌のように表示
-          />
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-3 text-amber-400">現在の選択:</h3>
+          <div className="flex flex-wrap gap-2 justify-center p-4 border-2 border-amber-600 rounded-lg bg-green-900 min-h-[60px]">
+            {selectedDoraTiles.length > 0 ? (
+              selectedDoraTiles.map((tile, index) => (
+                <div
+                  key={tile.instanceId || `${tile.id}-${index}`}
+                  className="relative cursor-pointer hover:scale-105 transition-transform duration-100 ease-out"
+                  onClick={() => handleTileClick(tile)}
+                >
+                  <Image
+                    src={tile.src}
+                    alt={tile.name}
+                    width={TILE_WIDTH}
+                    height={TILE_HEIGHT}
+                    className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-400">ドラ表示牌を選択してください。</p>
+            )}
+          </div>
         </div>
 
-        {/* 選択可能な牌の表示セクション */}
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold mb-2">選択可能な牌</h3>
-          <TileSelectionSection
-            title="" // タイトルは不要なので空文字列
-            tiles={allAvailableTiles} // 全ての麻雀牌データを渡す
-            onTileClick={handleTileClick} // 牌がクリックされた時のハンドラ
-            type="available" // 選択可能な牌のように表示
-          />
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-3 text-amber-400">選択可能な牌:</h3>
+          <div className="flex flex-wrap gap-2 justify-center p-4 border-2 border-amber-600 rounded-lg bg-green-900">
+            {allAvailableTiles.map((tile, /* index */) => {
+              const isSelected = selectedDoraTiles.some(t => t.id === tile.id && t.isRedDora === tile.isRedDora);
+              // 赤ドラは各種類1枚までしか選択できないように制御
+              const isRedDoraAlreadySelected = tile.isRedDora && selectedDoraTiles.some(t => t.id === tile.id);
+
+              return (
+                <div
+                  key={tile.id} // モーダル内の選択可能な牌はIDでキーを設定
+                  className={`relative cursor-pointer hover:scale-105 transition-transform duration-100 ease-out
+                    ${isSelected ? 'ring-4 ring-blue-500 ring-offset-2 ring-offset-green-900' : ''}
+                    ${isRedDoraAlreadySelected && !isSelected ? 'opacity-50 cursor-not-allowed' : ''}
+                  `}
+                  onClick={() => {
+                    if (isRedDoraAlreadySelected && !isSelected) {
+                      alert(`赤ドラ（${tile.name}）は1枚しか選択できません。`);
+                      return;
+                    }
+                    handleTileClick(tile);
+                  }}
+                >
+                  <Image
+                    src={tile.src}
+                    alt={tile.name}
+                    width={TILE_WIDTH}
+                    height={TILE_HEIGHT}
+                    className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* 確定ボタン */}
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-center gap-4">
           <button
-            onClick={() => onConfirm(selectedDora)} // selectedDora を親に渡して確定
-            className="py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+            onClick={handleConfirm}
+            className="py-3 px-8 rounded-xl font-bold bg-amber-500 hover:bg-amber-600 text-green-950 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
             確定
           </button>
+          <button
+            onClick={onClose}
+            className="py-3 px-8 rounded-xl font-bold bg-gray-600 hover:bg-gray-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          >
+            閉じる
+          </button>
         </div>
       </div>
-    </dialog>
+    </div>
   );
-}
+};
+
+export default DoraSelectionModal;

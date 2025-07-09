@@ -1,0 +1,143 @@
+/* mahjong-theme.css: 麻雀アプリ専用のテーマCSS（背景・ボタン・パネル・タイトルなど） */
+
+body, .calculator-page-main {
+  background: radial-gradient(ellipse at center, #14532d 0%, #0c1a0e 100%);
+  min-height: 100vh;
+  font-family: 'Noto Sans JP', 'Yu Gothic', 'Meiryo', sans-serif;
+  color: #f5e9c6;
+}
+
+.calculator-main-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #f5e9c6;
+  text-shadow: 0 2px 8px #000a, 0 0 2px #bfa76f;
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.section-panel {
+  background: rgba(255,255,255,0.07);
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 16px #0004;
+  padding: 1.5rem 1.2rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #bfa76f;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e6c97a;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 4px #0006;
+}
+
+.base-button, .mahjong-radio, .mahjong-radio-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.7rem 2.2rem;
+  border-radius: 0.7rem;
+  border: 2px solid #bfa76f;
+  background: linear-gradient(90deg, #e6c97a 0%, #bfa76f 100%);
+  color: #2d1c00;
+  box-shadow: 0 2px 8px #0003;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.base-button:hover:not(:disabled), .mahjong-radio-label:hover {
+  background: linear-gradient(90deg, #ffe9a7 0%, #e6c97a 100%);
+  color: #1a1200;
+  box-shadow: 0 4px 16px #bfa76f66;
+}
+.base-button:disabled, .base-button.disabled {
+  background: #bfa76f55;
+  color: #7a6a3a;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.mahjong-radio {
+  appearance: none;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  border: 2px solid #e6c97a;
+  background: #222b1a;
+  margin-right: 0.5em;
+  vertical-align: middle;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.mahjong-radio:checked {
+  background: radial-gradient(circle at 50% 50%, #ffe9a7 60%, #bfa76f 100%);
+  border: 2.5px solid #ffe9a7;
+  box-shadow: 0 0 0 2px #bfa76f99;
+}
+.mahjong-radio-label {
+  color: #f5e9c6;
+  background: none;
+  border: none;
+  padding: 0.4em 1em;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0.7rem;
+  transition: background 0.2s, color 0.2s;
+}
+.mahjong-radio-label.selected {
+  background: linear-gradient(90deg, #e6c97a 0%, #bfa76f 100%);
+  color: #2d1c00;
+}
+
+@media (max-width: 600px) {
+  .calculator-main-title {
+    font-size: 1.5rem;
+  }
+  .section-panel {
+    padding: 1rem 0.5rem;
+  }
+  .base-button, .mahjong-radio-label {
+    font-size: 1rem;
+    padding: 0.5rem 1.2rem;
+  }
+}
+
+.current-dora-display-area {
+  background: rgba(255,255,255,0.10);
+  border-radius: 0.7rem;
+  padding: 1rem;
+  border: 1.5px solid #e6c97a;
+}
+
+.riipaiing-message {
+  color: #e6c97a;
+  font-size: 1.2rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  text-shadow: 0 1px 4px #0006;
+}
+
+/* 暗槓の両端を裏側風に見せるためのクラス */
+.furo-back-tile {
+  background: repeating-linear-gradient(135deg, #222 0 6px, #444 6px 12px);
+  border-radius: 0.3em;
+  box-shadow: 0 0 8px #000a;
+  position: relative;
+}
+.furo-back-tile img, .furo-back-tile .tile-img {
+  opacity: 0.1 !important;
+  filter: grayscale(1) brightness(0.3) blur(1px) !important;
+}
+
+/* フーロの横向き牌 */
+.furo-rotated-tile {
+  /* 既存のtransform: rotate(90deg)を補助 */
+  box-shadow: 0 0 6px #bfa76f99;
+}
+
+/* 牌やフーロ表示のカスタムスタイルは必要に応じて追加 */

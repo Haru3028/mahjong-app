@@ -1,8 +1,9 @@
 // src/components/GameInfoSection.tsx
 
 import React from 'react';
-import { Kaze } from '../types/mahjong';
+import { Kaze } from '../types/mahjong'; // Kaze型をインポート
 
+// Propsの型定義
 interface GameInfoSectionProps {
   bakaze: Kaze;
   setBakaze: (kaze: Kaze) => void;
@@ -12,8 +13,7 @@ interface GameInfoSectionProps {
   setHonba: (value: number) => void;
   reachbo: number;
   setReachbo: (value: number) => void;
-  
-  isTsumo: boolean;
+  isTsumo: boolean | undefined;
   setIsTsumo: (checked: boolean) => void;
   isRiichi: boolean;
   setIsRiichi: (checked: boolean) => void;
@@ -29,213 +29,211 @@ interface GameInfoSectionProps {
   setIsHaitei: (checked: boolean) => void;
   isHoutei: boolean;
   setIsHoutei: (checked: boolean) => void;
-  isChiiho: boolean; // 地和
+  isChiiho: boolean;
   setIsChiiho: (checked: boolean) => void;
-  isTenho: boolean; // 天和
+  isTenho: boolean;
   setIsTenho: (checked: boolean) => void;
+  panelClassName?: string; // 親から受け取るクラス名を追加 (オプション)
+  titleClassName?: string; // 親から受け取るタイトル用クラス名を追加 (オプション)
 }
 
 const GameInfoSection: React.FC<GameInfoSectionProps> = ({
-  bakaze,
-  setBakaze,
-  jikaze,
-  setJikaze,
-  honba,
-  setHonba,
-  reachbo,
-  setReachbo,
-  isChankan,
-  setIsChankan,
-
-  isTsumo,
-  setIsTsumo,
-  isRiichi,
-  setIsRiichi,
-  isDoubleRiichi,
-  setIsDoubleRiichi,
-  isIppatsu,
-  setIsIppatsu,
-  isRinshan,
-  setIsRinshan,
-  isHaitei,
-  setIsHaitei,
-  isHoutei,
-  setIsHoutei,
-  isChiiho,
-  setIsChiiho,
-  isTenho,
-  setIsTenho,
+  bakaze, setBakaze,
+  jikaze, setJikaze,
+  honba, setHonba,
+  reachbo, setReachbo,
+  isTsumo, setIsTsumo,
+  isRiichi, setIsRiichi,
+  isDoubleRiichi, setIsDoubleRiichi,
+  isIppatsu, setIsIppatsu,
+  isChankan, setIsChankan,
+  isRinshan, setIsRinshan,
+  isHaitei, setIsHaitei,
+  isHoutei, setIsHoutei,
+  isChiiho, setIsChiiho,
+  isTenho, setIsTenho,
+  panelClassName, 
+  titleClassName, 
 }) => {
   return (
-    <div className="mb-8 p-4 border rounded-lg bg-white shadow-md w-full max-w-2xl text-gray-800">
-      <h2 className="text-xl font-semibold mb-2 text-center">場情報と役の有無</h2>
+    // panelClassNameを適用。デフォルトのスタイルも定義
+    <div className={`p-6 rounded-xl shadow-lg ${panelClassName || 'bg-green-700 border-lime-600 border-4 text-white'}`}>
+      {/* titleClassNameを適用。デフォルトのスタイルも定義 */}
+      <h2 className={`${titleClassName || 'text-2xl font-bold mb-4 text-center text-white'}`}>場と自風、点数情報</h2>
+
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
-          <label htmlFor="bakaze" className="block text-sm font-medium text-gray-700">場風:</label>
+          <label htmlFor="bakaze" className="block text-sm font-medium mb-1">場風:</label>
           <select
             id="bakaze"
+            className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
             value={bakaze}
             onChange={(e) => setBakaze(e.target.value as Kaze)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
           >
-            <option value="東">東</option>
-            <option value="南">南</option>
-            <option value="西">西</option>
-            <option value="北">北</option>
+            <option value="ton">東</option>
+            <option value="nan">南</option>
+            <option value="shaa">西</option>
+            <option value="pei">北</option>
           </select>
         </div>
         <div>
-          <label htmlFor="jikaze" className="block text-sm font-medium text-gray-700">自風:</label>
+          <label htmlFor="jikaze" className="block text-sm font-medium mb-1">自風:</label>
           <select
             id="jikaze"
+            className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
             value={jikaze}
             onChange={(e) => setJikaze(e.target.value as Kaze)}
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
           >
-            <option value="東">東</option>
-            <option value="南">南</option>
-            <option value="西">西</option>
-            <option value="北">北</option>
+            <option value="ton">東</option>
+            <option value="nan">南</option>
+            <option value="shaa">西</option>
+            <option value="pei">北</option>
           </select>
         </div>
         <div>
-          <label htmlFor="honba" className="block text-sm font-medium text-gray-700">本場:</label>
+          <label htmlFor="honba" className="block text-sm font-medium mb-1">本場:</label>
           <input
             type="number"
             id="honba"
+            className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
             value={honba}
-            onChange={(e) => setHonba(Number(e.target.value))}
+            onChange={(e) => setHonba(Math.max(0, parseInt(e.target.value)))}
             min="0"
-            className="mt-1 block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
           />
         </div>
         <div>
-          <label htmlFor="reachbo" className="block text-sm font-medium text-gray-700">リーチ棒 (場に出ている合計):</label>
+          <label htmlFor="reachbo" className="block text-sm font-medium mb-1">リーチ棒:</label>
           <input
             type="number"
             id="reachbo"
+            className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-amber-500"
             value={reachbo}
-            onChange={(e) => setReachbo(Number(e.target.value))}
+            onChange={(e) => setReachbo(Math.max(0, parseInt(e.target.value)))}
             min="0"
-            className="mt-1 block w-full pl-3 pr-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm"
           />
         </div>
       </div>
 
-      {/* アガリ方選択 */}
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">アガリ方:</h3>
-        <div className="flex gap-4">
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="agariType"
-              value="tsumo"
-              checked={isTsumo}
-              onChange={() => setIsTsumo(true)}
-              className="form-radio text-blue-600"
-            />
-            <span className="ml-2">ツモ</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="radio"
-              name="agariType"
-              value="ron"
-              checked={!isTsumo}
-              onChange={() => setIsTsumo(false)}
-              className="form-radio text-blue-600"
-            />
-            <span className="ml-2">ロン</span>
-          </label>
+      <h3 className="text-xl font-bold mb-3 text-center text-amber-400">上がり方・役の有無</h3>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id="tsumo"
+            name="agariType"
+            checked={isTsumo === true}
+            onChange={() => setIsTsumo(true)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 focus:ring-amber-500"
+          />
+          <label htmlFor="tsumo">ツモ上がり</label>
         </div>
-      </div>
+        <div className="flex items-center">
+          <input
+            type="radio"
+            id="ron"
+            name="agariType"
+            checked={isTsumo === false}
+            onChange={() => setIsTsumo(false)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 focus:ring-amber-500"
+          />
+          <label htmlFor="ron">ロン上がり</label>
+        </div>
 
-      {/* 特殊な役の有無 */}
-      <div>
-        <h3 className="text-lg font-semibold mb-2">特殊な役の有無:</h3>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isRiichi}
-              onChange={(e) => setIsRiichi(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">リーチ</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isDoubleRiichi}
-              onChange={(e) => setIsDoubleRiichi(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">ダブルリーチ</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isIppatsu}
-              onChange={(e) => setIsIppatsu(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">一発</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isChankan}
-              onChange={(e) => setIsChankan(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">槍槓</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isRinshan}
-              onChange={(e) => setIsRinshan(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">嶺上開花</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isHaitei}
-              onChange={(e) => setIsHaitei(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">海底摸月</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isHoutei}
-              onChange={(e) => setIsHoutei(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">河底撈魚</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isChiiho}
-              onChange={(e) => setIsChiiho(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">地和</span>
-          </label>
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={isTenho}
-              onChange={(e) => setIsTenho(e.target.checked)}
-              className="form-checkbox text-blue-600"
-            />
-            <span className="ml-2">天和</span>
-          </label>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="riichi"
+            checked={isRiichi}
+            onChange={(e) => setIsRiichi(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="riichi">リーチ</label>
+        </div>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="doubleRiichi"
+            checked={isDoubleRiichi}
+            onChange={(e) => setIsDoubleRiichi(e.target.checked)}
+            disabled={!isRiichi} // リーチ時のみ選択可能
+            className={`mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500 ${!isRiichi ? 'opacity-50 cursor-not-allowed' : ''}`}
+          />
+          <label htmlFor="doubleRiichi" className={`${!isRiichi ? 'opacity-50 cursor-not-allowed' : ''}`}>ダブルリーチ</label>
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="ippatsu"
+            checked={isIppatsu}
+            onChange={(e) => setIsIppatsu(e.target.checked)}
+            disabled={!isRiichi} // リーチ時のみ選択可能
+            className={`mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500 ${!isRiichi ? 'opacity-50 cursor-not-allowed' : ''}`}
+          />
+          <label htmlFor="ippatsu" className={`${!isRiichi ? 'opacity-50 cursor-not-allowed' : ''}`}>一発</label>
+        </div>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="chankan"
+            checked={isChankan}
+            onChange={(e) => setIsChankan(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="chankan">槍槓</label>
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="rinshan"
+            checked={isRinshan}
+            onChange={(e) => setIsRinshan(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="rinshan">嶺上開花</label>
+        </div>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="haitei"
+            checked={isHaitei}
+            onChange={(e) => setIsHaitei(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="haitei">海底摸月</label>
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="houtei"
+            checked={isHoutei}
+            onChange={(e) => setIsHoutei(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="houtei">河底撈魚</label>
+        </div>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="chiiho"
+            checked={isChiiho}
+            onChange={(e) => setIsChiiho(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="chiiho">地和</label>
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="tenho"
+            checked={isTenho}
+            onChange={(e) => setIsTenho(e.target.checked)}
+            className="mr-2 h-4 w-4 text-amber-500 border-gray-300 rounded focus:ring-amber-500"
+          />
+          <label htmlFor="tenho">天和</label>
         </div>
       </div>
     </div>

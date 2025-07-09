@@ -16,10 +16,10 @@ interface PlayerHandDisplayProps {
 
 export const PlayerHandDisplay: React.FC<PlayerHandDisplayProps> = ({
   selectedTiles,
-  removeTileFromHand, // もし通常の削除ボタンを残すなら残す
+  // removeTileFromHand, // もし通常の削除ボタンを残すなら残す
   furoList,
   removeFuro,
-  remainingHandTilesCount,
+  // remainingHandTilesCount,
   maxTotalTiles,
   isAnimatingRiipai,
   handleTileClickInHand, // 新しいハンドラーを受け取る

@@ -1,23 +1,32 @@
 // mahjong_app_frontend/src/app/page.tsx
 
-import Link from 'next/link'; // リンクのためにnext/linkをインポート
+import Link from 'next/link';
 import React from 'react';
+
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold text-gray-800 mb-12">麻雀アプリ</h1>
-
-      <div className="w-full max-w-sm space-y-6">
+    <div className="min-h-screen flex flex-col items-center justify-center calculator-page-main p-8">
+      <h1 className="calculator-main-title mb-8">
+        メニュー画面
+      </h1>
+      <div className="w-full max-w-sm flex flex-col items-center gap-4">
         {/* 点数計算・役表示 ボタン */}
-        <Link href="/calculator" className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg text-center text-xl shadow-md transition duration-300">
+        <Link
+          href="/calculator"
+          className="base-button w-60 text-center text-lg py-4"
+          aria-label="点数計算・役表示"
+          tabIndex={0}
+        >
           点数計算・役表示
         </Link>
 
         {/* 計算練習 ボタン */}
         <Link
           href="/keisanrenshu"
-          className="block w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-center text-xl shadow-md transition duration-300"
+          className="base-button w-60 text-center text-lg py-4"
+          aria-label="計算練習"
+          tabIndex={0}
         >
           計算練習
         </Link>
@@ -25,7 +34,9 @@ const HomePage: React.FC = () => {
         {/* 何切る問題 ボタン */}
         <Link
           href="/nanikiru"
-          className="block w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-6 rounded-lg text-center text-xl shadow-md transition duration-300"
+          className="base-button w-60 text-center text-lg py-4"
+          aria-label="何切る問題"
+          tabIndex={0}
         >
           何切る問題
         </Link>
@@ -33,7 +44,9 @@ const HomePage: React.FC = () => {
         {/* 履歴 ボタン */}
         <Link
           href="/history"
-          className="block w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-6 rounded-lg text-center text-xl shadow-md transition duration-300"
+          className="base-button w-60 text-center text-lg py-4"
+          aria-label="履歴"
+          tabIndex={0}
         >
           履歴
         </Link>
@@ -41,7 +54,9 @@ const HomePage: React.FC = () => {
         {/* 一覧 ボタン */}
         <Link
           href="/list"
-          className="block w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-lg text-center text-xl shadow-md transition duration-300"
+          className="base-button w-60 text-center text-lg py-4"
+          aria-label="一覧"
+          tabIndex={0}
         >
           一覧
         </Link>

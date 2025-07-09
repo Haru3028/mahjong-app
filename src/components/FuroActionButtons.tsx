@@ -1,217 +1,188 @@
 // src/components/FuroActionButtons.tsx
 
-import React, { useState, useMemo } from 'react';
-import { MahjongTile, KanType, FuroType, Furo } from '../types/mahjong';
-import TileComponent from './TileComponent'; // TileComponentをインポート
+import React from 'react';
+import Image from 'next/image';
+import { MahjongTile, FuroType, Furo, KanType } from '../types/mahjong';
 
 interface FuroActionButtonsProps {
   hasFuro: boolean;
-  selectedForFuro: MahjongTile[]; // ユーザーが現在選択している組み合わせの牌
-  onMakeFuro: (tiles: MahjongTile[], type: FuroType, kanType?: KanType) => void;
-  onClearFuroSelection: () => void; // page.tsxから渡されるクリア関数
+  selectedForFuro: MahjongTile[];
+  setSelectedForFuro: React.Dispatch<React.SetStateAction<MahjongTile[]>>;
+  onClearFuroSelection: () => void;
   isFuroSelectionMode: boolean;
   onToggleFuroSelectionMode: () => void;
-  // selectedTiles, furoList, setFuroList は page.tsx で候補計算に使われるため、
-  // このコンポーネントでは直接使われないが、Propsとして受け取る
-  selectedTiles: MahjongTile[]; 
-  furoList: Furo[]; 
-  setFuroList: React.Dispatch<React.SetStateAction<Furo[]>>; 
-  
-  // 新しいプロパティ
-  selectedFuroTypeToMake: FuroType | 'none'; // ユーザーが選択した鳴きの種類
-  setSelectedFuroTypeToMake: React.Dispatch<React.SetStateAction<FuroType | 'none'>>; // 鳴きの種類を設定する関数
-  possibleMeldCombinations: MahjongTile[][]; // page.tsxから渡される可能な組み合わせのリスト
-  onSelectMeldCombination: (combination: MahjongTile[]) => void; // 組み合わせを選択したときのハンドラ
-  onConfirmFuroSelection: (type: FuroType, kanType?: KanType) => void; // 確定ボタンクリック時のハンドラ
-  onCancelFuroSelection: () => void; // キャンセルボタンクリック時のハンドラ
+  selectedTiles: MahjongTile[]; // 手牌全体
+  furoList: Furo[]; // 鳴きリスト
+  setFuroList: React.Dispatch<React.SetStateAction<Furo[]>>; // 加槓時に必要
+  selectedFuroTypeToMake: FuroType | 'none';
+  setSelectedFuroTypeToMake: React.Dispatch<React.SetStateAction<FuroType | 'none'>>;
+  possibleMeldCombinations: MahjongTile[][];
+  onSelectMeldCombination?: (combination: MahjongTile[]) => void; // optional
+  onConfirmFuroSelection?: (type: FuroType, kanType?: KanType) => void; // optional
+  onCancelFuroSelection: () => void;
 }
 
 const FuroActionButtons: React.FC<FuroActionButtonsProps> = ({
-  hasFuro,
   selectedForFuro,
-  onMakeFuro,
-  onClearFuroSelection, // page.tsxから受け取る
+  onClearFuroSelection,
   isFuroSelectionMode,
   onToggleFuroSelectionMode,
-  selectedTiles, // このコンポーネントでは直接使わないが、Propsとして受け取る
-  furoList, // このコンポーネントでは直接使わないが、Propsとして受け取る
-  setFuroList, // このコンポーネントでは直接使わないが、Propsとして受け取る
   selectedFuroTypeToMake,
   setSelectedFuroTypeToMake,
-  possibleMeldCombinations, // 受け取る
-  onSelectMeldCombination, // 受け取る
+  possibleMeldCombinations,
+  onSelectMeldCombination,
   onConfirmFuroSelection,
   onCancelFuroSelection,
 }) => {
-  // カンの種類選択（明槓/暗槓/加槓）は、確定時に渡すためにここで管理
-  const [currentKanType, setCurrentKanType] = useState<KanType>('minkan');
-  // 選択中の鳴きタイプが「カン」の場合のみ、カンの種類を選択するUIを表示
-  const showKanTypeSelection = selectedFuroTypeToMake === 'kan';
+  const TILE_WIDTH = 32;
+  const TILE_HEIGHT = 40;
 
-  // 確定ボタンのdisabled状態を判定
-  const isConfirmDisabled = useMemo(() => {
-    // 選択された組み合わせがなければ無効
-    if (selectedForFuro.length === 0) return true; 
+  const handleFuroTypeSelect = (type: FuroType) => {
+    setSelectedFuroTypeToMake(type);
+    onClearFuroSelection(); // 選択中の牌をクリア
+    if (!isFuroSelectionMode) {
+      onToggleFuroSelectionMode(); // 鳴き選択モードへ
+    }
+  };
 
-    // 選択された組み合わせが、鳴きタイプと枚数に合致しているか確認
-    if (selectedFuroTypeToMake === 'pon' && selectedForFuro.length === 3) {
-      // ポンの場合、3枚全てが同じ牌であるか
-      const firstTile = selectedForFuro[0];
-      return !selectedForFuro.every(t => t.id.replace('r', '') === firstTile.id.replace('r', ''));
+  const handleKanTypeSelect = (kanType: KanType) => {
+    if (selectedForFuro.length > 0) {
+      if (onConfirmFuroSelection) onConfirmFuroSelection('kan', kanType);
+    } else {
+      alert('槓する牌を選択してください。');
     }
-    if (selectedFuroTypeToMake === 'chi' && selectedForFuro.length === 3) {
-      // チーの場合、3枚が順子を形成しているか
-      const sortedChiTiles = [...selectedForFuro].sort((a, b) => a.value - b.value);
-      if (sortedChiTiles[0].type === 'jihai') return true; // 字牌はチーできない
-      return !(sortedChiTiles[0].type === sortedChiTiles[1].type &&
-               sortedChiTiles[1].type === sortedChiTiles[2].type &&
-               sortedChiTiles[0].value === sortedChiTiles[1].value - 1 &&
-               sortedChiTiles[1].value === sortedChiTiles[2].value - 1);
-    }
-    if (selectedFuroTypeToMake === 'kan') {
-      if (selectedForFuro.length === 4) { // 明槓/暗槓
-        // 4枚全てが同じ牌であるか
-        const firstTile = selectedForFuro[0];
-        return !selectedForFuro.every(t => t.id.replace('r', '') === firstTile.id.replace('r', ''));
-      } else if (selectedForFuro.length === 1) { // 加槓
-        const selectedTile = selectedForFuro[0];
-        // furoListから該当するポンがあるかチェック (page.tsxで既にチェック済みだが念のため)
-        return !furoList.some(f => f.type === 'pon' && f.tiles[0].id.replace('r', '') === selectedTile.id.replace('r', ''));
-      }
-      return true; // カンで1枚でも4枚でもない場合は無効
-    }
-    return true; // その他の場合は無効
-  }, [selectedForFuro, selectedFuroTypeToMake, furoList]);
-
+  };
 
   return (
-    <div className="mb-8 p-4 border rounded-lg bg-white shadow-md flex flex-col items-center w-full max-w-2xl">
-      <h2 className="text-xl font-semibold w-full text-center mb-4">鳴き操作</h2>
+    <div className="p-6 rounded-xl shadow-lg bg-green-800 text-gray-100">
+      <h2 className="text-2xl font-bold mb-4 text-center text-amber-300">鳴き（フーロ）操作</h2>
 
-      {/* ボタンのスタイルを統一し、雀卓の雰囲気に合わせる */}
-      <button
-        onClick={onToggleFuroSelectionMode}
-        className={`py-2 px-4 rounded-lg font-bold mb-4 w-full shadow-md transition-colors duration-200
-          ${isFuroSelectionMode ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-700 hover:bg-gray-600 text-white'
-        }`}
-      >
-        {isFuroSelectionMode ? '鳴き選択モード解除' : '鳴き選択モード開始'}
-      </button>
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
+        <button
+          onClick={() => handleFuroTypeSelect('pon')}
+          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+            selectedFuroTypeToMake === 'pon' ? 'bg-blue-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
+          }`}
+        >
+          ポン
+        </button>
+        <button
+          onClick={() => handleFuroTypeSelect('chi')}
+          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+            selectedFuroTypeToMake === 'chi' ? 'bg-blue-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
+          }`}
+        >
+          チー
+        </button>
+        <button
+          onClick={() => handleFuroTypeSelect('kan')}
+          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+            selectedFuroTypeToMake === 'kan' ? 'bg-blue-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
+          }`}
+        >
+          カン
+        </button>
+        <button
+          onClick={onToggleFuroSelectionMode}
+          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+            isFuroSelectionMode && selectedFuroTypeToMake === 'none' ? 'bg-red-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
+          }`}
+        >
+          {isFuroSelectionMode ? '選択モード終了' : '鳴き選択モード'}
+        </button>
+      </div>
 
-      {isFuroSelectionMode && (
-        <>
-          {selectedFuroTypeToMake === 'none' ? (
-            // 鳴きタイプ選択フェーズ
-            <>
-              <h3 className="text-lg font-semibold mb-2">鳴きの種類を選択:</h3>
-              <div className="flex flex-wrap gap-2 justify-center w-full mb-4">
-                <button
-                  onClick={() => setSelectedFuroTypeToMake('pon')}
-                  className="py-2 px-4 rounded-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md"
-                >
-                  ポン
-                </button>
-                <button
-                  onClick={() => setSelectedFuroTypeToMake('chi')}
-                  className="py-2 px-4 rounded-lg font-bold bg-green-600 hover:bg-green-700 text-white shadow-md"
-                >
-                  チー
-                </button>
-                <button
-                  onClick={() => setSelectedFuroTypeToMake('kan')}
-                  className="py-2 px-4 rounded-lg font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-md"
-                >
-                  カン
-                </button>
-              </div>
-            </>
-          ) : (
-            // 組み合わせ表示と確定/キャンセルフェーズ
-            <>
-              <h3 className="text-lg font-semibold mb-2">
-                {selectedFuroTypeToMake === 'pon' && 'ポン'}
-                {selectedFuroTypeToMake === 'chi' && 'チー'}
-                {selectedFuroTypeToMake === 'kan' && 'カン'}
-                の組み合わせを選択してください:
-              </h3>
-              {showKanTypeSelection && (
-                <div className="mt-2 flex gap-2 text-sm mb-4 text-gray-800">
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="kanType"
-                      value="minkan"
-                      checked={currentKanType === 'minkan'}
-                      onChange={() => setCurrentKanType('minkan')}
-                      className="form-radio text-purple-600"
-                    />
-                    <span className="ml-1">明槓</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="kanType"
-                      value="ankan"
-                      checked={currentKanType === 'ankan'}
-                      onChange={() => setCurrentKanType('ankan')}
-                      className="form-radio text-purple-600"
-                    />
-                    <span className="ml-1">暗槓</span>
-                  </label>
-                  {/* 加槓は候補として表示されるため、ここではラジオボタンは不要 */}
-                </div>
+      {isFuroSelectionMode && selectedFuroTypeToMake !== 'none' && (
+        <div className="mt-4 p-4 border-2 border-amber-600 rounded-lg bg-green-900">
+          <h3 className="text-xl font-semibold mb-3 text-center text-amber-400">
+            {selectedFuroTypeToMake === 'pon' && 'ポンする牌を選択'}
+            {selectedFuroTypeToMake === 'chi' && 'チーする牌を選択'}
+            {selectedFuroTypeToMake === 'kan' && 'カンする牌を選択'}
+          </h3>
+          {/* 鳴き候補画像リスト（常に表示） */}
+          <div className="mb-4">
+            <p className="text-center text-sm mb-2">候補の組み合わせ:</p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {possibleMeldCombinations.length === 0 && (
+                <span className="text-gray-400">候補なし</span>
               )}
-
-              {/* 可能な組み合わせの表示 */}
-              <div className="flex flex-wrap gap-x-6 gap-y-6 justify-center w-full mb-4">
-                {possibleMeldCombinations.length > 0 ? (
-                  possibleMeldCombinations.map((combination, combIndex) => (
-                    <button
-                      key={combIndex}
-                      onClick={() => onSelectMeldCombination(combination)}
-                      className={`py-2 px-3 rounded-lg font-bold transition-colors duration-150 flex items-center gap-0.5 shadow-md
-                        ${selectedForFuro.length > 0 && combination.every(t => selectedForFuro.some(s => s.instanceId === t.instanceId)) && selectedForFuro.length === combination.length
-                          ? 'bg-yellow-400 text-gray-800' // 選択中の組み合わせをハイライト
-                          : 'bg-blue-300 hover:bg-blue-400 text-gray-800'
-                        }`}
-                    >
-                      {/* 牌の画像を直接表示 */}
-                      {combination.map((tile, tileIdx) => (
-                        <TileComponent 
-                          key={tile.instanceId || `${tile.id}-${tileIdx}`} 
-                          tile={tile} 
-                          isSmall={true} // 小さく表示
-                          isFaceDown={selectedFuroTypeToMake === 'kan' && currentKanType === 'ankan' && (tileIdx === 0 || tileIdx === 3)} // 暗槓の裏返し
-                          isTilted={selectedFuroTypeToMake === 'pon' || selectedFuroTypeToMake === 'chi' ? tileIdx === 2 : false} // ポン・チーの最後の牌を傾ける
-                        />
-                      ))}
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-gray-700">この鳴きタイプで可能な組み合わせはありません</p>
-                )}
-              </div>
-
-              <div className="flex gap-2 justify-center w-full mb-4">
-                <button
-                  onClick={() => onConfirmFuroSelection(selectedFuroTypeToMake, currentKanType)}
-                  disabled={isConfirmDisabled} // disabledロジックをuseMemoで一元化
-                  className={`py-2 px-4 rounded-lg font-bold shadow-md ${
-                    !isConfirmDisabled ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  }`}
-                >
-                  確定
-                </button>
-                <button
-                  onClick={onCancelFuroSelection}
-                  className="py-2 px-4 rounded-lg font-bold bg-gray-500 hover:bg-gray-600 text-white shadow-md"
-                >
-                  キャンセル
-                </button>
-              </div>
-            </>
+              {possibleMeldCombinations.map((combination, combIndex) => {
+                const isSelected =
+                  selectedForFuro.length === combination.length &&
+                  combination.every(cTile => selectedForFuro.some(sTile => sTile.instanceId === cTile.instanceId));
+                return (
+                  <div
+                    key={`comb-${combIndex}`}
+                    className={`flex gap-1 p-2 rounded-md cursor-pointer border-2 transition-all duration-150 ${
+                      isSelected
+                        ? 'border-blue-500 bg-blue-800/30 scale-105 shadow-lg'
+                        : 'border-gray-500 hover:border-blue-500'
+                    }`}
+                    onClick={() => {
+                      if (isSelected) {
+                        // すでに選択中なら解除
+                        onSelectMeldCombination && onSelectMeldCombination([]);
+                      } else {
+                        onSelectMeldCombination && onSelectMeldCombination(combination);
+                      }
+                    }}
+                  >
+                    {combination.map((tile, tileIndex) => (
+                      <Image
+                        key={tile.instanceId || `${tile.id}-${tileIndex}`}
+                        src={tile.src}
+                        alt={tile.name}
+                        width={TILE_WIDTH}
+                        height={TILE_HEIGHT}
+                        className={`rounded-sm ${tile.isRedDora ? 'border border-red-500' : ''}`}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* カン種別ボタン */}
+          {selectedFuroTypeToMake === 'kan' && (
+            <div className="flex justify-center gap-4 mb-4">
+              <button
+                onClick={() => handleKanTypeSelect('ankan')}
+                className="py-2 px-4 rounded-lg font-bold bg-purple-600 hover:bg-purple-700 text-white"
+              >
+                暗槓
+              </button>
+              <button
+                onClick={() => handleKanTypeSelect('minkan')}
+                className="py-2 px-4 rounded-lg font-bold bg-orange-600 hover:bg-orange-700 text-white"
+              >
+                明槓
+              </button>
+              <button
+                onClick={() => handleKanTypeSelect('kakan')}
+                className="py-2 px-4 rounded-lg font-bold bg-pink-600 hover:bg-pink-700 text-white"
+              >
+                加槓
+              </button>
+            </div>
           )}
-        </>
+          <div className="flex justify-center gap-4 mt-4">
+            <button
+              onClick={() => onConfirmFuroSelection && onConfirmFuroSelection(selectedFuroTypeToMake as FuroType)}
+              disabled={selectedForFuro.length === 0}
+              className={`py-2 px-6 rounded-lg font-bold text-white transition-all duration-200 ${
+                selectedForFuro.length > 0 ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-400 cursor-not-allowed'
+              }`}
+            >
+              確定
+            </button>
+            <button
+              onClick={onCancelFuroSelection}
+              className="py-2 px-6 rounded-lg font-bold bg-red-600 hover:bg-red-700 text-white transition-all duration-200"
+            >
+              キャンセル
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
