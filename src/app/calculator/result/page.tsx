@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 // 牌の型定義
 interface MahjongTile {
@@ -292,6 +293,7 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
 
 
 const CalculatorPage: React.FC = () => {
+  const router = useRouter();
   const [selectedTiles, setSelectedTiles] = useState<MahjongTile[]>([]);
   const [furoList, setFuroList] = useState<Furo[]>([]); // 鳴き面子リスト
   const [hasFuro, setHasFuro] = useState<boolean>(false); // 副露の有無
@@ -820,4 +822,96 @@ const CalculatorPage: React.FC = () => {
   );
 };
 
-export default CalculatorPage;
+// CalculatorResultPageのみをエクスポート
+export default function CalculatorResultPage() {
+  const router = useRouter();
+  // 仮のデータ（今後Contextや状態管理で受け渡し予定）
+  const handTiles: any[] = []; // 手牌
+  const furoList: any[] = []; // 鳴き
+  const doraIndicators: any[] = []; // ドラ
+  const bakaze = '東';
+  const jikaze = '東';
+  const honba = 0;
+  const reachbo = 0;
+  const isTsumo = false;
+  const isRiichi = false;
+  const isDoubleRiichi = false;
+  const isIppatsu = false;
+  const isChankan = false;
+  const isRinshan = false;
+  const isHaitei = false;
+  const isHoutei = false;
+  const isChiiho = false;
+  const isTenho = false;
+
+  return (
+    <main className="min-h-screen py-8 px-4 bg-gray-900 text-white flex flex-col items-center">
+      <header className="mb-8">
+        <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
+          計算結果
+        </h1>
+      </header>
+      <section className="section-panel w-full max-w-3xl mb-8">
+        <h2 className="section-title">手牌・鳴き・ドラ</h2>
+        <div className="flex flex-wrap gap-4 justify-center items-center mb-4">
+          {/* 手牌表示（仮） */}
+          <div>
+            <div className="font-bold text-green-300 mb-1">手牌</div>
+            <div className="flex gap-1">
+              {/* ここに手牌画像を並べる */}
+              {handTiles.length === 0 ? <span className="text-gray-400">（未実装）</span> : null}
+            </div>
+          </div>
+          {/* 鳴き表示（仮） */}
+          <div>
+            <div className="font-bold text-blue-300 mb-1">鳴き</div>
+            <div className="flex gap-1">
+              {furoList.length === 0 ? <span className="text-gray-400">（未実装）</span> : null}
+            </div>
+          </div>
+          {/* ドラ表示（仮） */}
+          <div>
+            <div className="font-bold text-amber-300 mb-1">ドラ</div>
+            <div className="flex gap-1">
+              {doraIndicators.length === 0 ? <span className="text-gray-400">（未実装）</span> : null}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section-panel w-full max-w-3xl mb-8">
+        <h2 className="section-title">対局情報</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+          <div><span className="font-bold">場風</span>: {bakaze}</div>
+          <div><span className="font-bold">自風</span>: {jikaze}</div>
+          <div><span className="font-bold">本場</span>: {honba}</div>
+          <div><span className="font-bold">リーチ棒</span>: {reachbo}</div>
+        </div>
+        <div className="flex flex-wrap gap-4 mb-2">
+          <div><span className="font-bold">ツモ</span>: {isTsumo ? '○' : '×'}</div>
+          <div><span className="font-bold">リーチ</span>: {isRiichi ? '○' : '×'}</div>
+          <div><span className="font-bold">ダブルリーチ</span>: {isDoubleRiichi ? '○' : '×'}</div>
+          <div><span className="font-bold">一発</span>: {isIppatsu ? '○' : '×'}</div>
+          <div><span className="font-bold">槍槓</span>: {isChankan ? '○' : '×'}</div>
+          <div><span className="font-bold">嶺上開花</span>: {isRinshan ? '○' : '×'}</div>
+          <div><span className="font-bold">海底</span>: {isHaitei ? '○' : '×'}</div>
+          <div><span className="font-bold">河底</span>: {isHoutei ? '○' : '×'}</div>
+          <div><span className="font-bold">地和</span>: {isChiiho ? '○' : '×'}</div>
+          <div><span className="font-bold">天和</span>: {isTenho ? '○' : '×'}</div>
+        </div>
+      </section>
+      <section className="section-panel w-full max-w-3xl mb-8">
+        <h2 className="section-title">役・点数</h2>
+        <div className="text-center text-2xl text-amber-400 font-bold mb-2">（ここに役・点数を表示予定）</div>
+        <div className="text-center text-gray-400">点数計算・役判定ロジックは今後実装します。</div>
+      </section>
+      <div className="flex justify-center w-full max-w-3xl">
+        <button
+          className="base-button back-button"
+          onClick={() => router.push('/calculator')}
+        >
+          戻る
+        </button>
+      </div>
+    </main>
+  );
+}
