@@ -61,10 +61,26 @@ export async function fetchMahjongScoreFromRails(params: {
   isTsumo: boolean;
   isOya: boolean;
 }): Promise<ScoreResult> {
-  const res = await fetch('/api/calc_score', {
+  const res = await fetch('http://localhost:4000/api/calc_score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params),
+    body: JSON.stringify({
+      handTiles: params.handTiles,
+      furoList: params.furoList,
+      doraIndicators: params.doraTiles,
+      isTsumo: params.isTsumo,
+      bakaze: params.bakaze,
+      jikaze: params.jikaze,
+      isRiichi: true, // 仮の値
+      isDoubleRiichi: false,
+      isIppatsu: false,
+      isChankan: false,
+      isRinshan: false,
+      isHaitei: false,
+      isHoutei: false,
+      isTenho: false,
+      isChiiho: false
+    }),
   });
   if (!res.ok) throw new Error('Rails API error');
   return await res.json();

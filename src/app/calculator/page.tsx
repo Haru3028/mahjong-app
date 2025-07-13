@@ -25,11 +25,11 @@ export default function CalculatorPage() {
     isChiiho, setIsChiiho, isTenho, setIsTenho,
     selectedForFuro, setSelectedForFuro,
     isFuroSelectionMode, handleToggleFuroSelectionMode,
-    selectedFuroTypeToMake, setSelectedFuroTypeToMake, isDoraModalOpen, setIsDoraModalOpen, isRiipaiing,
+    selectedFuroTypeToMake, setSelectedFuroTypeToMake, isRiipaiing,
     onClearFuroSelection, handleHandTileClick, handleConfirmFuroSelection, handleCancelFuroSelection,
     possibleMeldCombinations, validCandidateTiles, 
-    handleSelectMeldCombination, handleDoraConfirm,
-    isCalculateButtonEnabled, handleGoBack, handleCalculate,
+    handleSelectMeldCombination,
+    isCalculateButtonEnabled, handleCalculate,
     setSelectedTiles, // ← 追加
   } = useCalculatorPageLogic({ mahjongCalculator });
 
@@ -52,9 +52,6 @@ export default function CalculatorPage() {
     });
     return counts;
   }, [selectedTiles, doraIndicators, furoList]);
-
-  // マイナス枚数の牌を検出
-  const negativeTiles = Object.entries(tileCounts).filter(([id, count]) => count < 0);
 
   // クリアボタン
   const handleClearAll = () => {
@@ -193,7 +190,33 @@ export default function CalculatorPage() {
         <div className="w-full max-w-5xl space-y-8">
           {/* 手牌表示セクション */}
           <div className="section-panel">
-            <div className="flex justify-end mb-2">
+            <div className="flex justify-end mb-2 gap-2">
+              <button
+                onClick={async () => {
+                  try {
+                    const response = await fetch('http://localhost:4000/api/calc_score', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        handTiles: selectedTiles,
+                        furoList: furoList,
+                        doraIndicators: doraIndicators,
+                        isTsumo: isTsumo || true,
+                        isRiichi: isRiichi,
+                        bakaze: bakaze,
+                        jikaze: jikaze
+                      })
+                    });
+                    const result = await response.json();
+                    alert(`🀄 役判定結果！\n翻数: ${result.han}翻\n符: ${result.fu}符\n点数: ${result.pointText}\n\n役:\n${result.yakuList.map((y: any) => `${y.name}: ${y.han}翻`).join('\n')}`);
+                  } catch (error) {
+                    alert('❌ APIエラー: ' + error);
+                  }
+                }}
+                className="base-button bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
+              >
+                🀄 Ruby役判定テスト
+              </button>
               <button
                 onClick={() => setSelectedTiles([])}
                 className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
@@ -266,17 +289,7 @@ export default function CalculatorPage() {
         {/* 計算ボタンを一番下に移動 */}
         <div className="flex justify-end w-full max-w-5xl mt-8 mb-8">
           <button
-            onClick={() => {
-              if (selectedTiles.length !== 14) {
-                alert('手牌を14枚選んでください');
-                return;
-              }
-              if (!doraIndicators || doraIndicators.length === 0) {
-                alert('ドラ表示牌を1枚以上選んでください');
-                return;
-              }
-              window.location.href = '/calculator/result';
-            }}
+            onClick={handleCalculate}
             disabled={!isCalculateButtonEnabled}
             className={`base-button calculate-button ${
                 isCalculateButtonEnabled

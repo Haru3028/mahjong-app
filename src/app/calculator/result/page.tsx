@@ -3,7 +3,8 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 // 牌の型定義
 interface MahjongTile {
@@ -147,7 +148,7 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
 
     if (tempSelectedTiles.includes(tile)) {
       // If already selected, remove it
-      setTempSelectedTiles(tempSelectedTiles.filter(t => t !== tile));
+      setTempSelectedTiles(tempSelectedTiles.filter((t: MahjongTile) => t !== tile));
     } else if (tempSelectedTiles.length < requiredTilesCount) {
       // Check if adding this tile would exceed 4 total (including red 5s)
       if (countTotalTiles(tile.id, selectedTilesInHand, furoList, [...tempSelectedTiles, tile]) > 4) {
@@ -165,7 +166,7 @@ const FuroModal: React.FC<FuroModalProps> = ({ isOpen, onClose, onSelectFuroTile
       if (furoType === 'pon' || furoType === 'kan') {
         // ポン・カンは同じ牌が選択されているか確認
         const firstTileId = tempSelectedTiles[0].id.replace('r', ''); // 赤5も通常の5として扱う
-        const allSame = tempSelectedTiles.every(t => t.id.replace('r', '') === firstTileId);
+        const allSame = tempSelectedTiles.every((t: MahjongTile) => t.id.replace('r', '') === firstTileId);
         if (!allSame) {
           alert('ポン・カンは同じ種類の牌を選択してください。');
           return;
@@ -314,7 +315,7 @@ const CalculatorPage: React.FC = () => {
 
   // 鳴き面子の枚数に基づいて残り手牌数を計算
   useEffect(() => {
-    const tilesInFuro = furoList.reduce((sum, furo) => sum + furo.tiles.length, 0);
+    const tilesInFuro = furoList.reduce((sum: number, furo: any) => sum + furo.tiles.length, 0);
     setRemainingTilesCount(MAX_HAND_TILES - tilesInFuro);
     // 鳴きを追加/削除した際に手牌が多すぎないかチェックし、クリアする
     if (selectedTiles.length > (MAX_HAND_TILES - tilesInFuro)) {
@@ -429,27 +430,27 @@ const CalculatorPage: React.FC = () => {
   const handleSelectFuroTiles = (tiles: MahjongTile[], type: FuroType) => {
     // 既に同じタイプの鳴きがある場合は、追加しない (簡易化のため)
     // 例えば、ポンを複数回したい場合は、furoListの構造をfuroList: {pon: [], kan: [], chi: []} のように変える必要がある
-    if (furoList.some(f => f.type === type)) {
+    if (furoList.some((f: any) => f.type === type)) {
       alert(`${type}は既に選択されています。既存の鳴きを削除してから追加してください。`);
       return;
     }
-    setFuroList(prev => [...prev, { type, tiles: doRiipai(tiles) }]); // 鳴き面子もソートして追加
+    setFuroList((prev: any) => [...prev, { type, tiles: doRiipai(tiles) }]); // 鳴き面子もソートして追加
     setIsFuroModalOpen(false);
     setCurrentFuroType(null);
   };
 
   // 鳴き面子を削除
   const removeFuro = (indexToRemove: number) => {
-    setFuroList(prev => prev.filter((_, index) => index !== indexToRemove));
+    setFuroList((prev: any) => prev.filter((_: any, index: number) => index !== indexToRemove));
   };
 
 
   const handleHonbaChange = (increment: number) => {
-    setHonba(prev => Math.max(0, prev + increment));
+    setHonba((prev: number) => Math.max(0, prev + increment));
   };
 
   const handleReachboChange = (increment: number) => {
-    setReachbo(prev => Math.max(0, prev + increment));
+    setReachbo((prev: number) => Math.max(0, prev + increment));
   };
 
   return (
@@ -458,9 +459,9 @@ const CalculatorPage: React.FC = () => {
       {/* ヘッダー: 背景を半透明の白 (bg-white/90) に設定し、ぼかし効果を維持 */}
       <header className="bg-white/90 shadow p-3 rounded-lg mb-4 flex justify-between items-center backdrop-blur-sm">
         <h1 className="text-xl font-bold text-gray-900">点数計算・役表示</h1>
-        <a href="/" className="text-blue-500 hover:underline text-sm">
+        <Link href="/" className="text-blue-500 hover:underline text-sm">
           トップへ戻る
-        </a>
+        </Link>
       </header>
 
       {/* メインコンテンツ領域: 背景を半透明の白 (bg-white/90) に設定し、ぼかし効果を維持 */}
@@ -825,24 +826,39 @@ const CalculatorPage: React.FC = () => {
 // CalculatorResultPageのみをエクスポート
 export default function CalculatorResultPage() {
   const router = useRouter();
-  // 仮のデータ（今後Contextや状態管理で受け渡し予定）
-  const handTiles: any[] = []; // 手牌
-  const furoList: any[] = []; // 鳴き
-  const doraIndicators: any[] = []; // ドラ
-  const bakaze = '東';
-  const jikaze = '東';
-  const honba = 0;
-  const reachbo = 0;
-  const isTsumo = false;
-  const isRiichi = false;
-  const isDoubleRiichi = false;
-  const isIppatsu = false;
-  const isChankan = false;
-  const isRinshan = false;
-  const isHaitei = false;
-  const isHoutei = false;
-  const isChiiho = false;
-  const isTenho = false;
+  const searchParams = useSearchParams();
+  
+  // クエリパラメータから結果を取得
+  const [result, setResult] = useState<any>(null);
+  const [handData, setHandData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    try {
+      const resultParam = searchParams.get('result');
+      const handDataParam = searchParams.get('handData');
+      
+      if (resultParam && handDataParam) {
+        setResult(JSON.parse(resultParam));
+        setHandData(JSON.parse(handDataParam));
+      }
+    } catch (error) {
+      console.error('結果の解析に失敗しました:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [searchParams]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen py-8 px-4 bg-gray-900 text-white flex flex-col items-center justify-center">
+        <div className="text-center">
+          <div className="text-2xl text-amber-400 mb-4">計算中...</div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto"></div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen py-8 px-4 bg-gray-900 text-white flex flex-col items-center">
@@ -851,59 +867,122 @@ export default function CalculatorResultPage() {
           計算結果
         </h1>
       </header>
-      <section className="section-panel w-full max-w-3xl mb-8">
-        <h2 className="section-title">手牌・鳴き・ドラ</h2>
-        <div className="flex flex-wrap gap-4 justify-center items-center mb-4">
-          {/* 手牌表示（仮） */}
-          <div>
-            <div className="font-bold text-green-300 mb-1">手牌</div>
-            <div className="flex gap-1">
-              {/* ここに手牌画像を並べる */}
-              {handTiles.length === 0 ? <span className="text-gray-400">（未実装）</span> : null}
+      
+      {/* 手牌情報 */}
+      {handData && (
+        <section className="section-panel w-full max-w-3xl mb-8">
+          <h2 className="section-title">手牌・鳴き・条件</h2>
+          <div className="mb-4">
+            <div className="font-bold text-green-300 mb-1">手牌 ({handData.tiles?.length || 0}枚)</div>
+            <div className="text-gray-300 text-sm">
+              {handData.tiles?.map((tile: any, index: number) => `${tile.id}`).join(', ') || 'なし'}
             </div>
           </div>
-          {/* 鳴き表示（仮） */}
-          <div>
-            <div className="font-bold text-blue-300 mb-1">鳴き</div>
-            <div className="flex gap-1">
-              {furoList.length === 0 ? <span className="text-gray-400">（未実装）</span> : null}
+          
+          {handData.furo && handData.furo.length > 0 && (
+            <div className="mb-4">
+              <div className="font-bold text-blue-300 mb-1">鳴き</div>
+              {handData.furo.map((furo: any, index: number) => (
+                <div key={index} className="text-gray-300 text-sm">
+                  {furo.type}: {furo.tiles.map((tile: any) => tile.id).join(', ')}
+                </div>
+              ))}
             </div>
+          )}
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+            <div><span className="font-bold">場風</span>: {handData.bakaze}</div>
+            <div><span className="font-bold">自風</span>: {handData.jikaze}</div>
+            <div><span className="font-bold">本場</span>: {handData.honba}</div>
+            <div><span className="font-bold">ツモ</span>: {handData.tsumo ? '○' : '×'}</div>
           </div>
-          {/* ドラ表示（仮） */}
-          <div>
-            <div className="font-bold text-amber-300 mb-1">ドラ</div>
-            <div className="flex gap-1">
-              {doraIndicators.length === 0 ? <span className="text-gray-400">（未実装）</span> : null}
-            </div>
+          
+          <div className="flex flex-wrap gap-4 mb-2 text-sm">
+            <div><span className="font-bold">リーチ</span>: {handData.riichi ? '○' : '×'}</div>
+            <div><span className="font-bold">ダブルリーチ</span>: {handData.double_riichi ? '○' : '×'}</div>
+            <div><span className="font-bold">一発</span>: {handData.ippatsu ? '○' : '×'}</div>
+            <div><span className="font-bold">槍槓</span>: {handData.chankan ? '○' : '×'}</div>
+            <div><span className="font-bold">嶺上開花</span>: {handData.rinshan ? '○' : '×'}</div>
+            <div><span className="font-bold">海底</span>: {handData.haitei ? '○' : '×'}</div>
+            <div><span className="font-bold">河底</span>: {handData.houtei ? '○' : '×'}</div>
+            <div><span className="font-bold">地和</span>: {handData.chiiho ? '○' : '×'}</div>
+            <div><span className="font-bold">天和</span>: {handData.tenho ? '○' : '×'}</div>
           </div>
-        </div>
-      </section>
-      <section className="section-panel w-full max-w-3xl mb-8">
-        <h2 className="section-title">対局情報</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
-          <div><span className="font-bold">場風</span>: {bakaze}</div>
-          <div><span className="font-bold">自風</span>: {jikaze}</div>
-          <div><span className="font-bold">本場</span>: {honba}</div>
-          <div><span className="font-bold">リーチ棒</span>: {reachbo}</div>
-        </div>
-        <div className="flex flex-wrap gap-4 mb-2">
-          <div><span className="font-bold">ツモ</span>: {isTsumo ? '○' : '×'}</div>
-          <div><span className="font-bold">リーチ</span>: {isRiichi ? '○' : '×'}</div>
-          <div><span className="font-bold">ダブルリーチ</span>: {isDoubleRiichi ? '○' : '×'}</div>
-          <div><span className="font-bold">一発</span>: {isIppatsu ? '○' : '×'}</div>
-          <div><span className="font-bold">槍槓</span>: {isChankan ? '○' : '×'}</div>
-          <div><span className="font-bold">嶺上開花</span>: {isRinshan ? '○' : '×'}</div>
-          <div><span className="font-bold">海底</span>: {isHaitei ? '○' : '×'}</div>
-          <div><span className="font-bold">河底</span>: {isHoutei ? '○' : '×'}</div>
-          <div><span className="font-bold">地和</span>: {isChiiho ? '○' : '×'}</div>
-          <div><span className="font-bold">天和</span>: {isTenho ? '○' : '×'}</div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* 計算結果 */}
       <section className="section-panel w-full max-w-3xl mb-8">
         <h2 className="section-title">役・点数</h2>
-        <div className="text-center text-2xl text-amber-400 font-bold mb-2">（ここに役・点数を表示予定）</div>
-        <div className="text-center text-gray-400">点数計算・役判定ロジックは今後実装します。</div>
+        
+        {result ? (
+          <>
+            {result.success ? (
+              <>
+                {/* 成功時の表示 */}
+                <div className="text-center mb-6">
+                  <div className="text-3xl text-amber-400 font-bold mb-2">
+                    {result.total_score}点
+                  </div>
+                  <div className="text-xl text-green-300">
+                    {result.han}翻 {result.fu}符
+                  </div>
+                </div>
+                
+                {result.yaku && result.yaku.length > 0 && (
+                  <div className="mb-4">
+                    <h3 className="text-lg font-bold text-amber-300 mb-2">成立役</h3>
+                    <div className="space-y-2">
+                      {result.yaku.map((yaku: any, index: number) => (
+                        <div key={index} className="flex justify-between items-center bg-gray-800 p-2 rounded">
+                          <span className="text-white">{yaku.name}</span>
+                          <span className="text-amber-400 font-bold">{yaku.han}翻</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {result.dora_count > 0 && (
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center bg-gray-800 p-2 rounded">
+                      <span className="text-white">ドラ</span>
+                      <span className="text-amber-400 font-bold">{result.dora_count}翻</span>
+                    </div>
+                  </div>
+                )}
+                
+                {result.payment_info && (
+                  <div className="mt-6 text-center">
+                    <h3 className="text-lg font-bold text-green-300 mb-2">支払情報</h3>
+                    <div className="text-gray-300">
+                      {handData.tsumo ? (
+                        <>
+                          <div>子: {result.payment_info.ko_payment || 0}点</div>
+                          <div>親: {result.payment_info.oya_payment || 0}点</div>
+                        </>
+                      ) : (
+                        <div>振り込み: {result.total_score}点</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              /* エラー時の表示 */
+              <div className="text-center text-red-400">
+                <div className="text-xl font-bold mb-2">計算エラー</div>
+                <div className="text-gray-300">{result.error || '不明なエラーが発生しました'}</div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center text-gray-400">
+            計算結果がありません
+          </div>
+        )}
       </section>
+      
       <div className="flex justify-center w-full max-w-3xl">
         <button
           className="base-button back-button"

@@ -22,7 +22,7 @@ const HandDisplaySection: React.FC<HandDisplaySectionProps> = ({
   isFuroSelectionMode,
   validCandidateTiles,
   isRiipaiing = false, // ←追加
-}) => {
+}: HandDisplaySectionProps) => {
   // 牌の画像サイズを全てのtypeで統一し、アスペクト比を考慮した幅と高さを設定
   const TILE_WIDTH = 32;  // 牌の表示幅
   const TILE_HEIGHT = 40; // 牌の表示高さ
@@ -59,12 +59,12 @@ const HandDisplaySection: React.FC<HandDisplaySectionProps> = ({
     <div className="p-6 rounded-xl shadow-lg bg-green-800 text-gray-100">
       <h2 className="text-2xl font-bold mb-4 text-center text-amber-300">手牌</h2>
       <div className={`flex gap-2 justify-center mb-4 ${isQueueMode ? '' : ''}`} style={isQueueMode ? {minHeight: 48} : {}}>
-        {displayTiles.map((tile, index) => {
+        {displayTiles.map((tile: MahjongTile, index: number) => {
           const isSelectedForFuro = selectedForFuro.some(
-            (t) => t.instanceId === tile.instanceId
+            (t: MahjongTile) => t.instanceId === tile.instanceId
           );
           const isValidCandidate = validCandidateTiles.some(
-            (t) => t.instanceId === tile.instanceId
+            (t: MahjongTile) => t.instanceId === tile.instanceId
           );
 
           return (

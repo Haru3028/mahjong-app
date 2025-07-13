@@ -1,7 +1,7 @@
 // src/hooks/useCalculatorPageLogic.ts
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { MahjongTile, FuroType, KanType, Furo, Kaze } from '../types/mahjong';
 
 // useMahjongCalculator の戻り値の型を定義
@@ -18,7 +18,7 @@ interface UseMahjongCalculatorReturn {
   honba: number; setHonba: (value: number) => void;
   reachbo: number; setReachbo: (value: number) => void;
   remainingHandTilesCount: number;
-  setFuroList: React.Dispatch<React.SetStateAction<Furo[]>>;
+  setFuroList: (value: Furo[] | ((prevState: Furo[]) => Furo[])) => void;
 
   isTsumo: boolean | undefined; setIsTsumo: (checked: boolean) => void;
   doraIndicators: MahjongTile[]; setDoraIndicators: (tiles: MahjongTile[]) => void;
@@ -32,7 +32,7 @@ interface UseMahjongCalculatorReturn {
   isHoutei: boolean; setIsHoutei: (checked: boolean) => void;
   isChiiho: boolean; setIsChiiho: (checked: boolean) => void;
   isTenho: boolean; setIsTenho: (checked: boolean) => void;
-  setSelectedTiles: React.Dispatch<React.SetStateAction<MahjongTile[]>>;
+  setSelectedTiles: (value: MahjongTile[] | ((prevState: MahjongTile[]) => MahjongTile[])) => void;
 }
 
 
@@ -41,7 +41,7 @@ interface UseCalculatorPageLogicProps {
 }
 
 export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageLogicProps) => {
-  // const router = useRouter();
+  const router = useRouter();
 
   // useMahjongCalculator から必要なものを展開
   const {
@@ -103,7 +103,7 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
   }, [selectedTiles, furoList, setSelectedTiles]);
 
   const handleToggleFuroSelectionMode = useCallback(() => {
-    setIsFuroSelectionMode(prev => !prev);
+    setIsFuroSelectionMode((prev: boolean) => !prev);
     setSelectedForFuro([]);
     setSelectedFuroTypeToMake('none');
   }, []);
@@ -116,11 +116,11 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
     if (!isFuroSelectionMode) {
       removeTileFromHand(index);
     } else {
-      const isSelected = selectedForFuro.some(t => t.instanceId === tile.instanceId);
+      const isSelected = selectedForFuro.some((t: MahjongTile) => t.instanceId === tile.instanceId);
       if (isSelected) {
-        setSelectedForFuro(prev => prev.filter(t => t.instanceId !== tile.instanceId));
+        setSelectedForFuro((prev: MahjongTile[]) => prev.filter((t: MahjongTile) => t.instanceId !== tile.instanceId));
       } else {
-        setSelectedForFuro(prev => [...prev, tile]);
+        setSelectedForFuro((prev: MahjongTile[]) => [...prev, tile]);
       }
     }
   }, [isFuroSelectionMode, removeTileFromHand, selectedForFuro]);
@@ -134,7 +134,7 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
     }
     // 鳴きの形をmakeFuroFromSelectionで確定
     if (type === 'kan' && kanType === 'kakan') {
-      const selectedTileForKakan = selectedForFuro.find(t => !furoList.some(f => f.tiles.some(ft => ft.instanceId === t.instanceId)));
+      const selectedTileForKakan = selectedForFuro.find((t: MahjongTile) => !furoList.some((f: Furo) => f.tiles.some((ft: MahjongTile) => ft.instanceId === t.instanceId)));
       if (!selectedTileForKakan) {
         alert('加槓する牌が特定できませんでした。');
         return;
@@ -259,8 +259,8 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
 
   const validCandidateTiles = useMemo(() => {
     const tileInstanceIds = new Set<string>();
-    possibleMeldCombinations.forEach(combination => {
-      combination.forEach(tile => {
+    possibleMeldCombinations.forEach((combination: MahjongTile[]) => {
+      combination.forEach((tile: MahjongTile) => {
         if (tile.instanceId) {
           tileInstanceIds.add(tile.instanceId);
         }
@@ -327,7 +327,71 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
     handleDoraConfirm,
     isCalculateButtonEnabled: true, // 必要に応じて実装
     handleGoBack: () => {}, // 必要に応じて実装
-    handleCalculate: () => {}, // 必要に応じて実装
+    handleCalculate: async () => {
+      try {
+        // 手牌データの準備
+        const handData = {
+          tiles: selectedTiles.map(tile => ({
+            id: tile.id,
+            type: tile.type,
+            value: tile.value
+          })),
+          furo: furoList.map(furo => ({
+            type: furo.type,
+            tiles: furo.tiles.map(tile => ({
+              id: tile.id,
+              type: tile.type,
+              value: tile.value
+            }))
+          })),
+          winning_tile: null, // TODO: 実装予定
+          tsumo: isTsumo,
+          riichi: isRiichi,
+          double_riichi: isDoubleRiichi,
+          ippatsu: isIppatsu,
+          chankan: isChankan,
+          rinshan: isRinshan,
+          haitei: isHaitei,
+          houtei: isHoutei,
+          chiiho: isChiiho,
+          tenho: isTenho,
+          bakaze: bakaze,
+          jikaze: jikaze,
+          honba: honba,
+          dora_indicators: doraIndicators.map(tile => ({
+            id: tile.id,
+            type: tile.type,
+            value: tile.value
+          }))
+        };
+
+        // Ruby APIに送信
+        const response = await fetch('http://localhost:4000/calculate-score', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(handData)
+        });
+
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        // 結果をクエリパラメータとして結果ページに渡す
+        const searchParams = new URLSearchParams({
+          result: JSON.stringify(result),
+          handData: JSON.stringify(handData)
+        });
+        
+        router.push(`/calculator/result?${searchParams.toString()}`);
+      } catch (error) {
+        console.error('計算エラー:', error);
+        alert('計算中にエラーが発生しました。RubyサーバーとNext.jsアプリが両方起動していることを確認してください。');
+      }
+    },
     setSelectedTiles,
   };
 }
