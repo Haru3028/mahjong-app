@@ -57,7 +57,15 @@ const HandDisplaySection: React.FC<HandDisplaySectionProps> = ({
 
   return (
     <div className="p-6 rounded-xl shadow-lg bg-green-800 text-gray-100">
-      <h2 className="text-2xl font-bold mb-4 text-center text-amber-300">手牌</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-amber-300">手牌</h2>
+        <div className="text-sm bg-green-700 px-3 py-1 rounded-lg">
+          <span className={`font-bold ${selectedTiles.length === 14 ? 'text-green-300' : selectedTiles.length < 14 ? 'text-yellow-300' : 'text-red-300'}`}>
+            {selectedTiles.length}
+          </span>
+          <span className="text-gray-300">/14枚</span>
+        </div>
+      </div>
       <div className={`flex gap-2 justify-center mb-4 ${isQueueMode ? '' : ''}`} style={isQueueMode ? {minHeight: 48} : {}}>
         {displayTiles.map((tile: MahjongTile, index: number) => {
           const isSelectedForFuro = selectedForFuro.some(

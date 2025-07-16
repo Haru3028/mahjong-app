@@ -6,6 +6,7 @@ import { useMahjongCalculator } from '../../hooks/useMahjongCalculator';
 import { useCalculatorPageLogic } from '../../hooks/useCalculatorPageLogic';
 import { mahjongTiles } from '../../data/mahjongTiles';
 import React, { useMemo } from 'react';
+import Image from 'next/image';
 
 // 分割したコンポーネントをインポート
 import TileSelectionSection from '../../components/TileSelectionSection';
@@ -78,7 +79,7 @@ export default function CalculatorPage() {
 
   return (
     <>
-      <main className="calculator-page min-h-screen py-8 px-4 bg-gray-900 text-white">
+      <main className="calculator-page min-h-screen py-8 px-2 bg-gray-900 text-white flex flex-col items-center overflow-x-hidden">
         {/* ヘッダー */}
         <header className="mb-8">
           <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
@@ -86,48 +87,45 @@ export default function CalculatorPage() {
           </h1>
         </header>
 
-        {/* クリアボタン */}
-        <div className="flex justify-end w-full max-w-5xl mb-4">
-          <button
-            onClick={handleClearAll}
-            className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-2 rounded-lg shadow"
-          >
-            クリア
-          </button>
-        </div>
-
-        {/* 戻るボタンと計算ボタンのコンテナ */}
-        <div className="flex justify-between w-full max-w-5xl mb-8">
-          {/* 戻るボタン */}
-          <button
-            onClick={() => window.location.href = '/'}
-            className="base-button back-button"
-          >
-            戻る
-          </button>
-        </div>
-
         {/* 上部セクション: 場情報とドラ表示牌の選択・一覧 (2カラム) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-4xl mb-8">
           {/* 左側: 場情報と役の有無 */}
-          <GameInfoSection
-            bakaze={bakaze} setBakaze={setBakaze}
-            jikaze={jikaze} setJikaze={setJikaze}
-            honba={honba} setHonba={setHonba}
-            reachbo={reachbo} setReachbo={setReachbo}
-            isTsumo={isTsumo} setIsTsumo={setIsTsumo}
-            isRiichi={isRiichi} setIsRiichi={setIsRiichi}
-            isDoubleRiichi={isDoubleRiichi} setIsDoubleRiichi={setIsDoubleRiichi}
-            isIppatsu={isIppatsu} setIsIppatsu={setIsIppatsu}
-            isChankan={isChankan} setIsChankan={setIsChankan}
-            isRinshan={isRinshan} setIsRinshan={setIsRinshan}
-            isHaitei={isHaitei} setIsHaitei={setIsHaitei}
-            isHoutei={isHoutei} setIsHoutei={setIsHoutei}
-            isChiiho={isChiiho} setIsChiiho={setIsChiiho}
-            isTenho={isTenho} setIsTenho={setIsTenho}
-            panelClassName="section-panel"
-            titleClassName="section-title"
-          />
+          <div className="flex flex-col gap-6">
+            {/* 戻るボタンとクリアボタン */}
+            <div className="flex justify-between mb-4">
+              <button
+                onClick={() => window.location.href = '/'}
+                className="base-button bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-lg shadow h-10"
+              >
+                戻る
+              </button>
+              <button
+                onClick={handleClearAll}
+                className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-2 rounded-lg shadow h-10"
+              >
+                クリア
+              </button>
+            </div>
+            
+            <GameInfoSection
+              bakaze={bakaze} setBakaze={setBakaze}
+              jikaze={jikaze} setJikaze={setJikaze}
+              honba={honba} setHonba={setHonba}
+              reachbo={reachbo} setReachbo={setReachbo}
+              isTsumo={isTsumo} setIsTsumo={setIsTsumo}
+              isRiichi={isRiichi} setIsRiichi={setIsRiichi}
+              isDoubleRiichi={isDoubleRiichi} setIsDoubleRiichi={setIsDoubleRiichi}
+              isIppatsu={isIppatsu} setIsIppatsu={setIsIppatsu}
+              isChankan={isChankan} setIsChankan={setIsChankan}
+              isRinshan={isRinshan} setIsRinshan={setIsRinshan}
+              isHaitei={isHaitei} setIsHaitei={setIsHaitei}
+              isHoutei={isHoutei} setIsHoutei={setIsHoutei}
+              isChiiho={isChiiho} setIsChiiho={setIsChiiho}
+              isTenho={isTenho} setIsTenho={setIsTenho}
+              panelClassName="section-panel"
+              titleClassName="section-title"
+            />
+          </div>
 
           {/* 右側: ドラ表示牌の選択と一覧 */}
           <div className="flex flex-col gap-6">
@@ -172,14 +170,16 @@ export default function CalculatorPage() {
         </div>
 
         {/* 中間セクション: 牌を選択 (単一カラム) */}
-        <TileSelectionSection
-          title="牌を選択"
-          tiles={mahjongTiles}
-          onTileClick={addTileToHand}
-          type="available"
-          panelClassName="section-panel"
-          titleClassName="section-title"
-        />
+        <div className="w-full max-w-4xl">
+          <TileSelectionSection
+            title="牌を選択"
+            tiles={mahjongTiles}
+            onTileClick={addTileToHand}
+            type="available"
+            panelClassName="section-panel"
+            titleClassName="section-title"
+          />
+        </div>
 
         {/* 理牌中メッセージ */}
         {isRiipaiing && (
@@ -187,36 +187,10 @@ export default function CalculatorPage() {
         )}
 
         {/* 下部セクション: 手牌、鳴き操作、鳴き（フーロ）一覧 */}
-        <div className="w-full max-w-5xl space-y-8">
+        <div className="w-full max-w-4xl space-y-8">
           {/* 手牌表示セクション */}
           <div className="section-panel">
-            <div className="flex justify-end mb-2 gap-2">
-              <button
-                onClick={async () => {
-                  try {
-                    const response = await fetch('http://localhost:4000/api/calc_score', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        handTiles: selectedTiles,
-                        furoList: furoList,
-                        doraIndicators: doraIndicators,
-                        isTsumo: isTsumo || true,
-                        isRiichi: isRiichi,
-                        bakaze: bakaze,
-                        jikaze: jikaze
-                      })
-                    });
-                    const result = await response.json();
-                    alert(`🀄 役判定結果！\n翻数: ${result.han}翻\n符: ${result.fu}符\n点数: ${result.pointText}\n\n役:\n${result.yakuList.map((y: any) => `${y.name}: ${y.han}翻`).join('\n')}`);
-                  } catch (error) {
-                    alert('❌ APIエラー: ' + error);
-                  }
-                }}
-                className="base-button bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
-              >
-                🀄 Ruby役判定テスト
-              </button>
+            <div className="flex justify-end mb-2">
               <button
                 onClick={() => setSelectedTiles([])}
                 className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
@@ -287,7 +261,7 @@ export default function CalculatorPage() {
         </div>
 
         {/* 計算ボタンを一番下に移動 */}
-        <div className="flex justify-end w-full max-w-5xl mt-8 mb-8">
+        <div className="flex justify-end w-full max-w-4xl mt-8 mb-8">
           <button
             onClick={handleCalculate}
             disabled={!isCalculateButtonEnabled}
@@ -303,8 +277,8 @@ export default function CalculatorPage() {
 
         {/* 一番上に戻るボタン */}
         <button
-          className="base-button fixed bottom-6 right-6 z-50 shadow-2xl"
-          style={{minWidth: '48px', minHeight: '48px', borderRadius: '50%', padding: '0.5em 0.7em'}}
+          className="base-button fixed bottom-6 right-6 z-50 shadow-2xl flex items-center justify-center"
+          style={{minWidth: '48px', minHeight: '48px', borderRadius: '50%'}}
           onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
           aria-label="一番上に戻る"
         >

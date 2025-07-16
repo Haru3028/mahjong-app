@@ -3,13 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run setup:ports && concurrently --kill-others --names \"🌐Frontend,⚙️ API\" --prefix-colors \"cyan,magenta\" \"npm run dev:frontend\" \"npm run dev:api\"",
+    "dev:frontend": "PORT=3002 next dev",
+    "dev:api": "cd ruby_backend && ruby api_server.rb",
+    "dev:safe": "npm run clean && npm run setup:ports && npm run dev",
+    "dev:auto": "chmod +x scripts/auto-dev.sh && ./scripts/auto-dev.sh && npm run dev",
+    "dev:force": "npm run clean && sleep 2 && npm run dev",
+    "setup:ports": "chmod +x scripts/setup-ports.sh && ./scripts/setup-ports.sh",
+    "test:full": "chmod +x scripts/final-test.sh && ./scripts/final-test.sh",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "pkill -f 'next\\|ruby.*api_server' || true"
   },
   "dependencies": {
     "next": "15.3.4",
+    "node-fetch": "^3.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -22,6 +31,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "postcss": "^8.5.6",

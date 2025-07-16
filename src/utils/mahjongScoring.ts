@@ -61,7 +61,7 @@ export async function fetchMahjongScoreFromRails(params: {
   isTsumo: boolean;
   isOya: boolean;
 }): Promise<ScoreResult> {
-  const res = await fetch('http://localhost:4000/api/calc_score', {
+  const res = await fetch('http://localhost:5000/api/calc_score', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

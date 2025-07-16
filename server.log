@@ -1,0 +1,1009 @@
+nohup: ignoring input
+[2025-07-15 23:34:02] INFO  WEBrick 1.9.1
+[2025-07-15 23:34:02] INFO  ruby 3.2.2 (2023-03-30) [x86_64-linux]
+[2025-07-15 23:34:02] INFO  WEBrick::HTTPServer#start: pid=98001 port=4000
+🀄 麻雀API サーバーを起動中... http://localhost:4000
+健康チェック: http://localhost:4000/api/health
+計算エンドポイント: POST http://localhost:4000/api/calc_score
+Ctrl+Cで停止
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m2", "m3", "m4", "p2", "p3", "p4", "p5", "p6", "p7", "s2", "s3", "s4", "s5", "s5"]
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s5
+DEBUG: creating tile from ID: s5
+DEBUG: 解析後手牌: ["man2", "man3", "man4", "pin2", "pin3", "pin4", "pin5", "pin6", "pin7", "sou2", "sou3", "sou4", "sou5", "sou5"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m1", "m2", "m3", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man1", "man2", "man3", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p2", "p3", "p4", "p5", "p6", "p7", "s1", "s2", "s3", "s4", "s5"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s5
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin2", "pin3", "pin4", "pin5", "pin6", "pin7", "sou1", "sou2", "sou3", "sou4", "sou5"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "haku", "haku", "haku"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "白", "白", "白"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "hatsu", "hatsu", "hatsu"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "發", "發", "發"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "chun", "chun", "chun"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "中", "中", "中"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "ton", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "東", "東", "東"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "ton", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "東", "東", "東"]
+DEBUG: 手牌データ: ["m1", "m1", "m3", "m3", "p2", "p2", "p7", "p7", "s1", "s1", "s5", "s5", "s9", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s5
+DEBUG: creating tile from ID: s5
+DEBUG: creating tile from ID: s9
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man3", "man3", "pin2", "pin2", "pin7", "pin7", "sou1", "sou1", "sou5", "sou5", "sou9", "sou9"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "p2", "p2", "p2", "s3", "s3", "s3", "ton", "ton", "ton", "haku", "haku"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "pin2", "pin2", "pin2", "sou3", "sou3", "sou3", "東", "東", "東", "白", "白"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "p2", "p2", "p2", "s3", "s3", "s3", "m5", "m6", "m7", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "pin2", "pin2", "pin2", "sou3", "sou3", "sou3", "man5", "man6", "man7", "東", "東"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p7", "p8", "p9", "s1", "s1", "s1", "ton", "ton", "ton", "m9", "m9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: p8
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin7", "pin8", "pin9", "sou1", "sou1", "sou1", "東", "東", "東", "man9", "man9"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "p1", "p1", "p1", "s2", "s2"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s2
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "pin1", "pin1", "pin1", "sou2", "sou2"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p1", "p2", "p3", "s1", "s2", "s3", "m7", "m7", "m7", "p9", "p9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: p9
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "man7", "man7", "man7", "pin9", "pin9"]
+DEBUG: 手牌データ: ["m2", "m2", "m2", "p2", "p2", "p2", "s2", "s2", "s2", "m1", "m1", "p5", "p6", "p7"]
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p7
+DEBUG: 解析後手牌: ["man2", "man2", "man2", "pin2", "pin2", "pin2", "sou2", "sou2", "sou2", "man1", "man1", "pin5", "pin6", "pin7"]
+DEBUG: 手牌データ: ["haku", "haku", "haku", "hatsu", "hatsu", "hatsu", "chun", "chun", "m1", "m2", "m3", "p1", "p1", "p1"]
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: 解析後手牌: ["白", "白", "白", "發", "發", "發", "中", "中", "man1", "man2", "man3", "pin1", "pin1", "pin1"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m1", "m2", "m3", "p4", "p5", "p6", "p4", "p5", "p6", "s7", "s7"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s7
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man1", "man2", "man3", "pin4", "pin5", "pin6", "pin4", "pin5", "pin6", "sou7", "sou7"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p7", "p8", "p9", "s1", "s1", "s1", "m9", "m9", "m9", "p1", "p1"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: p8
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin7", "pin8", "pin9", "sou1", "sou1", "sou1", "man9", "man9", "man9", "pin1", "pin1"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "ton", "ton", "ton", "haku", "haku"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "東", "東", "東", "白", "白"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m1", "m1", "m2", "m2", "m3"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "man1", "man1", "man2", "man2", "man3"]
+DEBUG: 手牌データ: ["m1", "m9", "p1", "p9", "s1", "s9", "ton", "nan", "shaa", "pei", "haku", "hatsu", "chun", "m1"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s9
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: m1
+DEBUG: 解析後手牌: ["man1", "man9", "pin1", "pin9", "sou1", "sou9", "東", "南", "西", "北", "白", "發", "中", "man1"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m9", "m9", "m5"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m5
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "man9", "man9", "man5"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "p2", "p2", "p2", "s3", "s3", "s3", "m7", "m7", "m7", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "pin2", "pin2", "pin2", "sou3", "sou3", "sou3", "man7", "man7", "man7", "東", "東"]
+DEBUG: 手牌データ: ["haku", "haku", "haku", "hatsu", "hatsu", "hatsu", "chun", "chun", "chun", "m1", "m2", "m3", "p1", "p1"]
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: 解析後手牌: ["白", "白", "白", "發", "發", "發", "中", "中", "中", "man1", "man2", "man3", "pin1", "pin1"]
+DEBUG: 手牌データ: ["ton", "ton", "ton", "nan", "nan", "nan", "haku", "haku", "haku", "hatsu", "hatsu", "hatsu", "chun", "chun"]
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: 解析後手牌: ["東", "東", "東", "南", "南", "南", "白", "白", "白", "發", "發", "發", "中", "中"]
+DEBUG: 手牌データ: ["s2", "s3", "s4", "s6", "s8", "s2", "s3", "s4", "s6", "s8", "hatsu", "hatsu", "hatsu", "s2"]
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s6
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s6
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: s2
+DEBUG: 解析後手牌: ["sou2", "sou3", "sou4", "sou6", "sou8", "sou2", "sou3", "sou4", "sou6", "sou8", "發", "發", "發", "sou2"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "m9", "m9", "m9", "p1", "p1", "p1", "p9", "p9", "p9", "s1", "s1"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "man9", "man9", "man9", "pin1", "pin1", "pin1", "pin9", "pin9", "pin9", "sou1", "sou1"]
+DEBUG: 手牌データ: ["ton", "ton", "ton", "nan", "nan", "nan", "shaa", "shaa", "shaa", "pei", "pei", "pei", "m1", "m1"]
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: 解析後手牌: ["東", "東", "東", "南", "南", "南", "西", "西", "西", "北", "北", "北", "man1", "man1"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m2", "m3", "m4", "p2", "p3", "p4", "p5", "p6", "p7", "s2", "s3", "s4", "s5", "s5"]
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s5
+DEBUG: creating tile from ID: s5
+DEBUG: 解析後手牌: ["man2", "man3", "man4", "pin2", "pin3", "pin4", "pin5", "pin6", "pin7", "sou2", "sou3", "sou4", "sou5", "sou5"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m1", "m2", "m3", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man1", "man2", "man3", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p2", "p3", "p4", "p5", "p6", "p7", "s1", "s2", "s3", "s4", "s5"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s5
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin2", "pin3", "pin4", "pin5", "pin6", "pin7", "sou1", "sou2", "sou3", "sou4", "sou5"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "haku", "haku", "haku"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "白", "白", "白"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "hatsu", "hatsu", "hatsu"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "發", "發", "發"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "chun", "chun", "chun"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "中", "中", "中"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "ton", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "東", "東", "東"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p2", "p3", "s1", "s2", "s3", "ton", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "東", "東", "東"]
+DEBUG: 手牌データ: ["m1", "m1", "m3", "m3", "p2", "p2", "p7", "p7", "s1", "s1", "s5", "s5", "s9", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s5
+DEBUG: creating tile from ID: s5
+DEBUG: creating tile from ID: s9
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man3", "man3", "pin2", "pin2", "pin7", "pin7", "sou1", "sou1", "sou5", "sou5", "sou9", "sou9"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "p2", "p2", "p2", "s3", "s3", "s3", "ton", "ton", "ton", "haku", "haku"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "pin2", "pin2", "pin2", "sou3", "sou3", "sou3", "東", "東", "東", "白", "白"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "p2", "p2", "p2", "s3", "s3", "s3", "m5", "m6", "m7", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "pin2", "pin2", "pin2", "sou3", "sou3", "sou3", "man5", "man6", "man7", "東", "東"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p7", "p8", "p9", "s1", "s1", "s1", "ton", "ton", "ton", "m9", "m9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: p8
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin7", "pin8", "pin9", "sou1", "sou1", "sou1", "東", "東", "東", "man9", "man9"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "p1", "p1", "p1", "s2", "s2"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s2
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "pin1", "pin1", "pin1", "sou2", "sou2"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p1", "p2", "p3", "s1", "s2", "s3", "m7", "m7", "m7", "p9", "p9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p3
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: p9
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin1", "pin2", "pin3", "sou1", "sou2", "sou3", "man7", "man7", "man7", "pin9", "pin9"]
+DEBUG: 手牌データ: ["m2", "m2", "m2", "p2", "p2", "p2", "s2", "s2", "s2", "m1", "m1", "p5", "p6", "p7"]
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p7
+DEBUG: 解析後手牌: ["man2", "man2", "man2", "pin2", "pin2", "pin2", "sou2", "sou2", "sou2", "man1", "man1", "pin5", "pin6", "pin7"]
+DEBUG: 手牌データ: ["haku", "haku", "haku", "hatsu", "hatsu", "hatsu", "chun", "chun", "m1", "m2", "m3", "p1", "p1", "p1"]
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: 解析後手牌: ["白", "白", "白", "發", "發", "發", "中", "中", "man1", "man2", "man3", "pin1", "pin1", "pin1"]
+DEBUG: 手牌データ: ["m1", "m1", "m2", "m3", "m4", "p1", "p1", "p1", "s1", "s2", "s3", "s7", "s8", "s9"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s9
+DEBUG: 解析後手牌: ["man1", "man1", "man2", "man3", "man4", "pin1", "pin1", "pin1", "sou1", "sou2", "sou3", "sou7", "sou8", "sou9"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m1", "m2", "m3", "p4", "p5", "p6", "p4", "p5", "p6", "s7", "s7"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: p4
+DEBUG: creating tile from ID: p5
+DEBUG: creating tile from ID: p6
+DEBUG: creating tile from ID: s7
+DEBUG: creating tile from ID: s7
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man1", "man2", "man3", "pin4", "pin5", "pin6", "pin4", "pin5", "pin6", "sou7", "sou7"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "p7", "p8", "p9", "s1", "s1", "s1", "m9", "m9", "m9", "p1", "p1"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p7
+DEBUG: creating tile from ID: p8
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "pin7", "pin8", "pin9", "sou1", "sou1", "sou1", "man9", "man9", "man9", "pin1", "pin1"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "ton", "ton", "ton", "haku", "haku"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "東", "東", "東", "白", "白"]
+DEBUG: 手牌データ: ["m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m1", "m1", "m2", "m2", "m3"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: 解析後手牌: ["man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "man1", "man1", "man2", "man2", "man3"]
+DEBUG: 手牌データ: ["m1", "m9", "p1", "p9", "s1", "s9", "ton", "nan", "shaa", "pei", "haku", "hatsu", "chun", "m1"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s9
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: m1
+DEBUG: 解析後手牌: ["man1", "man9", "pin1", "pin9", "sou1", "sou9", "東", "南", "西", "北", "白", "發", "中", "man1"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9", "m9", "m9", "m5"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: m4
+DEBUG: creating tile from ID: m5
+DEBUG: creating tile from ID: m6
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m8
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m5
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "man2", "man3", "man4", "man5", "man6", "man7", "man8", "man9", "man9", "man9", "man5"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "p2", "p2", "p2", "s3", "s3", "s3", "m7", "m7", "m7", "ton", "ton"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: p2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: m7
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "pin2", "pin2", "pin2", "sou3", "sou3", "sou3", "man7", "man7", "man7", "東", "東"]
+DEBUG: 手牌データ: ["haku", "haku", "haku", "hatsu", "hatsu", "hatsu", "chun", "chun", "chun", "m1", "m2", "m3", "p1", "p1"]
+DEBUG: creating tile from ID: haku[2025-07-15 23:37:31] FATAL SignalException: SIGTERM
+	/home/haru0528/.rbenv/versions/3.2.2/lib/ruby/gems/3.2.0/gems/webrick-1.9.1/lib/webrick/server.rb:173:in `select'
+	/home/haru0528/.rbenv/versions/3.2.2/lib/ruby/gems/3.2.0/gems/webrick-1.9.1/lib/webrick/server.rb:173:in `block in start'
+	/home/haru0528/.rbenv/versions/3.2.2/lib/ruby/gems/3.2.0/gems/webrick-1.9.1/lib/webrick/server.rb:32:in `start'
+	/home/haru0528/.rbenv/versions/3.2.2/lib/ruby/gems/3.2.0/gems/webrick-1.9.1/lib/webrick/server.rb:160:in `start'
+	api_server.rb:90:in `start'
+	api_server.rb:97:in `<main>'
+[2025-07-15 23:37:31] INFO  going to shutdown ...
+[2025-07-15 23:37:31] INFO  WEBrick::HTTPServer#start done.
+
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m2
+DEBUG: creating tile from ID: m3
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: 解析後手牌: ["白", "白", "白", "發", "發", "發", "中", "中", "中", "man1", "man2", "man3", "pin1", "pin1"]
+DEBUG: 手牌データ: ["ton", "ton", "ton", "nan", "nan", "nan", "haku", "haku", "haku", "hatsu", "hatsu", "hatsu", "chun", "chun"]
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: haku
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: chun
+DEBUG: creating tile from ID: chun
+DEBUG: 解析後手牌: ["東", "東", "東", "南", "南", "南", "白", "白", "白", "發", "發", "發", "中", "中"]
+DEBUG: 手牌データ: ["s2", "s3", "s4", "s6", "s8", "s2", "s3", "s4", "s6", "s8", "hatsu", "hatsu", "hatsu", "s2"]
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s6
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: s2
+DEBUG: creating tile from ID: s3
+DEBUG: creating tile from ID: s4
+DEBUG: creating tile from ID: s6
+DEBUG: creating tile from ID: s8
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: hatsu
+DEBUG: creating tile from ID: s2
+DEBUG: 解析後手牌: ["sou2", "sou3", "sou4", "sou6", "sou8", "sou2", "sou3", "sou4", "sou6", "sou8", "發", "發", "發", "sou2"]
+DEBUG: 手牌データ: ["m1", "m1", "m1", "m9", "m9", "m9", "p1", "p1", "p1", "p9", "p9", "p9", "s1", "s1"]
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: m9
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p1
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: p9
+DEBUG: creating tile from ID: s1
+DEBUG: creating tile from ID: s1
+DEBUG: 解析後手牌: ["man1", "man1", "man1", "man9", "man9", "man9", "pin1", "pin1", "pin1", "pin9", "pin9", "pin9", "sou1", "sou1"]
+DEBUG: 手牌データ: ["ton", "ton", "ton", "nan", "nan", "nan", "shaa", "shaa", "shaa", "pei", "pei", "pei", "m1", "m1"]
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: ton
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: nan
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: shaa
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: pei
+DEBUG: creating tile from ID: m1
+DEBUG: creating tile from ID: m1
+DEBUG: 解析後手牌: ["東", "東", "東", "南", "南", "南", "西", "西", "西", "北", "北", "北", "man1", "man1"]

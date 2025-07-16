@@ -325,48 +325,47 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
     validCandidateTiles,
     handleSelectMeldCombination,
     handleDoraConfirm,
-    isCalculateButtonEnabled: true, // 必要に応じて実装
+    isCalculateButtonEnabled: selectedTiles.length + furoList.reduce((sum, furo) => sum + furo.tiles.length, 0) === 14, // 14枚揃った時のみ有効
     handleGoBack: () => {}, // 必要に応じて実装
     handleCalculate: async () => {
       try {
-        // 手牌データの準備
+        // 手牌数チェック
+        const totalHandTiles = selectedTiles.length + furoList.reduce((sum, furo) => sum + furo.tiles.length, 0);
+        if (totalHandTiles !== 14) {
+          alert(`手牌が${totalHandTiles}枚です。14枚になるように牌を選択してください。\n（現在: 手牌${selectedTiles.length}枚 + 鳴き${furoList.reduce((sum, furo) => sum + furo.tiles.length, 0)}枚 = ${totalHandTiles}枚）`);
+          return;
+        }
+
+        // Ruby APIの期待する形式に合わせてデータを準備
         const handData = {
-          tiles: selectedTiles.map(tile => ({
-            id: tile.id,
-            type: tile.type,
-            value: tile.value
-          })),
-          furo: furoList.map(furo => ({
-            type: furo.type,
-            tiles: furo.tiles.map(tile => ({
-              id: tile.id,
-              type: tile.type,
-              value: tile.value
-            }))
-          })),
-          winning_tile: null, // TODO: 実装予定
-          tsumo: isTsumo,
-          riichi: isRiichi,
-          double_riichi: isDoubleRiichi,
-          ippatsu: isIppatsu,
-          chankan: isChankan,
-          rinshan: isRinshan,
-          haitei: isHaitei,
-          houtei: isHoutei,
-          chiiho: isChiiho,
-          tenho: isTenho,
+          hand: selectedTiles.map(tile => tile.id), // Ruby APIの期待するフィールド名に変更
           bakaze: bakaze,
           jikaze: jikaze,
+          dora_indicators: doraIndicators.map(tile => tile.id),
+          furo: furoList.map(furo => ({
+            type: furo.type,
+            tiles: furo.tiles.map(tile => tile.id)
+          })),
+          is_tsumo: isTsumo || false,
+          is_riichi: isRiichi,
+          is_double_riichi: isDoubleRiichi,
+          is_ippatsu: isIppatsu,
+          is_chankan: isChankan,
+          is_rinshan: isRinshan,
+          is_haitei: isHaitei,
+          is_houtei: isHoutei,
+          is_chiiho: isChiiho,
+          is_tenho: isTenho,
           honba: honba,
-          dora_indicators: doraIndicators.map(tile => ({
-            id: tile.id,
-            type: tile.type,
-            value: tile.value
-          }))
+          winning_tile: selectedTiles.length > 0 ? selectedTiles[selectedTiles.length - 1].id : '',
+          prevalent_wind: bakaze,
+          seat_wind: jikaze
         };
 
+        console.log('送信データ:', handData); // デバッグ用
+
         // Ruby APIに送信
-        const response = await fetch('http://localhost:4000/calculate-score', {
+        const response = await fetch('http://localhost:4000/api/calc_score', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -379,17 +378,33 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
         }
 
         const result = await response.json();
+        console.log('受信データ:', result); // デバッグ用
+        
+        // APIレスポンスを結果画面用の形式に変換
+        const formattedResult = {
+          valid: result.success || false,
+          error: result.success ? undefined : result.error || '計算に失敗しました',
+          score: result.success ? {
+            points: result.total_score || 0,
+            han: result.han || 0,
+            fu: result.fu || 0,
+            name: result.yaku ? result.yaku.map((y: any) => y.name).join(', ') : ''
+          } : undefined,
+          yaku: result.success && result.yaku ? result.yaku : [],
+          agari_type: isTsumo ? '自摸' : 'ロン',
+          winning_tile: handData.winning_tile
+        };
         
         // 結果をクエリパラメータとして結果ページに渡す
         const searchParams = new URLSearchParams({
-          result: JSON.stringify(result),
+          result: JSON.stringify(formattedResult),
           handData: JSON.stringify(handData)
         });
         
         router.push(`/calculator/result?${searchParams.toString()}`);
       } catch (error) {
         console.error('計算エラー:', error);
-        alert('計算中にエラーが発生しました。RubyサーバーとNext.jsアプリが両方起動していることを確認してください。');
+        alert('計算中にエラーが発生しました。サーバーが起動していることを確認してください。');
       }
     },
     setSelectedTiles,

@@ -1,0 +1,4 @@
+nohup: ignoring input
+[2025-07-15 23:49:28] INFO  WEBrick 1.9.1
+[2025-07-15 23:49:28] INFO  ruby 3.2.2 (2023-03-30) [x86_64-linux]
+[2025-07-15 23:49:28] INFO  WEBrick::HTTPServer#start: pid=104152 port=4000

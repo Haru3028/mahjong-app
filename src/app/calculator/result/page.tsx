@@ -1,10 +1,11 @@
-// mahjong_app_frontend/src/app/calculator/page.tsx
+// src/app/calculator/result/page.tsx
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import TileComponent from '@/components/TileComponent';
 
 // 牌の型定義
 interface MahjongTile {
@@ -18,8 +19,49 @@ interface MahjongTile {
 // 鳴きの型定義
 interface Furo {
   type: 'pon' | 'kan' | 'chi';
-  tiles: MahjongTile[]; // 鳴きに使用された牌 (3枚または4枚)
-  // 例えば、ポンされた牌が横向きになるなどの表示情報もここに追加可能
+  tiles: MahjongTile[];
+}
+
+// 計算結果の型定義
+interface ScoreResult {
+  valid: boolean;
+  error?: string;
+  score?: {
+    points: number;
+    han: number;
+    fu: number;
+    name: string;
+  };
+  yaku?: Array<{
+    name: string;
+    han: number;
+  }>;
+  agari_type?: string;
+  winning_tile?: string;
+}
+
+// 手牌データの型定義
+interface HandData {
+  hand: string[];
+  bakaze: string;
+  jikaze: string;
+  dora_indicators: string[];
+  furo: Array<{
+    type: string;
+    tiles: string[];
+  }>;
+  is_tsumo: boolean;
+  is_riichi: boolean;
+  is_double_riichi: boolean;
+  is_ippatsu: boolean;
+  is_chankan: boolean;
+  is_rinshan: boolean;
+  is_haitei: boolean;
+  is_houtei: boolean;
+  is_chiiho: boolean;
+  is_tenho: boolean;
+  honba: number;
+  winning_tile: string;
 }
 
 // 麻雀牌のデータを定義
@@ -823,8 +865,8 @@ const CalculatorPage: React.FC = () => {
   );
 };
 
-// CalculatorResultPageのみをエクスポート
-export default function CalculatorResultPage() {
+// CalculatorResultPageをSuspenseでラップしたコンポーネント
+function CalculatorResultContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -861,136 +903,160 @@ export default function CalculatorResultPage() {
   }
 
   return (
-    <main className="min-h-screen py-8 px-4 bg-gray-900 text-white flex flex-col items-center">
-      <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
-          計算結果
-        </h1>
-      </header>
-      
-      {/* 手牌情報 */}
-      {handData && (
-        <section className="section-panel w-full max-w-3xl mb-8">
-          <h2 className="section-title">手牌・鳴き・条件</h2>
-          <div className="mb-4">
-            <div className="font-bold text-green-300 mb-1">手牌 ({handData.tiles?.length || 0}枚)</div>
-            <div className="text-gray-300 text-sm">
-              {handData.tiles?.map((tile: any, index: number) => `${tile.id}`).join(', ') || 'なし'}
-            </div>
-          </div>
-          
-          {handData.furo && handData.furo.length > 0 && (
-            <div className="mb-4">
-              <div className="font-bold text-blue-300 mb-1">鳴き</div>
-              {handData.furo.map((furo: any, index: number) => (
-                <div key={index} className="text-gray-300 text-sm">
-                  {furo.type}: {furo.tiles.map((tile: any) => tile.id).join(', ')}
-                </div>
-              ))}
-            </div>
-          )}
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
-            <div><span className="font-bold">場風</span>: {handData.bakaze}</div>
-            <div><span className="font-bold">自風</span>: {handData.jikaze}</div>
-            <div><span className="font-bold">本場</span>: {handData.honba}</div>
-            <div><span className="font-bold">ツモ</span>: {handData.tsumo ? '○' : '×'}</div>
-          </div>
-          
-          <div className="flex flex-wrap gap-4 mb-2 text-sm">
-            <div><span className="font-bold">リーチ</span>: {handData.riichi ? '○' : '×'}</div>
-            <div><span className="font-bold">ダブルリーチ</span>: {handData.double_riichi ? '○' : '×'}</div>
-            <div><span className="font-bold">一発</span>: {handData.ippatsu ? '○' : '×'}</div>
-            <div><span className="font-bold">槍槓</span>: {handData.chankan ? '○' : '×'}</div>
-            <div><span className="font-bold">嶺上開花</span>: {handData.rinshan ? '○' : '×'}</div>
-            <div><span className="font-bold">海底</span>: {handData.haitei ? '○' : '×'}</div>
-            <div><span className="font-bold">河底</span>: {handData.houtei ? '○' : '×'}</div>
-            <div><span className="font-bold">地和</span>: {handData.chiiho ? '○' : '×'}</div>
-            <div><span className="font-bold">天和</span>: {handData.tenho ? '○' : '×'}</div>
-          </div>
-        </section>
-      )}
-
-      {/* 計算結果 */}
-      <section className="section-panel w-full max-w-3xl mb-8">
-        <h2 className="section-title">役・点数</h2>
-        
-        {result ? (
-          <>
-            {result.success ? (
-              <>
-                {/* 成功時の表示 */}
-                <div className="text-center mb-6">
-                  <div className="text-3xl text-amber-400 font-bold mb-2">
-                    {result.total_score}点
-                  </div>
-                  <div className="text-xl text-green-300">
-                    {result.han}翻 {result.fu}符
-                  </div>
-                </div>
-                
-                {result.yaku && result.yaku.length > 0 && (
-                  <div className="mb-4">
-                    <h3 className="text-lg font-bold text-amber-300 mb-2">成立役</h3>
-                    <div className="space-y-2">
-                      {result.yaku.map((yaku: any, index: number) => (
-                        <div key={index} className="flex justify-between items-center bg-gray-800 p-2 rounded">
-                          <span className="text-white">{yaku.name}</span>
-                          <span className="text-amber-400 font-bold">{yaku.han}翻</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {result.dora_count > 0 && (
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center bg-gray-800 p-2 rounded">
-                      <span className="text-white">ドラ</span>
-                      <span className="text-amber-400 font-bold">{result.dora_count}翻</span>
-                    </div>
-                  </div>
-                )}
-                
-                {result.payment_info && (
-                  <div className="mt-6 text-center">
-                    <h3 className="text-lg font-bold text-green-300 mb-2">支払情報</h3>
-                    <div className="text-gray-300">
-                      {handData.tsumo ? (
-                        <>
-                          <div>子: {result.payment_info.ko_payment || 0}点</div>
-                          <div>親: {result.payment_info.oya_payment || 0}点</div>
-                        </>
-                      ) : (
-                        <div>振り込み: {result.total_score}点</div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              /* エラー時の表示 */
-              <div className="text-center text-red-400">
-                <div className="text-xl font-bold mb-2">計算エラー</div>
-                <div className="text-gray-300">{result.error || '不明なエラーが発生しました'}</div>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center text-gray-400">
-            計算結果がありません
-          </div>
-        )}
-      </section>
-      
-      <div className="flex justify-center w-full max-w-3xl">
+    <main className="min-h-screen py-8 px-4 bg-gray-900 text-white">
+      {/* ヘッダー：戻るボタン（左）と自風場風（右） */}
+      <header className="flex justify-between items-center mb-8 w-full max-w-3xl mx-auto">
         <button
           className="base-button back-button"
           onClick={() => router.push('/calculator')}
         >
           戻る
         </button>
+        
+        {handData && (
+          <div className="flex gap-4 text-lg">
+            <span className="text-amber-300">場風: {handData.bakaze}</span>
+            <span className="text-green-300">自風: {handData.jikaze}</span>
+          </div>
+        )}
+      </header>
+
+      <div className="flex flex-col items-center">
+        {/* 手牌表示 */}
+        {handData && (
+          <section className="section-panel w-full max-w-3xl mb-6">
+            <h2 className="section-title">上がった手牌</h2>
+            <div className="mb-4">
+              <div className="font-bold text-green-300 mb-2">手牌 ({handData.hand?.length || 0}枚)</div>
+              <div className="text-gray-300">
+                {handData.hand?.map((tileId: string, index: number) => {
+                  const tile = mahjongTiles.find(t => t.id === tileId);
+                  return (
+                    <span key={index} className="inline-block mr-1 text-sm bg-gray-800 px-2 py-1 rounded">
+                      {tile ? tile.name : tileId}
+                    </span>
+                  );
+                }) || 'なし'}
+              </div>
+            </div>
+            
+            {handData.furo && handData.furo.length > 0 && (
+              <div className="mb-4">
+                <div className="font-bold text-blue-300 mb-2">鳴き</div>
+                {handData.furo.map((furo: any, index: number) => (
+                  <div key={index} className="text-gray-300 mb-1">
+                    <span className="text-blue-200 font-semibold">{furo.type}:</span>
+                    {furo.tiles.map((tileId: string, tileIndex: number) => {
+                      const tile = mahjongTiles.find(t => t.id === tileId);
+                      return (
+                        <span key={tileIndex} className="inline-block ml-1 mr-1 text-sm bg-gray-800 px-2 py-1 rounded">
+                          {tile ? tile.name : tileId}
+                        </span>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2 text-sm mb-4">
+              <div><span className="font-bold">本場</span>: {handData.honba || 0}</div>
+              <div><span className="font-bold">ツモ</span>: {handData.is_tsumo ? '○' : '×'}</div>
+              <div><span className="font-bold">リーチ</span>: {handData.is_riichi ? '○' : '×'}</div>
+              <div><span className="font-bold">ダブルリーチ</span>: {handData.is_double_riichi ? '○' : '×'}</div>
+              <div><span className="font-bold">一発</span>: {handData.is_ippatsu ? '○' : '×'}</div>
+              <div><span className="font-bold">槍槓</span>: {handData.is_chankan ? '○' : '×'}</div>
+              <div><span className="font-bold">嶺上開花</span>: {handData.is_rinshan ? '○' : '×'}</div>
+              <div><span className="font-bold">海底</span>: {handData.is_haitei ? '○' : '×'}</div>
+              <div><span className="font-bold">河底</span>: {handData.is_houtei ? '○' : '×'}</div>
+              <div><span className="font-bold">地和</span>: {handData.is_chiiho ? '○' : '×'}</div>
+              <div><span className="font-bold">天和</span>: {handData.is_tenho ? '○' : '×'}</div>
+            </div>
+          </section>
+        )}
+
+        {/* 点数・翻数・符数 */}
+        <section className="section-panel w-full max-w-3xl mb-6">
+          <h2 className="section-title">点数・翻数・符数</h2>
+          
+          {result ? (
+            <>
+              {result.success ? (
+                <div className="text-center">
+                  <div className="text-4xl text-amber-400 font-bold mb-2">
+                    {result.total_score}点
+                  </div>
+                  <div className="text-2xl text-green-300">
+                    {result.han}翻 {result.fu}符
+                  </div>
+                  
+                  {result.dora_count > 0 && (
+                    <div className="mt-4 text-lg text-amber-300">
+                      ドラ: {result.dora_count}翻
+                    </div>
+                  )}
+                  
+                  {result.payment_info && (
+                    <div className="mt-6">
+                      <h3 className="text-lg font-bold text-green-300 mb-2">支払情報</h3>
+                      <div className="text-gray-300">
+                        {handData.is_tsumo ? (
+                          <>
+                            <div>子: {result.payment_info.ko_payment || 0}点</div>
+                            <div>親: {result.payment_info.oya_payment || 0}点</div>
+                          </>
+                        ) : (
+                          <div>振り込み: {result.total_score}点</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center text-red-400">
+                  <div className="text-xl font-bold mb-2">計算エラー</div>
+                  <div className="text-gray-300">{result.error || '不明なエラーが発生しました'}</div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center text-gray-400">
+              計算結果がありません
+            </div>
+          )}
+        </section>
+
+        {/* 成立役 */}
+        {result && result.success && result.yaku && result.yaku.length > 0 && (
+          <section className="section-panel w-full max-w-3xl mb-6">
+            <h2 className="section-title">成立役</h2>
+            <div className="space-y-2">
+              {result.yaku.map((yaku: any, index: number) => (
+                <div key={index} className="flex justify-between items-center bg-gray-800 p-3 rounded">
+                  <span className="text-white text-lg">{yaku.name}</span>
+                  <span className="text-amber-400 font-bold text-lg">{yaku.han}翻</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
+  );
+}
+
+// Suspenseでラップしたメインコンポーネント
+export default function CalculatorResultPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen py-8 px-4 bg-gray-900 text-white flex flex-col items-center justify-center">
+        <div className="text-center">
+          <div className="text-2xl text-amber-400 mb-4">読み込み中...</div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-400 mx-auto"></div>
+        </div>
+      </main>
+    }>
+      <CalculatorResultContent />
+    </Suspense>
   );
 }

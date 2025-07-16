@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# encoding: utf-8
 require 'json'
 require 'socket'
 require_relative 'score_calculator'
@@ -56,7 +58,7 @@ class SimpleMahjongAPIServer
     
     # CORS ヘッダー
     cors_headers = [
-      "Access-Control-Allow-Origin: http://localhost:3000",
+      "Access-Control-Allow-Origin: *",
       "Access-Control-Allow-Methods: GET, POST, OPTIONS",
       "Access-Control-Allow-Headers: Content-Type, Authorization"
     ]
@@ -101,9 +103,12 @@ class SimpleMahjongAPIServer
       send_response(client, 200, result.to_h, cors_headers)
       
     rescue JSON::ParserError => e
+      puts "JSON解析エラー: #{e.message}"
       send_response(client, 400, { error: 'Invalid JSON', message: e.message }, cors_headers)
     rescue => e
-      send_response(client, 500, { error: 'Internal Server Error', message: e.message }, cors_headers)
+      puts "サーバーエラー: #{e.message}"
+      puts e.backtrace
+      send_response(client, 500, { error: 'Internal Server Error', message: e.message, backtrace: e.backtrace.first(5) }, cors_headers)
     end
   end
 
@@ -120,10 +125,10 @@ class SimpleMahjongAPIServer
   end
 
   def send_response(client, status, data, cors_headers)
-    json_data = JSON.generate(data)
+    json_data = JSON.generate(data, encoding: 'UTF-8')
     
     response = "HTTP/1.1 #{status} #{status_text(status)}\r\n"
-    response += "Content-Type: application/json\r\n"
+    response += "Content-Type: application/json; charset=utf-8\r\n"
     response += cors_headers.join("\r\n") + "\r\n"
     response += "Content-Length: #{json_data.bytesize}\r\n\r\n"
     response += json_data
@@ -145,6 +150,6 @@ end
 
 # サーバー起動
 if __FILE__ == $0
-  server = SimpleMahjongAPIServer.new(4000)
+  server = SimpleMahjongAPIServer.new(5000)
   server.start
 end

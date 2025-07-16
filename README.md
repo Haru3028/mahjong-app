@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 麻雀役計算機アプリ
 
-## Getting Started
+本格的な麻雀役計算機ウェブアプリケーションです。手牌入力から役判定、点数計算まで完全対応。
 
-First, run the development server:
+## 🀄 主な機能
 
+### 🎯 役計算機能
+- **完全役判定**: 38種類の役を完全サポート
+- **点数計算**: 符・翻数から正確な点数計算
+- **鳴き対応**: ポン・チー・カン（明槓・暗槓・加槓）
+- **特殊役**: 国士無双、七対子、九蓮宝燈など
+- **ドラ対応**: ドラ・赤ドラ完全対応
+
+### 🎮 操作機能
+- **直感的手牌入力**: クリックで簡単牌選択
+- **自動理牌**: 手牌自動整列機能
+- **鳴き操作**: 視覚的な鳴き面子作成
+- **リアルタイム計算**: 即座に結果表示
+
+### 🔧 技術仕様
+- **フロントエンド**: Next.js 15.3.4 + React 19 + TypeScript
+- **バックエンド**: Ruby 3.2.2 + WEBrick
+- **スタイリング**: TailwindCSS
+- **開発効率**: 統一コマンドで完全自動化
+
+## 🚀 クイックスタート
+
+### 前提条件
+- Node.js 18+ 
+- Ruby 3.2+
+- npm
+
+### インストール & 起動
 ```bash
+# リポジトリクローン
+git clone https://github.com/Haru3028/mahjong_app_frontend.git
+cd mahjong_app_frontend
+
+# 依存関係インストール
+npm install
+
+# 開発サーバー起動（フロントエンド + API同時起動）
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 アクセス
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+開発サーバー起動後、以下のURLにアクセス：
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **メインアプリ**: http://localhost:3002
+- **役計算機**: http://localhost:3002/calculator  
+- **API Health**: http://localhost:4000/api/health
 
-## Learn More
+## 📋 使用方法
 
-To learn more about Next.js, take a look at the following resources:
+### 1. 手牌入力
+1. 牌選択エリアから牌をクリック
+2. 手牌エリアに自動追加（最大14枚）
+3. 不要牌は手牌エリアでクリックして削除
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. 鳴き操作
+1. 「ポン」「チー」「カン」ボタンを選択
+2. 鳴き候補から組み合わせを選択
+3. 確定ボタンで鳴き面子を確定
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. 設定入力
+- **場風・自風**: 東南西北から選択
+- **ドラ表示牌**: ドラ選択ボタンから指定
+- **役フラグ**: リーチ、一発、海底など
 
-## Deploy on Vercel
+### 4. 計算実行
+1. 手牌14枚完成で「計算」ボタン有効化
+2. クリックで役判定・点数計算実行
+3. 結果画面で詳細表示
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ⚡ 開発コマンド
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# 基本開発コマンド（推奨）
+npm run dev
+
+# 安全起動（完全クリーンアップ後起動）
+npm run dev:safe
+
+# 強制起動（プロセス強制終了後起動）
+npm run dev:force
+
+# プロセスクリーンアップのみ
+npm run clean
+
+# ポート設定チェックのみ
+npm run setup:ports
+```
+
+## 🔧 開発環境詳細
+
+### ポート設定
+- **フロントエンド**: 3002 (Next.js)
+- **バックエンドAPI**: 4000 (Ruby WEBrick)
+
+### 自動化機能
+- **ポート競合自動解決**: 使用中ポートの自動検出・解放
+- **プロセス管理**: 前回起動プロセスの自動クリーンアップ
+- **同時起動**: フロントエンド・API同時起動
+- **ヘルスチェック**: サーバー起動状況自動確認

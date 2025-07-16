@@ -19,7 +19,7 @@ class MahjongAPIServer
   def setup_routes
     # CORS対応
     @server.mount_proc '/' do |req, res|
-      res['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+      res['Access-Control-Allow-Origin'] = 'http://localhost:3002'  # フロントエンドポート
       res['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
       res['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
       
