@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run setup:ports && concurrently --kill-others --names \"🌐Frontend,⚙️ API\" --prefix-colors \"cyan,magenta\" \"npm run dev:frontend\" \"npm run dev:api\"",
+    "dev": "PORT=3002 next dev",
+    "dev:old": "npm run setup:ports && concurrently --kill-others --names \"🌐Frontend,⚙️ API\" --prefix-colors \"cyan,magenta\" \"npm run dev:frontend\" \"npm run dev:api\"",
     "dev:frontend": "PORT=3002 next dev",
-    "dev:api": "cd ruby_backend && ruby api_server.rb",
+    "dev:api": "cd ruby_backend && ruby working_api_server.rb",
     "dev:safe": "npm run clean && npm run setup:ports && npm run dev",
     "dev:auto": "chmod +x scripts/auto-dev.sh && ./scripts/auto-dev.sh && npm run dev",
     "dev:force": "npm run clean && sleep 2 && npm run dev",

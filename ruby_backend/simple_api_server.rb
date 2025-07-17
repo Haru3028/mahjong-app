@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # encoding: utf-8
 require 'json'
-require 'socket'
+require 'webrick'
 require_relative 'score_calculator'
 
 class SimpleMahjongAPIServer
@@ -16,17 +16,111 @@ class SimpleMahjongAPIServer
     puts "計算エンドポイント: POST http://localhost:#{@port}/api/calc_score"
     puts "Ctrl+Cで停止"
     
-    server = TCPServer.open(@port)
-    
-    loop do
-      Thread.start(server.accept) do |client|
-        handle_request(client)
+    # WEBrickサーバーの設定
+    server = WEBrick::HTTPServer.new(
+      Port: @port,
+      Logger: WEBrick::Log.new(nil),
+      AccessLog: []
+    )
+
+    # CORSヘッダーを追加するヘルパーメソッド
+    add_cors_headers = proc do |response|
+      response['Access-Control-Allow-Origin'] = 'http://localhost:3002'
+      response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+      response['Access-Control-Allow-Headers'] = 'Content-Type'
+      response['Content-Type'] = 'application/json'
+    end
+
+    # 健康チェックエンドポイント
+    server.mount_proc '/api/health' do |request, response|
+      add_cors_headers.call(response)
+      
+      health_data = {
+        status: 'ok',
+        message: 'API Server Running',
+        timestamp: Time.now.to_s,
+        version: '1.0.0'
+      }
+      
+      response.body = health_data.to_json
+    end
+
+    # 麻雀点数計算エンドポイント
+    server.mount_proc '/api/calc_score' do |request, response|
+      add_cors_headers.call(response)
+      
+      # OPTIONS リクエストの処理
+      if request.request_method == 'OPTIONS'
+        response.status = 200
+        response.body = ''
+        next
       end
+      
+      begin
+        # POSTデータの読み取り
+        request_body = request.body
+        if request_body.nil? || request_body.empty?
+          raise ArgumentError, "リクエストボディが空です"
+        end
+        
+        # JSONパース
+        params = JSON.parse(request_body)
+        puts "📥 計算リクエスト受信: #{params}"
+        
+        # 麻雀計算エンジンの実行
+        result = @calculator.calculate_score(params)
+        
+        # 結果をJSONに変換
+        response_data = result.to_h
+        puts "📤 計算結果送信: #{response_data}"
+        
+        response.body = response_data.to_json
+        
+      rescue JSON::ParserError => e
+        puts "❌ JSON解析エラー: #{e.message}"
+        error_response = {
+          success: false,
+          error: "JSONの形式が正しくありません",
+          details: e.message
+        }
+        response.body = error_response.to_json
+        
+      rescue ArgumentError => e
+        puts "❌ 引数エラー: #{e.message}"
+        error_response = {
+          success: false,
+          error: e.message
+        }
+        response.body = error_response.to_json
+        
+      rescue => e
+        puts "❌ 計算エラー: #{e.message}"
+        puts e.backtrace.join("\n")
+        error_response = {
+          success: false,
+          error: "計算中にエラーが発生しました",
+          details: e.message
+        }
+        response.body = error_response.to_json
+      end
+    end
+
+    # シャットダウン処理
+    trap("INT") do
+      puts "\n🛑 APIサーバーを停止中..."
+      server.shutdown
+    end
+
+    # サーバー開始
+    begin
+      server.start
+    rescue => e
+      puts "❌ サーバー起動エラー: #{e.message}"
+      exit 1
     end
   rescue Interrupt
     puts "\n🀄 サーバーを停止しています..."
-    server.close if server
-  end
+    server.shutdown if server
 
   private
 

@@ -364,8 +364,8 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
 
         console.log('送信データ:', handData); // デバッグ用
 
-        // Ruby APIに送信
-        const response = await fetch('http://localhost:4000/api/calc_score', {
+        // Ruby APIに送信（Next.jsプロキシ経由）
+        const response = await fetch('/api/calc_score', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -380,17 +380,17 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
         const result = await response.json();
         console.log('受信データ:', result); // デバッグ用
         
-        // APIレスポンスを結果画面用の形式に変換
+        // 新しいAPIレスポンス形式に対応
         const formattedResult = {
-          valid: result.success || false,
-          error: result.success ? undefined : result.error || '計算に失敗しました',
-          score: result.success ? {
-            points: result.total_score || 0,
-            han: result.han || 0,
+          valid: result.valid && result.total_han > 0,
+          error: result.valid ? undefined : (result.error || '計算に失敗しました'),
+          score: result.valid && result.total_han > 0 ? {
+            points: result.point_text || '0点',
+            han: result.total_han || 0,
             fu: result.fu || 0,
-            name: result.yaku ? result.yaku.map((y: any) => y.name).join(', ') : ''
+            name: result.yaku_list ? result.yaku_list.map((y: any) => y.name).join(', ') : ''
           } : undefined,
-          yaku: result.success && result.yaku ? result.yaku : [],
+          yaku: result.valid && result.yaku_list ? result.yaku_list : [],
           agari_type: isTsumo ? '自摸' : 'ロン',
           winning_tile: handData.winning_tile
         };

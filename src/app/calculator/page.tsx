@@ -101,7 +101,7 @@ export default function CalculatorPage() {
               </button>
               <button
                 onClick={handleClearAll}
-                className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-2 rounded-lg shadow h-10"
+                className="base-button bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow h-10"
               >
                 クリア
               </button>
@@ -261,14 +261,14 @@ export default function CalculatorPage() {
         </div>
 
         {/* 計算ボタンを一番下に移動 */}
-        <div className="flex justify-end w-full max-w-4xl mt-8 mb-8">
+        <div className="flex justify-center w-full max-w-4xl mt-8 mb-8">
           <button
             onClick={handleCalculate}
             disabled={!isCalculateButtonEnabled}
-            className={`base-button calculate-button ${
+            className={`px-8 py-4 rounded-lg font-bold text-lg transition-colors shadow-lg border-2 focus:outline-none focus:ring-2 ${
                 isCalculateButtonEnabled
-                ? 'enabled' 
-                : 'disabled' 
+                ? 'bg-blue-600 hover:bg-blue-700 text-white border-transparent hover:border-blue-400 focus:ring-blue-500' 
+                : 'bg-gray-500 text-gray-300 cursor-not-allowed border-gray-400'
             }`}
           >
             計算
@@ -277,7 +277,7 @@ export default function CalculatorPage() {
 
         {/* 一番上に戻るボタン */}
         <button
-          className="base-button fixed bottom-6 right-6 z-50 shadow-2xl flex items-center justify-center"
+          className="fixed bottom-6 right-6 z-50 shadow-2xl bg-gray-600 hover:bg-gray-700 text-white border-2 border-transparent hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
           style={{minWidth: '48px', minHeight: '48px', borderRadius: '50%'}}
           onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
           aria-label="一番上に戻る"
