@@ -18,6 +18,10 @@ const hanSet = Object.keys(yakuByHan).map(h => Number(h));
 export default function YakuListPage() {
   return (
     <main className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="flex gap-4 mb-6 justify-center">
+        <Link href="/" className="base-button bg-gray-700 hover:bg-gray-800 text-yellow-400 font-bold rounded shadow text-center px-6 py-3">メニューに戻る</Link>
+        <Link href="/list" className="base-button bg-gray-700 hover:bg-gray-800 text-yellow-400 font-bold rounded shadow text-center px-6 py-3">一覧画面に戻る</Link>
+      </div>
       <h1 className="text-3xl font-bold mb-6 text-yellow-400">役一覧</h1>
       <div className="flex flex-wrap gap-4 mb-8 justify-center">
         {hanSet.map(han => (

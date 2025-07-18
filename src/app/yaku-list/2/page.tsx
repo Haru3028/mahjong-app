@@ -3,21 +3,21 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const yakuList = [
-  { name: "ダブルリーチ", description: "第一巡でリーチ宣言。" },
-  { name: "三色同順", description: "3色で同じ順子。" },
-  { name: "一気通貫", description: "同種の1～9の順子3組。" },
-  { name: "混全帯么九（チャンタ）", description: "すべての面子と雀頭に一九字牌を含む。" },
-  { name: "三色同刻", description: "3色で同じ刻子。" },
-  { name: "三暗刻", description: "暗刻3組。" },
-  { name: "対々和（トイトイ）", description: "刻子のみで構成。" },
-  { name: "三槓子", description: "槓子3組。" },
-  { name: "混老頭", description: "一九字牌のみで構成。" },
-  { name: "小三元", description: "三元牌2組＋雀頭。" },
-  { name: "七対子（チートイツ）", description: "7組の対子。" },
-  { name: "純全帯么九（ジュンチャン）", description: "すべての面子と雀頭に一九牌を含み、字牌は含まない。" },
-  { name: "混一色（ホンイツ）", description: "1種の数牌＋字牌のみで構成。" },
-  { name: "小車輪", description: "チートイツで2～8索のみで構成。" },
-  { name: "連風牌", description: "自風・場風が同じでその刻子または槓子。" },
+  { name: "ダブルリーチ", description: "第一巡目でリーチ宣言。門前のみ成立。鳴くと成立しません。" },
+  { name: "三色同順", description: "萬・筒・索の3種類で同じ順子を揃える。鳴くと1翻に減少。" },
+  { name: "一気通貫", description: "同種の1～9の順子3組。鳴くと1翻に減少。" },
+  { name: "混全帯么九（チャンタ）", description: "すべての面子と雀頭に一九字牌を含む。鳴くと1翻に減少。" },
+  { name: "三色同刻", description: "萬・筒・索の3種類で同じ刻子（または槓子）を揃える。鳴いても2翻。" },
+  { name: "三暗刻", description: "暗刻3組。鳴いても2翻。" },
+  { name: "対々和（トイトイ）", description: "刻子のみで構成。鳴いても2翻。" },
+  { name: "三槓子", description: "槓子3組。鳴いても2翻。" },
+  { name: "混老頭", description: "一九字牌のみで構成。鳴いても2翻。" },
+  { name: "小三元", description: "三元牌2組＋雀頭。鳴いても2翻。" },
+  { name: "七対子（チートイツ）", description: "7組の対子。鳴くと成立しません。" },
+  { name: "純全帯么九（ジュンチャン）", description: "すべての面子と雀頭に一九牌を含み、字牌は含まない。鳴くと1翻に減少。" },
+  { name: "混一色（ホンイツ）", description: "1種の数牌＋字牌のみで構成。鳴くと1翻に減少。" },
+  { name: "小車輪", description: "チートイツで2～8索のみで構成。鳴くと成立しません。" },
+  { name: "連風牌", description: "自風・場風が同じでその刻子または槓子。鳴いても2翻。" },
 ];
 
 export default function Yaku2Page() {

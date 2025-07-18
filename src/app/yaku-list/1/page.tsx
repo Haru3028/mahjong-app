@@ -3,19 +3,19 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const yakuList = [
-  { name: "リーチ", description: "門前で和了宣言。" },
-  { name: "一発", description: "リーチ後1巡以内に和了。" },
-  { name: "門前清自摸和（メンゼンツモ）", description: "門前で自摸和了。" },
-  { name: "断么九（タンヤオ）", description: "字牌・一九牌を使わない。" },
-  { name: "平和（ピンフ）", description: "順子のみ、役牌なし、両面待ち。" },
-  { name: "一盃口（イーペーコー）", description: "同じ順子2組。" },
-  { name: "役牌（自風・場風・三元牌）", description: "自風・場風・三元牌の刻子または槓子。" },
-  { name: "嶺上開花（リンシャンカイホウ）", description: "嶺上牌で和了。" },
-  { name: "海底摸月（ハイテイツモ）", description: "海底牌で自摸和了。" },
-  { name: "河底撈魚（ホウテイロン）", description: "河底牌でロン和了。" },
-  { name: "槍槓（チャンカン）", description: "加槓に対してロン和了。" },
-  { name: "ドラ", description: "ドラ表示牌に対応する牌を含む（得点のみ、役ではない）。" },
-  { name: "赤ドラ", description: "赤色の5牌を含む（得点のみ、役ではない）。" },
+  { name: "リーチ", description: "門前（鳴きなし）で和了宣言を行う。鳴いている場合は成立しません。" },
+  { name: "一発", description: "リーチ後、1巡以内に和了（鳴きが入ると無効）。" },
+  { name: "門前清自摸和（メンゼンツモ）", description: "門前（鳴きなし）で自摸和了。鳴いている場合は成立しません。" },
+  { name: "断么九（タンヤオ）", description: "字牌・一九牌を使わず、2～8の数牌のみで構成。鳴いても1翻。" },
+  { name: "平和（ピンフ）", description: "順子のみ、役牌なし、両面待ち。鳴くと成立しません。" },
+  { name: "一盃口（イーペーコー）", description: "門前で同じ順子2組。鳴くと成立しません。" },
+  { name: "役牌（自風・場風・三元牌）", description: "自風・場風・三元牌の刻子または槓子。鳴いても1翻。" },
+  { name: "嶺上開花（リンシャンカイホウ）", description: "嶺上牌（カンした際の牌）で和了。鳴きの有無は問わない。" },
+  { name: "海底摸月（ハイテイツモ）", description: "最後の自摸牌（海底牌）で自摸和了。鳴きの有無は問わない。" },
+  { name: "河底撈魚（ホウテイロン）", description: "最後の捨て牌（河底牌）でロン和了。鳴きの有無は問わない。" },
+  { name: "槍槓（チャンカン）", description: "他家が加槓した牌でロン和了。鳴きの有無は問わない。" },
+  { name: "ドラ", description: "ドラ表示牌に対応する牌を含む（得点のみ、役ではない）。鳴きの有無は問わない。" },
+  { name: "赤ドラ", description: "赤色の5牌を含む（得点のみ、役ではない）。鳴きの有無は問わない。" },
 ];
 
 export default function Yaku1Page() {
