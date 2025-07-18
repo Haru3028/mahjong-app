@@ -116,6 +116,10 @@ export default function ScoreTablePage() {
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-6 text-yellow-400 text-center">点数表</h1>
       <div className="flex justify-center gap-4 mb-6">
+        <a href="/" className="base-button px-6 py-2 rounded font-bold text-lg bg-gray-700 text-yellow-400 hover:bg-yellow-400 hover:text-white transition">メニューに戻る</a>
+        <a href="/yaku-list" className="base-button px-6 py-2 rounded font-bold text-lg bg-gray-700 text-yellow-400 hover:bg-yellow-400 hover:text-white transition">一覧に戻る</a>
+      </div>
+      <div className="flex justify-center gap-4 mb-6">
         <button
           className={`base-button px-6 py-2 rounded font-bold text-lg ${type === "ko" ? "bg-yellow-400 text-white" : "bg-gray-700 text-yellow-400"}`}
           onClick={() => setType("ko")}
