@@ -265,10 +265,10 @@ export default function CalculatorPage() {
           <button
             onClick={handleCalculate}
             disabled={!isCalculateButtonEnabled}
-            className={`px-8 py-4 rounded-lg font-bold text-lg transition-colors shadow-lg border-2 focus:outline-none focus:ring-2 ${
+            className={`base-button px-8 py-4 text-lg ${
                 isCalculateButtonEnabled
-                ? 'bg-blue-600 hover:bg-blue-700 text-white border-transparent hover:border-blue-400 focus:ring-blue-500' 
-                : 'bg-gray-500 text-gray-300 cursor-not-allowed border-gray-400'
+                ? '' 
+                : 'disabled'
             }`}
           >
             計算

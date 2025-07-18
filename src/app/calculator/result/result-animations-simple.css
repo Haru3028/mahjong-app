@@ -1,0 +1,149 @@
+/* シンプルなアニメーション効果 */
+
+/* 基本パネルスタイル */
+.section-panel {
+  background: rgba(255,255,255,0.07);
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  border: 2px solid #bfa76f;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e6c97a;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
+.base-button {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.7rem 2.2rem;
+  border-radius: 0.7rem;
+  border: 2px solid #bfa76f;
+  background: linear-gradient(90deg, #e6c97a 0%, #bfa76f 100%);
+  color: #2d1c00;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.base-button:hover {
+  background: linear-gradient(90deg, #f0d085 0%, #c9a76f 100%);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.animate-particle-float {
+  animation: particle-float 6s infinite ease-in-out;
+}
+
+@keyframes particle-float {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-40px) translateX(-5px);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translateY(-10px) translateX(-10px);
+    opacity: 0.7;
+  }
+}
+
+.animate-float-up {
+  animation: float-up 0.8s ease-out;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-gold-glow {
+  animation: gold-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes gold-glow {
+  0% {
+    box-shadow: 0 0 20px rgba(191, 167, 111, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(191, 167, 111, 0.8);
+  }
+}
+
+.animate-winning-tile-glow {
+  animation: winning-tile-glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes winning-tile-glow {
+  0% {
+    box-shadow: 0 0 15px #bfa76f;
+  }
+  100% {
+    box-shadow: 0 0 25px #e6c97a, 0 0 35px #bfa76f;
+  }
+}
+
+.animate-yaku-appear {
+  animation: yaku-appear 0.5s ease-out;
+}
+
+@keyframes yaku-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

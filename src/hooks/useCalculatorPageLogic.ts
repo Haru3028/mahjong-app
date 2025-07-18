@@ -329,16 +329,31 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
     handleGoBack: () => {}, // 必要に応じて実装
     handleCalculate: async () => {
       try {
+        console.log('🎯 計算開始');
+        
         // 手牌数チェック
         const totalHandTiles = selectedTiles.length + furoList.reduce((sum, furo) => sum + furo.tiles.length, 0);
+        console.log(`📊 牌数チェック: 手牌${selectedTiles.length}枚 + 鳴き${furoList.reduce((sum, furo) => sum + furo.tiles.length, 0)}枚 = ${totalHandTiles}枚`);
+        
         if (totalHandTiles !== 14) {
           alert(`手牌が${totalHandTiles}枚です。14枚になるように牌を選択してください。\n（現在: 手牌${selectedTiles.length}枚 + 鳴き${furoList.reduce((sum, furo) => sum + furo.tiles.length, 0)}枚 = ${totalHandTiles}枚）`);
           return;
         }
 
+        // 必須フィールドの検証
+        if (selectedTiles.length === 0) {
+          alert('手牌が選択されていません。');
+          return;
+        }
+
+        if (isTsumo === undefined) {
+          alert('ツモかロンかを選択してください。');
+          return;
+        }
+
         // Ruby APIの期待する形式に合わせてデータを準備
         const handData = {
-          hand: selectedTiles.map(tile => tile.id), // Ruby APIの期待するフィールド名に変更
+          hand: selectedTiles.map(tile => tile.id),
           bakaze: bakaze,
           jikaze: jikaze,
           dora_indicators: doraIndicators.map(tile => tile.id),
@@ -362,9 +377,9 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           seat_wind: jikaze
         };
 
-        console.log('送信データ:', handData); // デバッグ用
+        console.log('📤 送信データ:', JSON.stringify(handData, null, 2));
 
-        // Ruby APIに送信（Next.jsプロキシ経由）
+        // Next.jsのAPIルートに送信
         const response = await fetch('/api/calc_score', {
           method: 'POST',
           headers: {
@@ -378,22 +393,19 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
         }
 
         const result = await response.json();
-        console.log('受信データ:', result); // デバッグ用
+        console.log('📥 API受信データ:', result);
         
-        // 新しいAPIレスポンス形式に対応
+        // APIレスポンス形式に対応
         const formattedResult = {
           valid: result.valid && result.total_han > 0,
-          error: result.valid ? undefined : (result.error || '計算に失敗しました'),
-          score: result.valid && result.total_han > 0 ? {
-            points: result.point_text || '0点',
-            han: result.total_han || 0,
-            fu: result.fu || 0,
-            name: result.yaku_list ? result.yaku_list.map((y: any) => y.name).join(', ') : ''
-          } : undefined,
+          points: result.point_text || '0点',
+          han: result.total_han || 0,
+          fu: result.fu || 0,
           yaku: result.valid && result.yaku_list ? result.yaku_list : [],
-          agari_type: isTsumo ? '自摸' : 'ロン',
-          winning_tile: handData.winning_tile
+          error: result.valid ? undefined : (result.error || '計算に失敗しました')
         };
+        
+        console.log('🎯 整形後結果:', formattedResult);
         
         // 結果をクエリパラメータとして結果ページに渡す
         const searchParams = new URLSearchParams({
@@ -401,10 +413,36 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           handData: JSON.stringify(handData)
         });
         
+        console.log('🔗 リダイレクト先:', `/calculator/result?${searchParams.toString()}`);
         router.push(`/calculator/result?${searchParams.toString()}`);
+
       } catch (error) {
-        console.error('計算エラー:', error);
-        alert('計算中にエラーが発生しました。サーバーが起動していることを確認してください。');
+        console.error('❌ 計算エラー:', error);
+        
+        // エラー時もとりあえず結果画面に遷移してエラー表示
+        const errorResult = {
+          valid: false,
+          points: '0点',
+          han: 0,
+          fu: 0,
+          yaku: [],
+          error: `計算エラー: ${error instanceof Error ? error.message : 'Unknown error'}`
+        };
+        
+        const handData = {
+          hand: selectedTiles.map(tile => tile.id),
+          is_tsumo: isTsumo || false,
+          bakaze: bakaze,
+          jikaze: jikaze,
+          winning_tile: selectedTiles.length > 0 ? selectedTiles[selectedTiles.length - 1].id : ''
+        };
+        
+        const searchParams = new URLSearchParams({
+          result: JSON.stringify(errorResult),
+          handData: JSON.stringify(handData)
+        });
+        
+        router.push(`/calculator/result?${searchParams.toString()}`);
       }
     },
     setSelectedTiles,
