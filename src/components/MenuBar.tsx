@@ -6,7 +6,7 @@ const MenuBar: React.FC = () => (
     <Link href="/" className="base-button text-center" style={{minWidth:'120px'}}>メニュー</Link>
     <Link href="/calculator" className="base-button text-center" style={{minWidth:'120px'}}>点数計算</Link>
     <Link href="/keisanrenshu" className="base-button text-center" style={{minWidth:'120px'}}>計算練習</Link>
-    <Link href="/nanikiru" className="base-button text-center" style={{minWidth:'120px'}}>何切る</Link>
+    {/* <Link href="/nanikiru" className="base-button text-center" style={{minWidth:'120px'}}>何切る</Link> */}
     <Link href="/history" className="base-button text-center" style={{minWidth:'120px'}}>履歴</Link>
     <Link href="/list" className="base-button text-center" style={{minWidth:'120px'}}>一覧メニュー</Link>
   </nav>

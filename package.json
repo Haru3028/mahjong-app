@@ -17,11 +17,11 @@
     "lint": "next lint",
     "clean": "pkill -f 'next\\|ruby.*api_server' || true"
   },
+  "type": "module",
   "dependencies": {
     "@prisma/client": "^6.12.0",
     "next": "15.3.4",
     "node-fetch": "^3.3.2",
-    "prisma": "^6.12.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -30,7 +30,7 @@
     "@tailwindcss/postcss": "^4.1.11",
     "@types/estree": "^1.0.8",
     "@types/json-schema": "^7.0.15",
-    "@types/node": "^20",
+    "@types/node": "^20.19.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.21",
@@ -38,7 +38,9 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "postcss": "^8.5.6",
+    "prisma": "^6.12.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
   }
 }

@@ -31,15 +31,6 @@ const HomePage: React.FC = () => {
           計算練習
         </Link>
 
-        {/* 何切る問題 ボタン */}
-        <Link
-          href="/nanikiru"
-          className="base-button w-60 text-center text-lg py-4"
-          aria-label="何切る問題"
-          tabIndex={0}
-        >
-          何切る問題
-        </Link>
 
         {/* 履歴 ボタン */}
         <Link
@@ -60,6 +51,8 @@ const HomePage: React.FC = () => {
         >
           一覧
         </Link>
+
+
       </div>
     </div>
   );
