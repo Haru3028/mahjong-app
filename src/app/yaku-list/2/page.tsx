@@ -14,10 +14,7 @@ const yakuList = [
   { name: "混老頭", description: "一九字牌のみで構成。鳴いても2翻。" },
   { name: "小三元", description: "三元牌2組＋雀頭。鳴いても2翻。" },
   { name: "七対子（チートイツ）", description: "7組の対子。鳴くと成立しません。" },
-  { name: "純全帯么九（ジュンチャン）", description: "すべての面子と雀頭に一九牌を含み、字牌は含まない。鳴くと1翻に減少。" },
-  { name: "混一色（ホンイツ）", description: "1種の数牌＋字牌のみで構成。鳴くと1翻に減少。" },
-  { name: "小車輪", description: "チートイツで2～8索のみで構成。鳴くと成立しません。" },
-  { name: "連風牌", description: "自風・場風が同じでその刻子または槓子。鳴いても2翻。" },
+  // 小車輪・連風牌は除外
 ];
 
 export default function Yaku2Page() {

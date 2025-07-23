@@ -2,10 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-const yakuList = [
-  { name: "純全帯么九（ジュンチャン）", description: "すべての面子と雀頭に一九牌を含み、字牌は含まない。" },
-  { name: "混一色（ホンイツ）", description: "1種の数牌＋字牌のみで構成。" },
-];
+const yakuList = [];
 
 export default function Yaku4Page() {
   const [openIdx, setOpenIdx] = useState<number|null>(null);

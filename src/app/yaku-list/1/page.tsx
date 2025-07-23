@@ -14,8 +14,8 @@ const yakuList = [
   { name: "海底摸月（ハイテイツモ）", description: "最後の自摸牌（海底牌）で自摸和了。鳴きの有無は問わない。" },
   { name: "河底撈魚（ホウテイロン）", description: "最後の捨て牌（河底牌）でロン和了。鳴きの有無は問わない。" },
   { name: "槍槓（チャンカン）", description: "他家が加槓した牌でロン和了。鳴きの有無は問わない。" },
-  { name: "ドラ", description: "ドラ表示牌に対応する牌を含む（得点のみ、役ではない）。鳴きの有無は問わない。" },
-  { name: "赤ドラ", description: "赤色の5牌を含む（得点のみ、役ではない）。鳴きの有無は問わない。" },
+  { name: "天和（テンホウ）", description: "親が配牌時に和了。ダブル役満。" },
+  { name: "地和（チーホウ）", description: "子が第一ツモで和了。ダブル役満。" },
 ];
 
 export default function Yaku1Page() {
@@ -24,6 +24,7 @@ export default function Yaku1Page() {
     <main className="min-h-screen bg-gray-900 text-white p-6">
       <Link href="/yaku-list" className="base-button bg-yellow-700 hover:bg-yellow-500 text-white font-bold rounded shadow text-center px-6 py-3 mb-6 inline-block">← 役一覧へ戻る</Link>
       <h1 className="text-3xl font-bold mb-6 text-yellow-400">1翻の役</h1>
+      <div className="text-gray-400 text-sm mb-4">※食い下がり（鳴きで翻数が下がる役）は説明欄に記載。重複役は門前時のみ表示。</div>
       <div className="max-w-xl mx-auto">
         {yakuList.map((yaku, idx) => (
           <div key={idx} className="mb-4">

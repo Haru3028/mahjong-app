@@ -1,6 +1,7 @@
 // src/components/TileSelectionSection.tsx
 
 import React from 'react';
+import { isRedTileDuplicatedAll } from '../app/keisanrenshu/mahjongHelper';
 import Image from 'next/image';
 import { MahjongTile, Furo } from '../types/mahjong';
 
@@ -9,10 +10,14 @@ interface TileSelectionSectionProps {
   tiles: MahjongTile[];
   onTileClick: (tile: MahjongTile, index?: number) => void;
   type: 'available' | 'hand' | 'furo';
-  furoList?: Furo[]; 
-  removeFuro?: (furoIndex: number) => void; 
+  furoList?: Furo[];
+  removeFuro?: (furoIndex: number) => void;
   panelClassName?: string;
   titleClassName?: string;
+  handTiles?: MahjongTile[];
+  doraTiles?: MahjongTile[];
+  furoTiles?: MahjongTile[];
+  nakiTiles?: MahjongTile[];
 }
 
 const TileSelectionSection: React.FC<TileSelectionSectionProps> = ({
@@ -24,6 +29,10 @@ const TileSelectionSection: React.FC<TileSelectionSectionProps> = ({
   removeFuro,
   panelClassName,
   titleClassName,
+  handTiles,
+  doraTiles,
+  furoTiles,
+  nakiTiles,
 }) => {
   // 牌の画像サイズを全てのtypeで統一し、アスペクト比を考慮した幅と高さを設定
   // 一般的な麻雀牌の画像は、幅32px、高さ40pxが標準的なサイズです。
@@ -56,69 +65,145 @@ const TileSelectionSection: React.FC<TileSelectionSectionProps> = ({
     }
   };
 
+  // 牌の合計枚数（赤含む）を取得する関数
+  const getTotalTileCount = (tileId: string) => {
+    const baseId = tileId.replace('_red', '');
+    const handCount = (handTiles || []).filter(t => t.id.replace('_red', '') === baseId).length;
+    const doraCount = (doraTiles || []).filter(t => t.id.replace('_red', '') === baseId).length;
+    return handCount + doraCount;
+  };
+
+  // 赤5萬・赤5筒・赤5索はそれぞれ全領域で1枚までしか選択できない
+  const isRedTileAlreadyExists = (tile: MahjongTile) => {
+    if (!tile.isRedDora) return false;
+    // 赤5牌はidが man5_red, pin5_red, sou5_red で区別されている
+    const redId = tile.id;
+    const inHand = (handTiles || []).filter(t => t.id === redId).length;
+    const inDora = (doraTiles || []).filter(t => t.id === redId).length;
+    const inFuro = (furoTiles || []).filter(t => t.id === redId).length;
+    return (inHand + inDora + inFuro) >= 1;
+  };
+
   return (
-    // panelClassName があればそれを使い、なければデフォルトのスタイルを適用
     <div className={`p-6 rounded-xl shadow-lg ${panelClassName || 'bg-green-700 border-lime-600 border-4 text-white'}`}>
       {title && (
-        // titleClassName があればそれを使い、なければデフォルトのスタイルを適用
         <h2 className={`${titleClassName || 'text-2xl font-bold mb-4 text-center text-white'}`}>
           {title}
         </h2>
       )}
-      {/* 牌が横に並び、折り返し、間隔を空け、中央揃えするためのFlexboxコンテナ */}
       {type === 'available' && (
         <>
+          {/* 萬子 */}
           <div className="flex flex-wrap gap-2 justify-center mb-2">
-            {/* 萬子 */}
-            {tiles.filter(t => t.type === 'manzu').map((tile, index) => (
-              <div key={tile.instanceId || `${tile.id}-${index}`}
-                className="relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform"
-                onClick={() => onTileClick(tile, index)}
-              >
-                <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
-                  className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
-                />
-              </div>
-            ))}
+            {tiles.filter(t => t.type === 'manzu').map((tile, index) => {
+              const handStr = (handTiles || []).map(t => t.id).join(' ');
+              const doraStr = (doraTiles || []).map(t => t.id).join(' ');
+              const furoStr = (furoTiles || []).map(t => t.id).join(' ');
+              const nakiStr = (nakiTiles || []).map(t => t.id).join(' ');
+              const isRedDuplicated = tile.isRedDora && isRedTileDuplicatedAll(handStr, doraStr, furoStr, nakiStr, tile.id);
+              const totalCount = getTotalTileCount(tile.id);
+              const isOverLimit = totalCount >= 4;
+              const isRedAlready = isRedTileAlreadyExists(tile);
+              return (
+                <div key={tile.instanceId || `${tile.id}-${index}`}
+                  className={`relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform${isRedDuplicated || isOverLimit || isRedAlready ? ' opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => {
+              if (isRedDuplicated || isRedAlready) {
+                alert(`赤ドラ（${tile.name}）は手牌・ドラ表示牌・フーロ全体で1枚までしか選択できません。`);
+                return;
+              }
+                    if (isOverLimit) {
+                      alert(`${tile.name}は手牌とドラ表示牌を合わせて4枚までしか選択できません。`);
+                      return;
+                    }
+                    onTileClick(tile, index);
+                  }}
+                >
+                  <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
+                    className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              );
+            })}
           </div>
+          {/* 筒子 */}
           <div className="flex flex-wrap gap-2 justify-center mb-2">
-            {/* 筒子 */}
-            {tiles.filter(t => t.type === 'pinzu').map((tile, index) => (
-              <div key={tile.instanceId || `${tile.id}-${index}`}
-                className="relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform"
-                onClick={() => onTileClick(tile, index)}
-              >
-                <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
-                  className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
-                />
-              </div>
-            ))}
+            {tiles.filter(t => t.type === 'pinzu').map((tile, index) => {
+              const totalCount = getTotalTileCount(tile.id);
+              const isOverLimit = totalCount >= 4;
+              const isRedAlready = isRedTileAlreadyExists(tile);
+              return (
+                <div key={tile.instanceId || `${tile.id}-${index}`}
+                  className={`relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform${isOverLimit || isRedAlready ? ' opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => {
+                    if (isRedAlready) {
+                      alert(`赤ドラ（${tile.name}）は手牌・ドラ表示牌・フーロ全体で1枚までしか選択できません。`);
+                      return;
+                    }
+                    if (isOverLimit) {
+                      alert(`${tile.name}は手牌とドラ表示牌を合わせて4枚までしか選択できません。`);
+                      return;
+                    }
+                    onTileClick(tile, index);
+                  }}
+                >
+                  <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
+                    className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              );
+            })}
           </div>
+          {/* 索子 */}
           <div className="flex flex-wrap gap-2 justify-center mb-2">
-            {/* 索子 */}
-            {tiles.filter(t => t.type === 'souzu').map((tile, index) => (
-              <div key={tile.instanceId || `${tile.id}-${index}`}
-                className="relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform"
-                onClick={() => onTileClick(tile, index)}
-              >
-                <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
-                  className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
-                />
-              </div>
-            ))}
+            {tiles.filter(t => t.type === 'souzu').map((tile, index) => {
+              const totalCount = getTotalTileCount(tile.id);
+              const isOverLimit = totalCount >= 4;
+              const isRedAlready = isRedTileAlreadyExists(tile);
+              return (
+                <div key={tile.instanceId || `${tile.id}-${index}`}
+                  className={`relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform${isOverLimit || isRedAlready ? ' opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => {
+                    if (isRedAlready) {
+                      alert(`赤ドラ（${tile.name}）は手牌・ドラ表示牌・フーロ全体で1枚までしか選択できません。`);
+                      return;
+                    }
+                    if (isOverLimit) {
+                      alert(`${tile.name}は手牌とドラ表示牌を合わせて4枚までしか選択できません。`);
+                      return;
+                    }
+                    onTileClick(tile, index);
+                  }}
+                >
+                  <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
+                    className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              );
+            })}
           </div>
+          {/* 字牌 */}
           <div className="flex flex-wrap gap-2 justify-center mb-2">
-            {/* 字牌 */}
-            {tiles.filter(t => t.type === 'jihai').map((tile, index) => (
-              <div key={tile.instanceId || `${tile.id}-${index}`}
-                className="relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform"
-                onClick={() => onTileClick(tile, index)}
-              >
-                <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
-                  className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
-                />
-              </div>
-            ))}
+            {tiles.filter(t => t.type === 'jihai').map((tile, index) => {
+              const totalCount = getTotalTileCount(tile.id);
+              const isOverLimit = totalCount >= 4;
+              return (
+                <div key={tile.instanceId || `${tile.id}-${index}`}
+                  className={`relative cursor-pointer transition-transform duration-100 ease-out hover:scale-105 transform${isOverLimit ? ' opacity-50 cursor-not-allowed' : ''}`}
+                  onClick={() => {
+                    if (isOverLimit) {
+                      alert(`${tile.name}は手牌とドラ表示牌を合わせて4枚までしか選択できません。`);
+                      return;
+                    }
+                    onTileClick(tile, index);
+                  }}
+                >
+                  <Image src={tile.src} alt={tile.name} width={TILE_WIDTH} height={TILE_HEIGHT}
+                    className={`rounded-md border ${tile.isRedDora ? 'border-red-500' : 'border-gray-300'}`}
+                  />
+                </div>
+              );
+            })}
           </div>
         </>
       )}

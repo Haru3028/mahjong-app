@@ -4,6 +4,8 @@ import { useState } from 'react';
 
 const yakuList = [
   { name: "二盃口（リャンペーコー）", description: "同じ順子2組を2回作る（門前のみ）。" },
+  { name: "純全帯么九（ジュンチャン）", description: "すべての面子と雀頭に一九牌を含み、字牌は含まない。鳴くと2翻に減少。" },
+  { name: "混一色（ホンイツ）", description: "1種の数牌＋字牌のみで構成。鳴くと2翻に減少。" },
 ];
 
 export default function Yaku3Page() {

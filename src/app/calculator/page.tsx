@@ -152,11 +152,12 @@ export default function CalculatorPage() {
                       alert(`赤ドラ（${tile.name}）は1枚しか選択できません。`);
                       return;
                     }
-                    // 同じ牌は最大4枚まで
+                    // ドラ表示牌＋手牌 合計4枚まで
                     const baseId = tile.id.replace('_red', '');
-                    const count = doraIndicators.filter(t => t.id.replace('_red', '') === baseId).length;
-                    if (count >= 4) {
-                      alert(`${tile.name}は4枚までしか選択できません。`);
+                    const countInDora = doraIndicators.filter(t => t.id.replace('_red', '') === baseId).length;
+                    const countInHand = selectedTiles.filter(t => t.id.replace('_red', '') === baseId).length;
+                    if (countInDora + countInHand >= 4) {
+                      alert(`${tile.name}はドラ表示牌と手牌を合わせて4枚までしか選択できません。`);
                       return;
                     }
                     // 追加
@@ -178,6 +179,10 @@ export default function CalculatorPage() {
             type="available"
             panelClassName="section-panel"
             titleClassName="section-title"
+            handTiles={selectedTiles}
+            doraTiles={doraIndicators}
+            furoTiles={furoList.flatMap(f => f.tiles)}
+            nakiTiles={[]}
           />
         </div>
 

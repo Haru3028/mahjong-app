@@ -1,6 +1,27 @@
+// 赤ドラ重複判定（全選択領域対応）
+export function isRedTileDuplicatedAll(...tileGroups: string[]): boolean {
+  const reds = ["5m_red", "5p_red", "5s_red"];
+  const allTiles = tileGroups.flatMap(str => str.trim().split(/\s+/));
+  for (const red of reds) {
+    if (allTiles.filter(t => t === red).length > 1) return true;
+  }
+  return false;
+}
+// 牌ごとの枚数制限バリデーション
+export function isTileCountValid(inputStr: string, doraStr: string): boolean {
+  const allTiles = [...inputStr.trim().split(/\s+/), ...doraStr.trim().split(/\s+/)].filter(Boolean);
+  const tileCount: Record<string, number> = {};
+  for (const tile of allTiles) {
+    // 通常牌・赤ドラ問わず1種類4枚まで
+    tileCount[tile] = (tileCount[tile] || 0) + 1;
+    if (tileCount[tile] > 4) return false;
+  }
+  return true;
+}
 // 牌画像ID変換・牌文字列描画・赤牌重複判定
 import { mahjongTiles } from "../../data/mahjongTiles";
 import Image from "next/image";
+import React from "react";
 
 export function getTileImageId(tileStr: string): string | null {
   // 赤牌対応: 5m_red, 5p_red, 5s_red
@@ -20,8 +41,8 @@ export function getTileImageId(tileStr: string): string | null {
   return null;
 }
 // JSX返却のため.tsx拡張子必須
-export function renderTilesFromString(str: string): JSX.Element[] {
-  const tiles: JSX.Element[] = [];
+export function renderTilesFromString(str: string): React.JSX.Element[] {
+  const tiles: React.JSX.Element[] = [];
   const regex = /([1-9]+[mps])|([東南西北白發中])/g;
   let match;
   while ((match = regex.exec(str))) {

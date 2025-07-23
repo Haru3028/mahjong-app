@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import { sampleProblems, Problem } from "./ProblemList";
-import { getTileImageId, renderTilesFromString, isRedTileDuplicated } from "./mahjongHelper";
+import { getTileImageId, renderTilesFromString, isRedTileDuplicated, isTileCountValid } from "./mahjongHelper";
 
 // 問題表示
 function ProblemDisplay({ problem }: { problem: Problem }) {
@@ -22,6 +22,7 @@ function InputForm({ input, setInput, doraInput, setDoraInput, showResult }: {
   setDoraInput: (v: string) => void;
   showResult: boolean;
 }) {
+  // 赤ドラが2枚以上の場合はsetInput/setDoraInputしない
   return (
     <div className="flex flex-row items-center gap-2">
       <input
@@ -31,7 +32,13 @@ function InputForm({ input, setInput, doraInput, setDoraInput, showResult }: {
           const newVal = e.target.value;
           const inputTiles = newVal.trim() ? newVal.trim().split(/\s+/) : [];
           const doraTiles = doraInput.trim() ? doraInput.trim().split(/\s+/) : [];
-          if ((inputTiles.length + doraTiles.length) <= 4 && !isRedTileDuplicated(newVal, doraInput)) setInput(newVal);
+          if (
+            (inputTiles.length + doraTiles.length) <= 4 &&
+            isTileCountValid(newVal, doraInput) &&
+            !isRedTileDuplicated(newVal, doraInput)
+          ) {
+            setInput(newVal);
+          }
         }}
         placeholder="手牌を入力 (例: 1m)"
         className="border px-2 py-1 rounded"
@@ -44,7 +51,13 @@ function InputForm({ input, setInput, doraInput, setDoraInput, showResult }: {
           const newVal = e.target.value;
           const inputTiles = input.trim() ? input.trim().split(/\s+/) : [];
           const doraTiles = newVal.trim() ? newVal.trim().split(/\s+/) : [];
-          if ((inputTiles.length + doraTiles.length) <= 4 && !isRedTileDuplicated(input, newVal)) setDoraInput(newVal);
+          if (
+            (inputTiles.length + doraTiles.length) <= 4 &&
+            isTileCountValid(input, newVal) &&
+            !isRedTileDuplicated(input, newVal)
+          ) {
+            setDoraInput(newVal);
+          }
         }}
         placeholder="ドラを入力 (例: 5p)"
         className="border px-2 py-1 rounded"
