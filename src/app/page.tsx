@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
 
         {/* 計算練習 ボタン */}
         <Link
-          href="/keisanrenshu"
+          href="/keisanrenshu/class"
           className="base-button w-60 text-center text-lg py-4"
           aria-label="計算練習"
           tabIndex={0}

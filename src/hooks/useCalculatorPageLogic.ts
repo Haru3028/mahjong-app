@@ -330,27 +330,22 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
     handleCalculate: async () => {
       try {
         console.log('🎯 計算開始');
-        
         // 手牌数チェック
         const totalHandTiles = selectedTiles.length + furoList.reduce((sum, furo) => sum + furo.tiles.length, 0);
         console.log(`📊 牌数チェック: 手牌${selectedTiles.length}枚 + 鳴き${furoList.reduce((sum, furo) => sum + furo.tiles.length, 0)}枚 = ${totalHandTiles}枚`);
-        
         if (totalHandTiles !== 14) {
           alert(`手牌が${totalHandTiles}枚です。14枚になるように牌を選択してください。\n（現在: 手牌${selectedTiles.length}枚 + 鳴き${furoList.reduce((sum, furo) => sum + furo.tiles.length, 0)}枚 = ${totalHandTiles}枚）`);
           return;
         }
-
         // 必須フィールドの検証
         if (selectedTiles.length === 0) {
           alert('手牌が選択されていません。');
           return;
         }
-
         if (isTsumo === undefined) {
           alert('ツモかロンかを選択してください。');
           return;
         }
-
         // Ruby APIの期待する形式に合わせてデータを準備
         const handData = {
           hand: selectedTiles.map(tile => tile.id),
@@ -376,9 +371,7 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           prevalent_wind: bakaze,
           seat_wind: jikaze
         };
-
         console.log('📤 送信データ:', JSON.stringify(handData, null, 2));
-
         // Next.jsのAPIルートに送信
         const response = await fetch('/api/calc_score', {
           method: 'POST',
@@ -387,14 +380,11 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           },
           body: JSON.stringify(handData)
         });
-
         if (!response.ok) {
           throw new Error(`API Error: ${response.status}`);
         }
-
         const result = await response.json();
         console.log('📥 API受信データ:', result);
-        
         // APIレスポンス形式に対応
         const formattedResult = {
           valid: result.valid && result.total_han > 0,
@@ -404,21 +394,33 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           yaku: result.valid && result.yaku_list ? result.yaku_list : [],
           error: result.valid ? undefined : (result.error || '計算に失敗しました')
         };
-        
         console.log('🎯 整形後結果:', formattedResult);
-        
+
+        // --- 履歴APIに保存 ---
+        try {
+          await fetch('/api/history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'calculation',
+              handData,
+              result: formattedResult
+            })
+          });
+        } catch (e) {
+          console.warn('履歴保存失敗', e);
+        }
+        // --- 履歴API保存ここまで ---
+
         // 結果をクエリパラメータとして結果ページに渡す
         const searchParams = new URLSearchParams({
           result: JSON.stringify(formattedResult),
           handData: JSON.stringify(handData)
         });
-        
         console.log('🔗 リダイレクト先:', `/calculator/result?${searchParams.toString()}`);
         router.push(`/calculator/result?${searchParams.toString()}`);
-
       } catch (error) {
         console.error('❌ 計算エラー:', error);
-        
         // エラー時もとりあえず結果画面に遷移してエラー表示
         const errorResult = {
           valid: false,
@@ -428,7 +430,6 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           yaku: [],
           error: `計算エラー: ${error instanceof Error ? error.message : 'Unknown error'}`
         };
-        
         const handData = {
           hand: selectedTiles.map(tile => tile.id),
           is_tsumo: isTsumo || false,
@@ -436,12 +437,25 @@ export const useCalculatorPageLogic = ({ mahjongCalculator }: UseCalculatorPageL
           jikaze: jikaze,
           winning_tile: selectedTiles.length > 0 ? selectedTiles[selectedTiles.length - 1].id : ''
         };
-        
+        // --- 履歴APIにエラーも保存 ---
+        try {
+          await fetch('/api/history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'calculation',
+              handData,
+              result: errorResult
+            })
+          });
+        } catch (e) {
+          console.warn('履歴保存失敗', e);
+        }
+        // --- 履歴API保存ここまで ---
         const searchParams = new URLSearchParams({
           result: JSON.stringify(errorResult),
           handData: JSON.stringify(handData)
         });
-        
         router.push(`/calculator/result?${searchParams.toString()}`);
       }
     },

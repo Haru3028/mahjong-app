@@ -225,7 +225,7 @@ function CalculatorResultContent() {
           <div className="flex flex-col gap-2">
             <button
               onClick={() => window.location.href = '/'}
-              className="base-button bg-gray-600 hover:bg-gray-700 text-white font-bold rounded shadow flex items-center justify-center"
+              className="base-button w-60 text-center text-lg py-4 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded shadow flex items-center justify-center"
               style={{ 
                 width: '120px', 
                 height: '45px', 
@@ -240,7 +240,7 @@ function CalculatorResultContent() {
             </button>
             <button
               onClick={() => window.location.href = '/calculator'}
-              className="base-button bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow flex items-center justify-center"
+              className="base-button w-60 text-center text-lg py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded shadow flex items-center justify-center"
               style={{ 
                 width: '120px', 
                 height: '45px', 

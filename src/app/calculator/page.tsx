@@ -95,13 +95,13 @@ export default function CalculatorPage() {
             <div className="flex justify-between mb-4">
               <button
                 onClick={() => window.location.href = '/'}
-                className="base-button bg-gray-600 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-lg shadow h-10"
+                className="base-button w-60 text-center text-lg py-4 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg shadow"
               >
                 戻る
               </button>
               <button
                 onClick={handleClearAll}
-                className="base-button bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow h-10"
+                className="base-button w-60 text-center text-lg py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow"
               >
                 クリア
               </button>
@@ -198,7 +198,7 @@ export default function CalculatorPage() {
             <div className="flex justify-end mb-2">
               <button
                 onClick={() => setSelectedTiles([])}
-                className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
+                className="base-button w-60 text-center text-lg py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow"
               >
                 手牌クリア
               </button>
@@ -219,7 +219,7 @@ export default function CalculatorPage() {
             <div className="flex justify-end mb-2">
               <button
                 onClick={() => setFuroList([])}
-                className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
+                className="base-button w-60 text-center text-lg py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow"
               >
                 フーロクリア
               </button>
@@ -248,7 +248,7 @@ export default function CalculatorPage() {
             <div className="flex justify-end mb-2">
               <button
                 onClick={() => setFuroList([])}
-                className="base-button bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-1 rounded-lg shadow text-sm"
+                className="base-button w-60 text-center text-lg py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg shadow"
               >
                 フーロクリア
               </button>
