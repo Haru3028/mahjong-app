@@ -1,0 +1,33 @@
+require('dotenv').config();
+// JSONファイルから初期問題データをHistoryテーブルに一括投入するNode.jsスクリプト
+const { Pool } = require('pg');
+const problems = require('./problems.json');
+
+const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/postgres';
+const pool = new Pool({ connectionString });
+
+async function main() {
+  const client = await pool.connect();
+  try {
+    for (const p of problems) {
+      await client.query(
+        `INSERT INTO "History" (type, result, hand_data, problem, "createdAt") VALUES ($1, $2, $3, $4, NOW())`,
+        [
+          'init',
+          '()',
+          JSON.stringify({ hand: p.hand }),
+          JSON.stringify(p),
+        ]
+      );
+      console.log(`Inserted problem id=${p.id}`);
+    }
+  } finally {
+    client.release();
+    await pool.end();
+  }
+}
+
+main().catch(e => {
+  console.error(e);
+  process.exit(1);
+});

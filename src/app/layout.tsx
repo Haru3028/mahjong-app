@@ -1,8 +1,11 @@
+
 // src/app/layout.tsx
+
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css"; // グローバルCSSをインポート
+import ClientRoot from "../components/ClientRoot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,9 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      {/* bodyタグに直接背景色クラスを適用することで、アプリ全体の背景を制御 */}
-      <body className={`${inter.className} bg-green-950`}> 
-        {children}
+      <body className={`${inter.className} bg-green-950`}>
+        <ClientRoot>
+          {children}
+        </ClientRoot>
       </body>
     </html>
   );

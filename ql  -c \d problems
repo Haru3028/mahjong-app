@@ -1,0 +1,7 @@
+ id | type |                                                                       problem                                                                        
+----+------+------------------------------------------------------------------------------------------------------------------------------------------------------
+ 23 | init | {"id":20,"hand":["man1","man1","man1","man2","man2","man2","man3","man3","man3","pin1","pin1","pin1","sou1","sou1"],"answer":"三色同刻","level":2}
+ 22 | init | {"id":19,"hand":["man9","man1","man2","man3","man4","man5","man6","man7","man8","pin9","pin9","pin9","sou9","sou9"],"answer":"清一色","level":2}
+ 21 | init | {"id":18,"hand":["man8","man9","man1","man2","man3","man4","man5","man6","man7","pin8","pin8","pin8","sou8","sou8"],"answer":"純全帯么九","level":2}
+(3 rows)
+

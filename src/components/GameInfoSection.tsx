@@ -110,8 +110,7 @@ const GameInfoSection: React.FC<GameInfoSectionProps> = ({
         </div>
         <div className="flex items-center gap-2">
           <label htmlFor="honba" className="text-xs font-bold text-slate-200 whitespace-nowrap">本場:</label>
-          <input
-            type="number"
+          <select
             id="honba"
             style={{
               backgroundColor: 'transparent',
@@ -123,16 +122,18 @@ const GameInfoSection: React.FC<GameInfoSectionProps> = ({
               fontWeight: '500',
               boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
             }}
-            className="w-20 focus:outline-none focus:ring-1 focus:ring-yellow-300 focus:border-yellow-300 transition-all duration-300"
+            className="w-20 focus:outline-none focus:ring-1 focus:ring-yellow-300 focus:border-yellow-300 transition-all duration-300 cursor-pointer"
             value={honba}
-            onChange={(e) => setHonba(Math.max(0, parseInt(e.target.value)))}
-            min="0"
-          />
+            onChange={(e) => setHonba(Number(e.target.value))}
+          >
+            {Array.from({length: 11}, (_, n) => (
+              <option key={n} value={n} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>{n}</option>
+            ))}
+          </select>
         </div>
         <div className="flex items-center gap-2">
           <label htmlFor="reachbo" className="text-xs font-bold text-slate-200 whitespace-nowrap">リーチ棒:</label>
-          <input
-            type="number"
+          <select
             id="reachbo"
             style={{
               backgroundColor: 'transparent',
@@ -144,11 +145,14 @@ const GameInfoSection: React.FC<GameInfoSectionProps> = ({
               fontWeight: '500',
               boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
             }}
-            className="w-20 focus:outline-none focus:ring-1 focus:ring-yellow-300 focus:border-yellow-300 transition-all duration-300"
+            className="w-20 focus:outline-none focus:ring-1 focus:ring-yellow-300 focus:border-yellow-300 transition-all duration-300 cursor-pointer"
             value={reachbo}
-            onChange={(e) => setReachbo(Math.max(0, parseInt(e.target.value)))}
-            min="0"
-          />
+            onChange={(e) => setReachbo(Number(e.target.value))}
+          >
+            {Array.from({length: 11}, (_, n) => (
+              <option key={n} value={n} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>{n}</option>
+            ))}
+          </select>
         </div>
       </div>
 

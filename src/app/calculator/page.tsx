@@ -5,16 +5,29 @@
 import { useMahjongCalculator } from '../../hooks/useMahjongCalculator';
 import { useCalculatorPageLogic } from '../../hooks/useCalculatorPageLogic';
 import { mahjongTiles } from '../../data/mahjongTiles';
-import React, { useMemo } from 'react';
-import Image from 'next/image';
+import { useEffect, useState, useMemo } from 'react';
 
-// 分割したコンポーネントをインポート
 import TileSelectionSection from '../../components/TileSelectionSection';
 import HandDisplaySection from '../../components/HandDisplaySection';
 import FuroActionButtons from '../../components/FuroActionButtons';
 import GameInfoSection from '../../components/GameInfoSection';
 
 export default function CalculatorPage() {
+  const [mode, setMode] = useState<'new' | 'history'>('new');
+  const [dbProblem, setDbProblem] = useState<any>(null);
+  useEffect(() => {
+    async function fetchProblem() {
+      try {
+        const url = mode === 'new' ? '/api/problem' : '/api/review';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.hand) setDbProblem(data);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchProblem();
+  }, [mode]);
   const mahjongCalculator = useMahjongCalculator();
 
   const {
@@ -34,18 +47,20 @@ export default function CalculatorPage() {
     setSelectedTiles, // ← 追加
   } = useCalculatorPageLogic({ mahjongCalculator });
 
-  // 牌ごとの合計枚数を計算
+  useEffect(() => {
+    if (dbProblem && dbProblem.hand) {
+      setSelectedTiles(dbProblem.hand.map((id: string) => ({ id })));
+    }
+  }, [dbProblem, setSelectedTiles]);
+
   const tileCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    // 手牌
     selectedTiles.forEach(tile => {
       counts[tile.id] = (counts[tile.id] || 0) + 1;
     });
-    // ドラ
     doraIndicators.forEach(tile => {
       counts[tile.id] = (counts[tile.id] || 0) + 1;
     });
-    // フーロ
     furoList.forEach(furo => {
       furo.tiles.forEach(tile => {
         counts[tile.id] = (counts[tile.id] || 0) + 1;
@@ -54,14 +69,13 @@ export default function CalculatorPage() {
     return counts;
   }, [selectedTiles, doraIndicators, furoList]);
 
-  // クリアボタン
   const handleClearAll = () => {
     if (window.confirm('全ての設定をクリアしますか？')) {
       setSelectedTiles([]);
       setFuroList([]);
       setDoraIndicators([]);
-      setBakaze('ton'); // '東'→'ton'
-      setJikaze('ton'); // '自風'→'ton'（初期値は東）
+      setBakaze('ton');
+      setJikaze('ton');
       setHonba(0);
       setReachbo(0);
       setIsTsumo(false);
@@ -79,12 +93,27 @@ export default function CalculatorPage() {
 
   return (
     <>
-      <main className="calculator-page min-h-screen py-8 px-2 bg-gray-900 text-white flex flex-col items-center overflow-x-hidden">
+      <main className="min-h-screen py-8 px-2 bg-gray-900 text-white flex flex-col items-center overflow-x-hidden">
         {/* ヘッダー */}
         <header className="mb-8">
           <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
             麻雀役計算機
           </h1>
+          {/* 新規/履歴モード切替ボタン */}
+          <div className="flex gap-4 justify-center mt-4">
+            <button
+              className={`base-button px-4 py-2 rounded ${mode === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-black'}`}
+              onClick={() => setMode('new')}
+            >
+              新規問題
+            </button>
+            <button
+              className={`base-button px-4 py-2 rounded ${mode === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-black'}`}
+              onClick={() => setMode('history')}
+            >
+              履歴から出題
+            </button>
+          </div>
         </header>
 
         {/* 上部セクション: 場情報とドラ表示牌の選択・一覧 (2カラム) */}
@@ -93,12 +122,6 @@ export default function CalculatorPage() {
           <div className="flex flex-col gap-6">
             {/* 戻るボタンとクリアボタン */}
             <div className="flex justify-between mb-4">
-              <button
-                onClick={() => window.location.href = '/'}
-                className="base-button w-60 text-center text-lg py-4 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg shadow"
-              >
-                戻る
-              </button>
               <button
                 onClick={handleClearAll}
                 className="base-button w-60 text-center text-lg py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow"
@@ -267,28 +290,28 @@ export default function CalculatorPage() {
 
         {/* 計算ボタンを一番下に移動 */}
         <div className="flex justify-center w-full max-w-4xl mt-8 mb-8">
-          <button
-            onClick={handleCalculate}
-            disabled={!isCalculateButtonEnabled}
-            className={`base-button px-8 py-4 text-lg ${
-                isCalculateButtonEnabled
-                ? '' 
-                : 'disabled'
-            }`}
-          >
-            計算
-          </button>
+          <div className="flex gap-4 w-full justify-center">
+            <button
+              onClick={handleCalculate}
+              disabled={!isCalculateButtonEnabled}
+              className={`base-button px-8 py-4 text-lg ${
+                  isCalculateButtonEnabled
+                  ? '' 
+                  : 'disabled'
+              }`}
+            >
+              計算
+            </button>
+            <button
+              onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+              className="base-button px-8 py-4 text-lg bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg shadow ml-4"
+              aria-label="一番上に戻る"
+            >
+              ↑ 一番上へ
+            </button>
+          </div>
         </div>
 
-        {/* 一番上に戻るボタン */}
-        <button
-          className="fixed bottom-6 right-6 z-50 shadow-2xl bg-gray-600 hover:bg-gray-700 text-white border-2 border-transparent hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
-          style={{minWidth: '48px', minHeight: '48px', borderRadius: '50%'}}
-          onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
-          aria-label="一番上に戻る"
-        >
-          ↑
-        </button>
       </main>
     </>
   );

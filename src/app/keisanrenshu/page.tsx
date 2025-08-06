@@ -65,7 +65,7 @@ function PointInputForm({ value, setValue, showResult }: { value: string; setVal
         value={value}
         onChange={e => setValue(e.target.value.replace(/[^0-9点]/g, ""))}
         placeholder="点数を入力 (例: 1300点)"
-        className="border px-2 py-1 rounded"
+        className="form-input-dark w-full"
         disabled={showResult}
       />
     </div>

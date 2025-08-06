@@ -60,7 +60,7 @@ const FuroActionButtons: React.FC<FuroActionButtonsProps> = ({
       <div className="flex flex-wrap justify-center gap-4 mb-6">
         <button
           onClick={() => handleFuroTypeSelect('pon')}
-          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+          className={`base-button px-8 py-4 text-lg font-bold rounded-lg shadow transition-all duration-200 ${
             selectedFuroTypeToMake === 'pon' ? 'bg-blue-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
           }`}
         >
@@ -68,7 +68,7 @@ const FuroActionButtons: React.FC<FuroActionButtonsProps> = ({
         </button>
         <button
           onClick={() => handleFuroTypeSelect('chi')}
-          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+          className={`base-button px-8 py-4 text-lg font-bold rounded-lg shadow transition-all duration-200 ${
             selectedFuroTypeToMake === 'chi' ? 'bg-blue-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
           }`}
         >
@@ -76,7 +76,7 @@ const FuroActionButtons: React.FC<FuroActionButtonsProps> = ({
         </button>
         <button
           onClick={() => handleFuroTypeSelect('kan')}
-          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+          className={`base-button px-8 py-4 text-lg font-bold rounded-lg shadow transition-all duration-200 ${
             selectedFuroTypeToMake === 'kan' ? 'bg-blue-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
           }`}
         >
@@ -84,7 +84,7 @@ const FuroActionButtons: React.FC<FuroActionButtonsProps> = ({
         </button>
         <button
           onClick={onToggleFuroSelectionMode}
-          className={`py-2 px-6 rounded-lg font-bold transition-all duration-200 ${
+          className={`base-button px-8 py-4 text-lg font-bold rounded-lg shadow transition-all duration-200 ${
             isFuroSelectionMode && selectedFuroTypeToMake === 'none' ? 'bg-red-600 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'
           }`}
         >
