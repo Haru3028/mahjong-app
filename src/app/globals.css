@@ -1,5 +1,26 @@
-html, body {
-  overflow: hidden;
+/* スクロールバーのカスタマイズ: 麻雀アプリのダーク背景に合わせる */
+::-webkit-scrollbar {
+  width: 12px;
+  background: #0c1a0e;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #bfa76f 0%, #14532d 100%);
+  border-radius: 8px;
+  border: 2px solid #222b1a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #e6c97a 0%, #14532d 100%);
+}
+::-webkit-scrollbar-corner {
+  background: #0c1a0e;
+}
+html {
+  height: 100%;
+}
+body {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden !important;
 }
 /* 共通ダーク用フォームスタイル */
 .form-input-dark {

@@ -13,21 +13,25 @@ import FuroActionButtons from '../../components/FuroActionButtons';
 import GameInfoSection from '../../components/GameInfoSection';
 
 export default function CalculatorPage() {
-  const [mode, setMode] = useState<'new' | 'history'>('new');
   const [dbProblem, setDbProblem] = useState<any>(null);
   useEffect(() => {
     async function fetchProblem() {
       try {
-        const url = mode === 'new' ? '/api/problem' : '/api/review';
-        const res = await fetch(url);
+        // 履歴DB（historyテーブル）からのみ出題
+        const res = await fetch('/api/review');
         const data = await res.json();
-        if (data && data.hand) setDbProblem(data);
+        console.log('API /api/review response:', data); // デバッグ用
+        if (data && data.hand) {
+          setDbProblem(data);
+        } else {
+          console.warn('No hand data in API response:', data);
+        }
       } catch (e) {
-        console.error(e);
+        console.error('API fetch error:', e);
       }
     }
     fetchProblem();
-  }, [mode]);
+  }, []);
   const mahjongCalculator = useMahjongCalculator();
 
   const {
@@ -49,9 +53,13 @@ export default function CalculatorPage() {
 
   useEffect(() => {
     if (dbProblem && dbProblem.hand) {
-      setSelectedTiles(dbProblem.hand.map((id: string) => ({ id })));
+      setSelectedTiles(
+        dbProblem.hand
+          .map((id: string) => mahjongTiles.find(tile => tile.id === id))
+          .filter(Boolean)
+      );
     }
-  }, [dbProblem, setSelectedTiles]);
+  }, [dbProblem, setSelectedTiles, mahjongTiles]);
 
   const tileCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -93,33 +101,27 @@ export default function CalculatorPage() {
 
   return (
     <>
-      <main className="min-h-screen py-8 px-2 bg-gray-900 text-white flex flex-col items-center overflow-x-hidden">
+  <main className="w-full max-w-full pb-32 overflow-y-auto overflow-x-hidden bg-gray-900 text-white flex flex-col items-center">
         {/* ヘッダー */}
-        <header className="mb-8">
+        <header className="mb-8 w-full max-w-4xl flex flex-col items-center">
+          <button
+            onClick={() => window.location.href = '/'}
+            className="base-button w-40 text-center text-md py-2 bg-gray-700 hover:bg-gray-800 text-white font-bold rounded-lg shadow mb-4 self-start"
+          >
+            ← メニューに戻る
+          </button>
           <h1 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">
             麻雀役計算機
           </h1>
-          {/* 新規/履歴モード切替ボタン */}
-          <div className="flex gap-4 justify-center mt-4">
-            <button
-              className={`base-button px-4 py-2 rounded ${mode === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-black'}`}
-              onClick={() => setMode('new')}
-            >
-              新規問題
-            </button>
-            <button
-              className={`base-button px-4 py-2 rounded ${mode === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-black'}`}
-              onClick={() => setMode('history')}
-            >
-              履歴から出題
-            </button>
+          <div className="mt-2 text-center">
+            <span className="inline-block px-4 py-1 bg-blue-800 text-blue-100 rounded-full text-sm font-semibold">現在：履歴から出題中</span>
           </div>
         </header>
 
         {/* 上部セクション: 場情報とドラ表示牌の選択・一覧 (2カラム) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-4xl mb-8">
           {/* 左側: 場情報と役の有無 */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 section-panel">
             {/* 戻るボタンとクリアボタン */}
             <div className="flex justify-between mb-4">
               <button
@@ -151,7 +153,7 @@ export default function CalculatorPage() {
           </div>
 
           {/* 右側: ドラ表示牌の選択と一覧 */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6 section-panel">
             <div className="section-panel w-full">
               <h2 className="section-title">ドラ表示牌</h2>
               {/* ドラ選択UI（常時表示） */}
@@ -194,7 +196,7 @@ export default function CalculatorPage() {
         </div>
 
         {/* 中間セクション: 牌を選択 (単一カラム) */}
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl section-panel">
           <TileSelectionSection
             title="牌を選択"
             tiles={mahjongTiles}

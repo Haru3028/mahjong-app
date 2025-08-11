@@ -183,7 +183,6 @@ export default function KeisanRenshuPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <h1 className="calculator-main-title mb-8">点数計算練習</h1>
       <div className="w-full max-w-sm flex flex-col items-center gap-4">
-        <a href="/keisanrenshu/class" className="base-button w-60 text-center text-lg py-4 mb-4">クラス選択に戻る</a>
         <div className="w-full max-w-xl p-4 bg-white rounded shadow">
           {loading ? (
             <div className="text-gray-500 text-center py-8">問題を読み込み中...</div>
@@ -202,14 +201,13 @@ export default function KeisanRenshuPage() {
                 </button>
               </form>
               <JudgeResult input={pointInput} problem={problem} showResult={showResult} />
-              {showResult && (
-                <button
-                  className="base-button w-60 text-center text-lg py-4 mt-2"
-                  onClick={handleNext}
-                >
-                  次の問題
-                </button>
-              )}
+              <button
+                className="base-button w-60 text-center text-lg py-4 mt-2"
+                onClick={handleNext}
+                disabled={loading}
+              >
+                次の問題
+              </button>
             </>
           ) : (
             <div className="text-red-500 text-center py-8">問題が取得できませんでした</div>

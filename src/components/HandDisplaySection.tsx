@@ -75,6 +75,9 @@ const HandDisplaySection: React.FC<HandDisplaySectionProps> = ({
             (t: MahjongTile) => t.instanceId === tile.instanceId
           );
 
+          // tile.srcが空文字やundefinedの場合はImageを描画しない
+          if (!tile.src) return null;
+
           return (
             <div
               key={tile.instanceId || `${tile.id}-${index}`}
