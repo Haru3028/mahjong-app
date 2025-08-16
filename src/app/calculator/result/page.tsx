@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
@@ -32,38 +33,55 @@ function CalculatorResultContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [showAnimation, setShowAnimation] = useState(false);
-  
-  // URLパラメータから結果と手牌データを取得
   let result: ScoreResult | null = null;
   let handData: HandData | null = null;
-  
+  let errorMsg: string | null = null;
   try {
     const resultParam = searchParams.get('result');
     const handDataParam = searchParams.get('handData');
-    console.log('Raw params:', { resultParam, handDataParam });
     if (resultParam) {
       result = JSON.parse(decodeURIComponent(resultParam));
-      console.log('Parsed result:', result);
     }
     if (handDataParam) {
       handData = JSON.parse(decodeURIComponent(handDataParam));
-      console.log('Parsed handData:', handData);
     }
   } catch (error) {
-    console.error('パラメータの解析エラー:', error);
+    errorMsg = 'パラメータの解析エラー: ' + (error instanceof Error ? error.message : String(error));
+  }
+
+  // パラメータ不正やエラー時は必ずUIを返す
+  if (errorMsg) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="text-center">
+          <div className="text-2xl font-bold mb-4 text-red-400">{errorMsg}</div>
+          <button onClick={() => router.push('/')} className="base-button mt-4">メニューに戻る</button>
+        </div>
+      </main>
+    );
+  }
+  if (!result || !handData) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="text-center">
+          <div className="text-2xl font-bold mb-4 text-yellow-300">データがありません</div>
+          <button onClick={() => router.push('/')} className="base-button mt-4">メニューに戻る</button>
+        </div>
+      </main>
+    );
   }
 
   // 牌画像パスを取得する関数
   function getTileImagePath(tileId: string): string {
     const tileMapping: Record<string, string> = {
       'man1': '/tiles/man1.png', 'man2': '/tiles/man2.png', 'man3': '/tiles/man3.png',
-      'man4': '/tiles/man4.png', 'man5': '/tiles/man5.png', 'man5r': '/tiles/man5_red.png',
+  'man4': '/tiles/man4.png', 'man5': '/tiles/man5.png', 'man5r': '/tiles/man5_red.png', 'man5_red': '/tiles/man5_red.png',
       'man6': '/tiles/man6.png', 'man7': '/tiles/man7.png', 'man8': '/tiles/man8.png', 'man9': '/tiles/man9.png',
       'pin1': '/tiles/pin1.png', 'pin2': '/tiles/pin2.png', 'pin3': '/tiles/pin3.png',
-      'pin4': '/tiles/pin4.png', 'pin5': '/tiles/pin5.png', 'pin5r': '/tiles/pin5_red.png',
+  'pin4': '/tiles/pin4.png', 'pin5': '/tiles/pin5.png', 'pin5r': '/tiles/pin5_red.png', 'pin5_red': '/tiles/pin5_red.png',
       'pin6': '/tiles/pin6.png', 'pin7': '/tiles/pin7.png', 'pin8': '/tiles/pin8.png', 'pin9': '/tiles/pin9.png',
       'sou1': '/tiles/sou1.png', 'sou2': '/tiles/sou2.png', 'sou3': '/tiles/sou3.png',
-      'sou4': '/tiles/sou4.png', 'sou5': '/tiles/sou5.png', 'sou5r': '/tiles/sou5_red.png',
+  'sou4': '/tiles/sou4.png', 'sou5': '/tiles/sou5.png', 'sou5r': '/tiles/sou5_red.png', 'sou5_red': '/tiles/sou5_red.png',
       'sou6': '/tiles/sou6.png', 'sou7': '/tiles/sou7.png', 'sou8': '/tiles/sou8.png', 'sou9': '/tiles/sou9.png',
       'ton': '/tiles/ji_ton.png', 'nan': '/tiles/ji_nan.png', 'sha': '/tiles/ji_sha.png', 'pei': '/tiles/ji_pei.png',
       'haku': '/tiles/ji_haku.png', 'hatsu': '/tiles/ji_hatsu.png', 'chun': '/tiles/ji_chun.png'
@@ -123,89 +141,96 @@ function CalculatorResultContent() {
   }
 
   return (
-    <main className="h-screen bg-gray-900 text-white overflow-hidden flex items-center justify-center" style={{ overscrollBehavior: 'none', touchAction: 'none' }}>
-      <div className={`w-full max-w-4xl px-2 transition-all duration-1000 ${showAnimation ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ height: 'auto', maxHeight: '100vh', overflow: 'hidden' }}>
-        
-        {/* 手牌表示 - 左右に情報配置 */}
-        <div className="mb-8">
-          <div className="flex justify-center items-center gap-4 max-w-4xl mx-auto">
-            {/* 左側: 場風・親子情報 - 横書き */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="bg-green-700 rounded-lg px-3 py-1 shadow-lg">
-                <div className="flex items-center gap-1" style={{
-                  writingMode: 'horizontal-tb',
-                  textOrientation: 'mixed',
-                  direction: 'ltr'
-                }}>
-                  <span className="text-white font-bold text-lg">{handData.bakaze === 'ton' ? '東' : '南'}</span>
-                  <span className="text-green-200 text-sm">場</span>
-                </div>
-              </div>
-              <div className="bg-orange-700 rounded-lg px-3 py-1 shadow-lg">
-                <div className="text-center" style={{
-                  writingMode: 'horizontal-tb',
-                  textOrientation: 'mixed',
-                  direction: 'ltr'
-                }}>
-                  <span className="text-white font-bold text-lg">{handData.jikaze === 'ton' ? '親' : '子'}</span>
-                </div>
+    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex items-center justify-center py-8 px-2">
+      <div className={`w-full max-w-3xl mx-auto rounded-2xl shadow-2xl bg-gray-950/95 border border-yellow-900/30 transition-all duration-1000 ${showAnimation ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ overflow: 'hidden' }}>
+        {/* 手牌・ドラ・北ドラ・和了種まとめて中央カード上部に */}
+        <div className="flex flex-col items-center gap-2 pt-8 pb-4">
+          {/* 南場・子・ロンを横並び・等間隔で中央上部に */}
+          <div className="flex flex-row items-center justify-center gap-8 mb-4">
+            <div className="flex flex-col items-center">
+              <span className="bg-green-700 rounded-lg px-6 py-2 shadow-lg text-white font-bold text-xl tracking-widest">{handData.bakaze === 'ton' ? '東場' : '南場'}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="bg-orange-700 rounded-lg px-6 py-2 shadow-lg text-white font-bold text-xl tracking-widest">{handData.jikaze === 'ton' ? '親' : '子'}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className={`${handData.is_tsumo ? 'bg-blue-700' : 'bg-red-700'} rounded-lg px-6 py-2 shadow-lg text-white font-bold text-xl tracking-widest`}>{handData.is_tsumo ? 'ツモ' : 'ロン'}</span>
+            </div>
+          </div>
+          <div className="flex items-end gap-2 justify-center px-2 py-2 bg-gray-800 rounded-xl shadow-lg">
+            {handData.hand.map((tileId: string, index: number) => {
+              const isWinning = tileId === handData.winning_tile &&
+                (handData.hand.filter(t => t === tileId).length === 1 || index === handData.hand.lastIndexOf(tileId));
+              // 和了牌（自摸牌/ロン牌）の直前に大きめスペースを挿入
+              const isWinningTileLast = isWinning && index === handData.hand.lastIndexOf(tileId);
+              return (
+                <React.Fragment key={`${tileId}-${index}`}>
+                  {isWinningTileLast && index !== 0 && (
+                    <div style={{ width: '2.5rem' }} />
+                  )}
+                  <div className="relative flex-shrink-0 flex items-end justify-center" style={{height: '4.5rem'}}>
+                    <img 
+                      src={getTileImagePath(tileId)} 
+                      alt={tileId}
+                      className={`w-12 h-16 drop-shadow-lg ${isWinning ? 'scale-110' : ''}`}
+                      style={{display: 'block'}}
+                    />
+                    {isWinning && (
+                      <span className="absolute left-1/2 -translate-x-1/2 text-xs text-white bg-gray-700 bg-opacity-80 rounded px-2 py-0.5 border border-gray-500" style={{fontSize:'0.75rem', letterSpacing:'0.1em', bottom: '-1.3rem'}}>
+                        {handData.is_tsumo ? 'ツモ' : 'ロン'}
+                      </span>
+                    )}
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+          <div className="flex flex-row justify-center gap-8 mt-3 mb-1">
+            <div className="flex flex-col items-center">
+              <span className="text-xs text-yellow-300 font-bold mb-0.5">ドラ表示牌</span>
+              <div className="flex gap-1 bg-gray-800 rounded-lg px-2 py-1">
+                {(handData.doraTiles || []).map((tileId: string, idx: number) => (
+                  <img key={tileId + idx} src={getTileImagePath(tileId)} alt={tileId} className="w-8 h-10" />
+                ))}
               </div>
             </div>
-            
-            {/* 中央: 手牌 */}
-            <div className="flex items-end gap-0.5">
-              {handData.hand.map((tileId: string, index: number) => (
-                <div key={`${tileId}-${index}`} className="relative flex-shrink-0">
-                  <img 
-                    src={getTileImagePath(tileId)} 
-                    alt=""
-                    className="w-6 h-8 object-contain transition-transform hover:scale-110"
-                  />
-                </div>
-              ))}
-            </div>
-            
-            {/* 右側: ツモ・ロン情報 */}
-            <div className="flex flex-col items-center gap-2">
-              <div className={`rounded-lg px-3 py-2 shadow-lg ${handData.is_tsumo ? 'bg-blue-700' : 'bg-red-700'}`}>
-                <div className="text-center">
-                  <span className="text-white font-bold text-lg">{handData.is_tsumo ? 'ツモ' : 'ロン'}</span>
-                </div>
+            <div className="flex flex-col items-center">
+              <span className="text-xs text-blue-300 font-bold mb-0.5">北ドラ（抜きドラ）</span>
+              <div className="flex gap-1 bg-gray-800 rounded-lg px-2 py-1">
+                {(handData.kitaTiles || []).map((tileId: string, idx: number) => (
+                  <img key={tileId + idx} src={getTileImagePath(tileId)} alt={tileId} className="w-8 h-10" />
+                ))}
               </div>
             </div>
           </div>
         </div>
-
-        {/* 成立役 - 2列レイアウトで役と翻数を近づける */}
+  {/* 中央: 翻・符・点数・満貫等の表示を削除 */}
+        {/* 役リストは下部1箇所のみ。重複表示を完全に削除 */}
         {(result as any).valid && ((result as any).yaku || (result as any).yakuList) && ((result as any).yaku || (result as any).yakuList).length > 0 && (
           <div className="mb-6">
-            <div className="grid grid-cols-2 gap-y-4 gap-x-2 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 gap-y-4 gap-x-6 max-w-xl mx-auto bg-gray-800/80 rounded-xl py-4 px-6 shadow-lg">
               {((result as any).yaku || (result as any).yakuList).map((yaku: any, index: number) => (
-                <div key={index} className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between px-2 py-0" style={{
-                    background: 'none',
-                    fontSize: '15px',
-                    gap: '8px',
-                    borderRadius: '0'
-                  }}>
-                    <span className="text-white font-medium flex-1" style={{ minWidth: 0 }}>{yaku.name}</span>
-                    <div className="flex items-center gap-0.5 flex-shrink-0">
-                      <span className="text-yellow-400 font-bold text-lg">{yaku.han}</span>
-                      <span className="text-yellow-400 text-xs">翻</span>
-                    </div>
-                  </div>
-                  <div style={{
-                    width: '100%',
-                    height: '2px',
-                    borderRadius: '1px',
-                    background: 'linear-gradient(90deg, #ffd700 0%, #ffb347 100%)',
-                    boxShadow: '0 0 4px 1px #ffd70055'
-                  }}></div>
+                <div key={index} className="flex items-center justify-between px-2 py-1 border-b border-yellow-900/30">
+                  <span className="text-white font-medium text-lg truncate">{yaku.name}</span>
+                  <span className="text-yellow-400 font-bold text-xl ml-2">{yaku.han}翻</span>
                 </div>
               ))}
             </div>
           </div>
         )}
+        {/* 下部: ボタンを中央寄せで */}
+        <div className="flex justify-center gap-8 pb-8">
+          <button
+            onClick={() => window.location.href = '/'}
+            className="base-button text-center text-lg py-3 px-8 bg-gray-700 hover:bg-gray-800 text-white font-bold rounded shadow"
+          >メニュー</button>
+          <button
+            onClick={() => window.location.href = '/calculator'}
+            className="base-button text-center text-lg py-3 px-8 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded shadow"
+          >入力画面</button>
+        </div>
+
+  {/* 上部の役リスト・役名表示を完全に削除（下部1箇所のみ残す） */}
 
         {/* 中央の大きな翻数・符数表示 */}
         {(result as any).valid && (

@@ -1,0 +1,41 @@
+name: Daily Auto Push
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # JST 3:00 (UTC+9 → UTC 18:00)
+  workflow_dispatch:
+
+jobs:
+  auto-commit-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Detect changes
+        id: changes
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push if changes
+        if: steps.changes.outputs.no_changes == 'false'
+        run: |
+          DATE=$(date '+%Y-%m-%d %H:%M:%S')
+          SUMMARY=$(git status --short)
+          git commit -m "auto: ${DATE} ${SUMMARY}"
+          git push origin ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

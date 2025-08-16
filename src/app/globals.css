@@ -1,3 +1,12 @@
+/* メニュー画面（/）のスクロールバーを非表示にする */
+body.menu-page {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+  scrollbar-width: none !important; /* Firefox */
+}
+body.menu-page::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Edge */
+}
 /* スクロールバーのカスタマイズ: 麻雀アプリのダーク背景に合わせる */
 ::-webkit-scrollbar {
   width: 12px;

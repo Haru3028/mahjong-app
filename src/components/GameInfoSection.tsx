@@ -4,6 +4,8 @@ import React from 'react';
 import { Kaze } from '../types/mahjong'; // Kaze型をインポート
 
 // Propsの型定義
+import { PlayerCount, KitaCount } from '../context/PlayerCountContext';
+
 interface GameInfoSectionProps {
   bakaze: Kaze;
   setBakaze: (kaze: Kaze) => void;
@@ -33,6 +35,10 @@ interface GameInfoSectionProps {
   setIsChiiho: (checked: boolean) => void;
   isTenho: boolean;
   setIsTenho: (checked: boolean) => void;
+  playerCount: PlayerCount;
+  setPlayerCount: (count: PlayerCount) => void;
+  kitaCount: KitaCount;
+  setKitaCount: (count: KitaCount) => void;
   panelClassName?: string;
   titleClassName?: string;
 }
@@ -52,6 +58,7 @@ const GameInfoSection: React.FC<GameInfoSectionProps> = ({
   isHoutei, setIsHoutei,
   isChiiho, setIsChiiho,
   isTenho, setIsTenho,
+  playerCount, setPlayerCount, kitaCount, setKitaCount,
   panelClassName, 
   titleClassName, 
 }) => {
@@ -59,7 +66,58 @@ const GameInfoSection: React.FC<GameInfoSectionProps> = ({
     <div className={`w-full p-6 rounded-xl shadow-xl ${panelClassName || 'bg-gradient-to-br from-teal-800 via-teal-900 to-slate-900 border-yellow-400 border-3 text-white'}`}>
       <h2 className={`${titleClassName || 'text-2xl font-bold mb-4 text-center text-cyan-200'}`}>場と自風、点数情報</h2>
 
-      <div className="grid grid-cols-2 gap-3 mb-3">
+  <div className="grid grid-cols-2 gap-3 mb-3">
+        {/* 人数（3人/4人） */}
+        <div className="flex items-center gap-2">
+          <label htmlFor="playerCount" className="text-xs font-bold text-slate-200 whitespace-nowrap">人数:</label>
+          <select
+            id="playerCount"
+            style={{
+              backgroundColor: 'transparent',
+              color: '#e2e8f0',
+              border: '1px solid rgba(250, 204, 21, 0.4)',
+              borderRadius: '4px',
+              padding: '6px 8px',
+              fontSize: '12px',
+              fontWeight: '500',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
+            }}
+            className="w-20 focus:outline-none focus:ring-1 focus:ring-yellow-300 focus:border-yellow-300 transition-all duration-300 cursor-pointer"
+            value={playerCount}
+            onChange={e => setPlayerCount(Number(e.target.value) as PlayerCount)}
+          >
+            <option value={4} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>4人麻雀</option>
+            <option value={3} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>3人麻雀</option>
+          </select>
+        </div>
+        {/* 北抜き（3人麻雀時のみ） */}
+        {playerCount === 3 && (
+          <div className="flex items-center gap-2 col-span-2">
+            <label htmlFor="kitaCount" className="text-xs font-bold text-slate-200 whitespace-nowrap">北抜き:</label>
+            <select
+              id="kitaCount"
+              style={{
+                backgroundColor: 'transparent',
+                color: '#e2e8f0',
+                border: '1px solid rgba(250, 204, 21, 0.4)',
+                borderRadius: '4px',
+                padding: '6px 8px',
+                fontSize: '12px',
+                fontWeight: '500',
+                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.1)'
+              }}
+              className="w-28 focus:outline-none focus:ring-1 focus:ring-yellow-300 focus:border-yellow-300 transition-all duration-300 cursor-pointer"
+              value={kitaCount}
+              onChange={e => setKitaCount(Number(e.target.value) as KitaCount)}
+            >
+              <option value={0} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>北抜きなし</option>
+              <option value={1} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>北1枚抜き</option>
+              <option value={2} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>北2枚抜き</option>
+              <option value={3} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>北3枚抜き</option>
+              <option value={4} style={{backgroundColor: '#134e4a', color: '#e2e8f0'}}>北4枚抜き</option>
+            </select>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <label htmlFor="bakaze" className="text-xs font-bold text-slate-200 whitespace-nowrap">場風:</label>
           <select

@@ -20,12 +20,18 @@ export default function SignupPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password, email, displayName }),
     });
-    const data = await res.json();
+    let data = null;
+    try {
+      data = await res.json();
+    } catch (e) {
+      setError("サーバーから不正なレスポンスが返されました");
+      return;
+    }
     if (res.ok) {
       setSuccess("登録が完了しました。ログインしてください。");
       setTimeout(() => router.push("/login"), 1500);
     } else {
-      setError(data.error || "登録に失敗しました");
+      setError((data && data.error) || "登録に失敗しました");
     }
   };
 

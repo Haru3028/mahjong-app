@@ -6,13 +6,15 @@ import { useMahjongCalculator } from '../../hooks/useMahjongCalculator';
 import { useCalculatorPageLogic } from '../../hooks/useCalculatorPageLogic';
 import { mahjongTiles } from '../../data/mahjongTiles';
 import { useEffect, useState, useMemo } from 'react';
+import { usePlayerCount } from '../../context/PlayerCountContext';
 
-import TileSelectionSection from '../../components/TileSelectionSection';
+
 import HandDisplaySection from '../../components/HandDisplaySection';
 import FuroActionButtons from '../../components/FuroActionButtons';
 import GameInfoSection from '../../components/GameInfoSection';
 
 export default function CalculatorPage() {
+  const { playerCount, setPlayerCount, kitaCount, setKitaCount } = usePlayerCount();
   const [dbProblem, setDbProblem] = useState<any>(null);
   useEffect(() => {
     async function fetchProblem() {
@@ -51,8 +53,11 @@ export default function CalculatorPage() {
     setSelectedTiles, // ← 追加
   } = useCalculatorPageLogic({ mahjongCalculator });
 
+  // 新規入力時は手牌を空に初期化
   useEffect(() => {
-    if (dbProblem && dbProblem.hand) {
+    if (!dbProblem) {
+      setSelectedTiles([]);
+    } else if (dbProblem.hand) {
       setSelectedTiles(
         dbProblem.hand
           .map((id: string) => mahjongTiles.find(tile => tile.id === id))
@@ -123,7 +128,8 @@ export default function CalculatorPage() {
           {/* 左側: 場情報と役の有無 */}
           <div className="flex flex-col gap-6 section-panel">
             {/* 戻るボタンとクリアボタン */}
-            <div className="flex justify-between mb-4">
+
+            <div className="flex justify-between items-center mb-4 gap-4">
               <button
                 onClick={handleClearAll}
                 className="base-button w-60 text-center text-lg py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow"
@@ -147,6 +153,8 @@ export default function CalculatorPage() {
               isHoutei={isHoutei} setIsHoutei={setIsHoutei}
               isChiiho={isChiiho} setIsChiiho={setIsChiiho}
               isTenho={isTenho} setIsTenho={setIsTenho}
+              playerCount={playerCount} setPlayerCount={setPlayerCount}
+              kitaCount={kitaCount} setKitaCount={setKitaCount}
               panelClassName="section-panel"
               titleClassName="section-title"
             />
@@ -159,37 +167,11 @@ export default function CalculatorPage() {
               {/* ドラ選択UI（常時表示） */}
               <div className="mb-4">
                 <h3 className="text-xl font-semibold mb-3 text-amber-400">現在のドラ表示牌</h3>
-                <TileSelectionSection
-                  title=""
-                  tiles={doraIndicators}
-                  onTileClick={(tile, index) => removeDoraIndicator(index!)}
-                  type="hand"
-                />
+
               </div>
               <div className="mb-4">
                 <h3 className="text-xl font-semibold mb-3 text-amber-400">選択可能な牌</h3>
-                <TileSelectionSection
-                  title=""
-                  tiles={mahjongTiles}
-                  onTileClick={tile => {
-                    // 既に同じ赤ドラがあれば追加不可
-                    if (tile.isRedDora && doraIndicators.some(t => t.id === tile.id)) {
-                      alert(`赤ドラ（${tile.name}）は1枚しか選択できません。`);
-                      return;
-                    }
-                    // ドラ表示牌＋手牌 合計4枚まで
-                    const baseId = tile.id.replace('_red', '');
-                    const countInDora = doraIndicators.filter(t => t.id.replace('_red', '') === baseId).length;
-                    const countInHand = selectedTiles.filter(t => t.id.replace('_red', '') === baseId).length;
-                    if (countInDora + countInHand >= 4) {
-                      alert(`${tile.name}はドラ表示牌と手牌を合わせて4枚までしか選択できません。`);
-                      return;
-                    }
-                    // 追加
-                    setDoraIndicators([...doraIndicators, { ...tile, instanceId: Math.random().toString(36).substring(2, 11) }]);
-                  }}
-                  type="available"
-                />
+
               </div>
             </div>
           </div>
@@ -197,18 +179,7 @@ export default function CalculatorPage() {
 
         {/* 中間セクション: 牌を選択 (単一カラム) */}
         <div className="w-full max-w-4xl section-panel">
-          <TileSelectionSection
-            title="牌を選択"
-            tiles={mahjongTiles}
-            onTileClick={addTileToHand}
-            type="available"
-            panelClassName="section-panel"
-            titleClassName="section-title"
-            handTiles={selectedTiles}
-            doraTiles={doraIndicators}
-            furoTiles={furoList.flatMap(f => f.tiles)}
-            nakiTiles={[]}
-          />
+
         </div>
 
         {/* 理牌中メッセージ */}
@@ -278,15 +249,7 @@ export default function CalculatorPage() {
                 フーロクリア
               </button>
             </div>
-            <TileSelectionSection
-              title="鳴き（フーロ）一覧"
-              tiles={[]}
-              furoList={furoList}
-              onTileClick={() => {}}
-              type="furo"
-              removeFuro={removeFuro}
-              titleClassName="section-title"
-            />
+
           </div>
         </div>
 

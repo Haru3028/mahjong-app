@@ -35,9 +35,15 @@ export default function HistoryPage() {
           return [];
         }
       })
-      .then((data: HistoryItem[]) => {
-        setProblemHistory(data.filter((item) => item.type === "practice"));
-        setCalcHistory(data.filter((item) => item.type === "calculation"));
+      .then((data: any) => {
+        if (Array.isArray(data)) {
+          setProblemHistory(data.filter((item) => item.type === "practice"));
+          setCalcHistory(data.filter((item) => item.type === "calculation"));
+        } else {
+          setProblemHistory([]);
+          setCalcHistory([]);
+          // 必要ならエラー表示もここで追加可能
+        }
       })
       .finally(() => setLoading(false));
   }, []);

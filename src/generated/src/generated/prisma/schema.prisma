@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model History {
+  id        Int      @id @default(autoincrement())
+  userId    String?
+  type      String // 'quiz', 'practice', 'calculation'
+  result    String // 結果やスコア等
+  createdAt DateTime @default(now())
+}
+
+model Quiz {
+  id          Int      @id @default(autoincrement())
+  question    String
+  choices     String // JSON形式で選択肢を格納
+  answer      Int // 正解の選択肢インデックス
+  explanation String?
+  chapter     String?
+  createdAt   DateTime @default(now())
+}
+
+model Practice {
+  id        Int      @id @default(autoincrement())
+  tiles     String // JSON形式で手牌や状況を格納
+  answer    String // 推奨打牌や解説
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  email        String?  @unique
+  displayName  String?
+  createdAt    DateTime @default(now())
+}
